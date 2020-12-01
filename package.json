@@ -1,0 +1,59 @@
+{
+  "name": "esix-gui",
+  "productName": "esix-gui",
+  "version": "0.1.0",
+  "description": "An Electron Program for the esix-api repo ",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make",
+    "publish": "electron-forge publish",
+    "lint": "eslint src --color"
+  },
+  "keywords": ["e621","esix-api","esix-cli","electron-forge","electron","react","reactjs"],
+  "contributors": [
+	"zyme-xd (https://twitter.com/zyrnwtf)",
+	"jylescoad-ward (https://jyles.club)"
+  ],
+  "author": "jyles.coad-ward",
+  "license": "MIT",
+  "config": {
+    "forge": {
+      "make_targets": {
+        "win32": [
+          "squirrel"
+        ],
+        "darwin": [
+          "zip"
+        ],
+        "linux": [
+          "deb",
+          "rpm"
+        ]
+      },
+      "electronPackagerConfig": {
+        "packageManager": "npm"
+      },
+      "electronWinstallerConfig": {
+        "name": "esix_gui"
+      },
+      "electronInstallerDebian": {},
+      "electronInstallerRedhat": {},
+      "github_repository": {
+        "owner": "jylescoad-ward",
+        "name": "esix-gui"
+      }
+    }
+  },
+  "dependencies": {
+    "electron-compile": "^6.4.4",
+    "electron-squirrel-startup": "^1.0.0"
+  },
+  "devDependencies": {
+    "babel-plugin-transform-async-to-generator": "^6.24.1",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-react": "^6.24.1",
+    "electron-forge": "^5.2.4"
+  }
+}
