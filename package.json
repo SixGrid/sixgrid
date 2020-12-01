@@ -11,10 +11,18 @@
     "publish": "electron-forge publish",
     "lint": "eslint src --color"
   },
-  "keywords": ["e621","esix-api","esix-cli","electron-forge","electron","react","reactjs"],
+  "keywords": [
+    "e621",
+    "esix-api",
+    "esix-cli",
+    "electron-forge",
+    "electron",
+    "react",
+    "reactjs"
+  ],
   "contributors": [
-	"zyme-xd (https://twitter.com/zyrnwtf)",
-	"jylescoad-ward (https://jyles.club)"
+    "zyme-xd (https://twitter.com/zyrnwtf)",
+    "jylescoad-ward (https://jyles.club)"
   ],
   "author": "jyles.coad-ward",
   "license": "MIT",
@@ -54,6 +62,7 @@
     "babel-plugin-transform-async-to-generator": "^6.24.1",
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
-    "electron-forge": "^5.2.4"
+    "electron-forge": "^5.2.4",
+    "electron-prebuilt-compile": "8.2.0"
   }
 }
