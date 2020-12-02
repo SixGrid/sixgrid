@@ -26,7 +26,8 @@ class component {
 	listen() {
 		this.$("form#tagSearch").submit((me)=>{
 			me.preventDefault();
-			var givenSearch = me.target.elements.search.value
+			var tags = me.target.elements.search.value.split(',');
+			console.debug(`[search.js] Tags given`,tags)
 		})
 	}
 }
