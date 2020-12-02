@@ -2,6 +2,7 @@
 @import url("preloader.css");
 @import url("settings.css");
 @import url("nav.css");
+@import url("controlbar.css");
 
 body {
 	background-color: #303030;

@@ -1,0 +1,29 @@
+div.control {
+	-webkit-app-region: drag;
+	position:absolute;
+	top:0px;
+	left:0px;
+	height: 28px;
+	width: 100%;
+	line-height: 20px;
+	z-index:9001;
+}
+
+div.control ul ,
+div.control ul *{
+	margin: 0;
+	display: inline;
+	float:right;
+}
+
+div.control ul li.control {
+	margin-right: 10px;
+	height: 24px;
+	width: 32px;
+}
+
+div.control ul li svg {
+	height: 24px;
+	width: 24px;
+	color:white;
+}

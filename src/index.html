@@ -6,46 +6,66 @@
 		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 		<!--Import materialize.css-->
 		<link type="text/css" rel="stylesheet" href="./../materialize/css/materialize.min.css"  media="screen,projection"/>
-
 		<!--Let browser know website is optimized for mobile-->
 		<meta name="viewport" content="width=device-width, initial-scale=0.8"/>
 
+		<!-- Font Awesome! -->
+		<link type="text/css" rel="stylesheet" href="./../font-awesome/css/all.min.css" />
 
 		<!-- Custom CSS -->
 		<link type="text/css" rel="stylesheet" href="./../css/main.css" />
 	</head>
 
 	<body>
-		<div class="preloader">
-			<div class="container">
-				<h4>Loading sixgrid</h4>
-				<div class="progress">
-					<div class="indeterminate"></div>
-				</div>
-				<h5 id="loadingStatus"></h5>
-			</div>
+		<div class="control" id="titlebar">
+			<ul>
+				<li id="close" class="control">
+					<i class="fas fa-times"></i>
+				</li>
+				<li id="maximize" class="control">
+					<i class="far fa-window-maximize"></i>
+				</li>
+				<li id="minimize" class="control">
+					<i class="fas fa-window-minimize"></i>
+				</li>
+			</ul>
 		</div>
-		<nav class="main-navbar">
-			<div class="row">
-				<div class="nav-wrapper">
-					<div class="col s12">
-						<a class="brand-logo">sixgrid</a>
-						<ul class="right hide-on-med-and-down">
-							<li><a data="home">Home</a></li>
-							<li><a data="search">Search</a></li>
-							<li><a data="settings">Settings</a></li>
-						</ul>
-					</div>
-				</div>
-			</div>
-		</nav>
-
+	
 		<div class="pageContent">
 			
 		</div>
-
+		<div class="poo" style="margin-top:28px;">
+			<div class="preloader">
+				<div class="blurbg">
+					<div class="container">
+						<h4>Loading sixgrid</h4>
+						<div class="progress">
+							<div class="indeterminate"></div>
+						</div>
+						<h5 id="loadingStatus"></h5>
+					</div>
+				</div>
+			</div>
+	
+			<nav class="main-navbar">
+				<div class="row">
+					<div class="nav-wrapper">
+						<div class="col s12">
+							<a class="brand-logo">sixgrid</a>
+							<ul class="right hide-on-med-and-down">
+								<li><a data="home">Home</a></li>
+								<li><a data="search">Search</a></li>
+								<li><a data="settings">Settings</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</nav>
+		</div>
+		
 		<!--JavaScript at end of body for optimized loading-->
 		<script type="text/javascript" src="./../materialize/js/materialize.min.js"></script>
 		<script type="text/javascript" src="gui.js"></script>
+		<script type="text/javascript" src="./../font-awesome/js/all.min.js"></script>
 	</body>
 </html>
