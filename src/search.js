@@ -13,6 +13,7 @@ class component {
 					<div class="input-field">
 						<input id="search" type="search">
 						<label class="label-icon" for="search"><i class="material-icons">search</i></label>
+						<label class="label-icon" for="add"><i class="material-icons">plus</i></label>
 						<i class="material-icons">close</i>
 					</div>
 				</form>
@@ -24,10 +25,13 @@ class component {
 	}
 
 	listen() {
-		this.$("form#tagSearch").submit((me)=>{
+		const api = new esix.modules.api({username: localStorage.auth_username,key: localStorage.auth_key,});
+		this.$("form#tagSearch").submit(async (me)=>{
 			me.preventDefault();
-			var tags = me.target.elements.search.value.split(',');
-			console.debug(`[search.js] Tags given`,tags)
+			var tags = me.target.elements.search.value.split(' ').join("+");
+			console.debug(`[search.js] Tags given`,tags);
+
+			var returnedPosts = await esix.modules.api.getPostsByTag(tags)
 		})
 	}
 }
