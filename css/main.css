@@ -1,3 +1,12 @@
 @import url("search.css");
 @import url("preloader.css");
-@import url("settings.css")
+@import url("settings.css");
+@import url("nav.css");
+
+body {
+	background-color: #303030;
+}
+
+* {
+	color: #fff;
+}
