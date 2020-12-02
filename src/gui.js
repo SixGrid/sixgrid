@@ -1,6 +1,6 @@
 global.esix = {
 	modules: {
-		esixapi: require("esix-api"),
+		api: require("esix-api"),
 		jquery: require("jquery")
 	},
 	functions: {
@@ -11,9 +11,6 @@ global.esix = {
 	pageManager: require("./pagemanager"),
 	loader: require("./loader")
 }
-
-// Start Page Listener
-new esix.pageManager().pageListen()
 
 // Misc stuff
 const $ = esix.modules.jquery;
@@ -26,3 +23,6 @@ $(document).ready(()=>{
 })
 
 console.debug(`[gui.js] esix global`,esix)
+
+// Start Page Listener
+new esix.pageManager().pageListen()
