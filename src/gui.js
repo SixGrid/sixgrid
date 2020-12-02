@@ -8,7 +8,8 @@ global.esix = {
 		home: require("./home"),
 		settings: require("./settings")
 	},
-	pageManager: require("./pagemanager")
+	pageManager: require("./pagemanager"),
+	loader: require("./loader")
 }
 
 // Start Page Listener
