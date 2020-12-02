@@ -1,0 +1,7 @@
+div.btn, .btn-large, .btn-small{
+    background-color: black;
+
+}
+div.button:hover, .btn-large:hover, .btn-small:hover{
+    background-color: gray;
+}
