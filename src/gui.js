@@ -19,10 +19,9 @@ new esix.pageManager().pageListen()
 const $ = esix.modules.jquery;
 
 $(document).ready(()=>{
-	$("#loadingStatus").html("Done!")
+	esix.loader.caption("Done!")
 	setTimeout(()=>{
-		$("div.preloader").fadeOut("fast")
-		$("#loadingStatus").html("<!-- -->")
+		esix.loader.hide()
 	},1200)
 })
 
