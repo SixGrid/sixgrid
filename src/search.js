@@ -23,7 +23,7 @@ class component {
 		`;
 	}
 
-	searchListen() {
+	listen() {
 		this.$("form#tagSearch").submit((me)=>{
 			me.preventDefault();
 			var givenSearch = me.target.elements.search.value

@@ -7,24 +7,23 @@ class component {
 		this.$("nav.main-navbar").click((me)=>{
 			if (me.target.localName != 'a') return;
 			var thingClickedOn = me.target.attributes.data.value;
-
+			var shitToRun = null;
 			switch(thingClickedOn) {
 				case "search":
-					var content = new esix.functions.search().defaultPage()
-					this.$("div.pageContent").html(content)
+					shitToRun = new esix.functions.search();
 					break;
 				case "home":
-					var content = new esix.functions.home().defaultPage()
-					this.$("div.pageContent").html(content)
+					shitToRun = new esix.functions.home();
 					break;
 				case "settings":
-					var content = new esix.functions.settings().defaultPage()
-					this.$("div.pageContent").html(content)
+					shitToRun = new esix.functions.settings();
 					break;
 				default:
 					return;
 					break;
 			}
+			this.$("div.pageContent").html(shitToRun.defaultPage())
+			shitToRun.listen()
 		})
 	}
 

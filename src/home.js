@@ -13,6 +13,10 @@ class component {
 </div>
 		`;
 	}
+
+	listen() {
+		
+	}
 }
 
 
