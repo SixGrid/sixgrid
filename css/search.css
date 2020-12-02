@@ -1,0 +1,9 @@
+nav.smallSearch,
+nav.smallSearch *{
+	height: 32px;
+	line-height:32px;
+}
+
+nav.smallSearch i.material-icons {
+	line-height: 32px;
+}
