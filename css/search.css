@@ -4,6 +4,10 @@ nav.smallSearch *{
 	line-height:32px;
 }
 
+nav.smallSearch {
+	margin-top: 15px;
+}
+
 nav.smallSearch i.material-icons {
 	line-height: 32px;
 }

@@ -1,5 +1,5 @@
 import { app, BrowserWindow } from 'electron';
-if (require('electron-squirrel-startup')) { // eslint-disable-line global-require
+if (require('electron-squirrel-startup')) {
 	app.quit();
 }
 let mainWindow;
@@ -31,3 +31,5 @@ app.on('activate', () => {
 		createWindow();
 	}
 });
+
+
