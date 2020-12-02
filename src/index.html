@@ -1,10 +1,59 @@
+
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <title></title>
-  </head>
-  <body>
-    Well hey there!!!
-  </body>
+	<head>
+		<!--Import Google Icon Font-->
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<!--Import materialize.css-->
+		<link type="text/css" rel="stylesheet" href="./../materialize/css/materialize.min.css"  media="screen,projection"/>
+
+		<!--Let browser know website is optimized for mobile-->
+		<meta name="viewport" content="width=device-width, initial-scale=0.8"/>
+
+
+		<!-- Custom CSS -->
+		<link type="text/css" rel="stylesheet" href="./../css/main.css" />
+	</head>
+
+	<body>
+		<div class="preloader">
+			<div class="container">
+				<h4>Loading esix-gui</h4>
+				<div class="progress">
+					<div class="indeterminate"></div>
+				</div>
+				<h5 id="loadingStatus"></h5>
+			</div>
+		</div>
+		<nav>
+			<div class="row">
+				<div class="nav-wrapper">
+					<div class="col s12">
+						<a class="brand-logo">esix gui</a>
+						<ul class="right hide-on-med-and-down">
+							<li><a id="search">Search</a></li>
+							<li><a id="settings">Settings</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</nav>
+		<nav class="smallSearch">
+			<div class="row">
+				<div class="nav-wrapper">
+					<form id="tagSearch">
+						<div class="input-field">
+							<input id="search" type="search">
+							<label class="label-icon" for="search"><i class="material-icons">search</i></label>
+							<i class="material-icons">close</i>
+						</div>
+					</form>
+				</div>
+			</div>
+		</nav>
+
+		<!--JavaScript at end of body for optimized loading-->
+		<script type="text/javascript" src="./../materialize/js/materialize.min.js"></script>
+		<script type="text/javascript" src="gui.js"></script>
+	</body>
 </html>
