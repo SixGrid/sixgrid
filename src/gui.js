@@ -3,13 +3,15 @@ global.esix = {
 		api: require("esix-api"),
 		jquery: require("jquery")
 	},
-	functions: {
+	pages: {
 		search: require("./search"),
 		home: require("./home"),
-		settings: require("./settings")
+		settings: require("./settings"),
+		debug: require("./debugpage"),
 	},
 	pageManager: require("./pagemanager"),
 	loader: require("./loader"),
+	packageJSON: require("./../package.json"),
 	content: (g_content) => {
 		esix.modules.jquery('div.pageContent').animate({'opacity': 0}, 30, function () {
 			$(this).html(g_content);
@@ -27,6 +29,10 @@ $(document).ready(()=>{
 		esix.loader.hide()
 	},1200)
 })
+
+if (localStorage.debugMode.includes("debug") || localStorage.debugMode) {
+	$("#navbarLinks").append(`<li><a data="debug">Debug Menu</a></li>`)
+}
 
 console.debug(`[gui.js] esix global`,esix)
 
