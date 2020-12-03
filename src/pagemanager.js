@@ -10,13 +10,16 @@ class component {
 			var shitToRun = null;
 			switch(thingClickedOn) {
 				case "search":
-					shitToRun = new esix.functions.search();
+					shitToRun = new esix.pages.search();
 					break;
 				case "home":
-					shitToRun = new esix.functions.home();
+					shitToRun = new esix.pages.home();
 					break;
 				case "settings":
-					shitToRun = new esix.functions.settings();
+					shitToRun = new esix.pages.settings();
+					break;
+				case "debug":
+					shitToRun = new esix.pages.debug();
 					break;
 				default:
 					return;
