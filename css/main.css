@@ -9,3 +9,14 @@ body {
 	background-color: #303030;
 	color: #ffffff;
 }
+.censorContent {
+	filter: blur(5px);
+	transition: 150ms;
+}
+.censorContent:hover {
+	filter:none;
+}
+div.bottomSpace {
+	height: 150px;
+	position: relative;
+}
