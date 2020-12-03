@@ -9,7 +9,13 @@ global.esix = {
 		settings: require("./settings")
 	},
 	pageManager: require("./pagemanager"),
-	loader: require("./loader")
+	loader: require("./loader"),
+	content: (g_content) => {
+		esix.modules.jquery('div.pageContent').animate({'opacity': 0}, 30, function () {
+			$(this).html(g_content);
+		}).animate({'opacity': 1}, 100);
+		return;
+	}
 }
 
 // Misc stuff

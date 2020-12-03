@@ -15,7 +15,6 @@ class component {
 		<h1>Settings</h1>
 		<a class="waves-effect waves-light btn-large" id="settings_applybtn">Test</a>
 </div>
-
 		`;
 	}
 }

@@ -2,6 +2,10 @@ nav.main-navbar {
 	background-color: #121212;
 }
 
+nav ul a:hover {
+	background-color: #454545;
+}
+
 nav.smallSearch {
 	background-color: #181818;
 }

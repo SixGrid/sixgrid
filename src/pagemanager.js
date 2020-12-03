@@ -22,7 +22,8 @@ class component {
 					return;
 					break;
 			}
-			this.$("div.pageContent").html(shitToRun.defaultPage())
+			var contentToGive = shitToRun.defaultPage()
+			esix.content(contentToGive)
 			shitToRun.listen()
 		})
 	}
