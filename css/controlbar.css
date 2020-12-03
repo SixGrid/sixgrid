@@ -1,29 +1,46 @@
 div.control {
+	margin:0;
 	-webkit-app-region: drag;
+	background-color: rgb(60,60,60);
 	position:absolute;
 	top:0px;
-	left:0px;
+	right:0px;
 	height: 28px;
 	width: 100%;
-	line-height: 20px;
 	z-index:9001;
+
+	border: 1px solid rgb(120,120,120);
+	border-radius: 5px;
+	border-bottom-left-radius:0px;
+	border-bottom-right-radius:0px;
+	border-bottom: none;
 }
 
 div.control ul ,
 div.control ul *{
-	margin: 0;
+	margin: 0;	
 	display: inline;
 	float:right;
 }
 
 div.control ul li.control {
-	margin-right: 10px;
+	margin-right: 5px;
+	margin-left: 5px;
 	height: 24px;
 	width: 32px;
 }
 
-div.control ul li svg {
-	height: 24px;
-	width: 24px;
-	color:white;
+div.control ul li.control i {
+	height: 18px;
+	width: 18px;
+	font-size: 18px;
+
+	margin-right: 5px;
+	margin-left: 5px;
+
+	padding: 1px;
+}
+
+div.control ul li.minimize.control:hover{
+	background-color: rgb(255, 102, 0);
 }
