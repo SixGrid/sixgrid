@@ -1,6 +1,6 @@
 {
   "name": "esix-gui",
-  "productName": "esix-gui",
+  "productName": "SixGrid",
   "version": "0.1.0",
   "description": "An Electron Program for the esix-api repo ",
   "main": "src/index.js",
@@ -9,6 +9,7 @@
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
+    "build-installer": "electron-builder",
     "lint": "eslint src --color"
   },
   "keywords": [
@@ -16,10 +17,22 @@
     "esix-api",
     "esix-cli",
     "electron-forge",
-    "electron",
-    "react",
-    "reactjs"
+    "electron"
   ],
+  "build":{
+    "appId": "sixgrid",
+    "win":{
+      "target": ["nsis"],
+      "icon": "src/sixgrid.ico"
+    }
+  },
+  "nsis": {
+    "installerIcon": "src/sixgrid.ico",
+    "uninstallerIcon": "src/sixgrid.ico",
+    "uninstallDisplayName": "SixGrid",
+    "oneClick": false,
+    "allowToChangeInstallationDirectory": true
+  },
   "contributors": [
     "zyme-xd (https://twitter.com/zyrnwtf)",
     "jylescoad-ward (https://jyles.club)"
@@ -61,6 +74,7 @@
     "jquery": "^3.5.1"
   },
   "devDependencies": {
+    "electron-builder": "^22.9.1",
     "babel-plugin-transform-async-to-generator": "^6.24.1",
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
