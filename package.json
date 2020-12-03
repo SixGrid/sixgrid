@@ -70,7 +70,7 @@
 	"dependencies": {
 		"electron-compile": "^6.4.4",
 		"electron-squirrel-startup": "^1.0.0",
-		"esix-api": "^0.1.2",
+		"esix-api": "0.1.2",
 		"jquery": "^3.5.1"
 	},
 	"devDependencies": {
