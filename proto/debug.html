@@ -1,0 +1,75 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--Import Google Icon Font-->
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<!--Import materialize.css-->
+		<link type="text/css" rel="stylesheet" href="./../materialize/css/materialize.min.css"  media="screen,projection"/>
+		<!--Let browser know website is optimized for mobile-->
+		<meta name="viewport" content="width=device-width, initial-scale=0.8"/>
+
+		<link rel="stylesheet" href="//cdn.materialdesignicons.com/5.4.55/css/materialdesignicons.min.css">
+
+		<!-- Custom CSS -->
+		<link type="text/css" rel="stylesheet" href="./../css/main.css" />
+	</head>
+
+	<body>
+		<div class="mainContent">
+			<nav class="main-navbar">
+				<div class="row">
+					<div class="nav-wrapper">
+						<div class="col s12">
+							<a class="brand-logo">sixgrid</a>
+							<ul class="right hide-on-med-and-down" id="navbarLinks">
+								<li><a data="home">Home</a></li>
+								<li><a data="search">Search</a></li>
+								<li><a data="settings">Settings</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</nav>
+			<div class="pageContent">
+				<div class="container">
+					<h3>Debug Page</h3>
+					<h4>Browser Information</h4>
+					<table>
+						<tr>
+							<th>SixGrid Version</th>
+							<td>{code: esix.packageJSON.version}</td>
+						</tr>
+						<tr>
+							<th>esix-api Version</th>
+							<td>{code: esix.packageJSON.dependencies.esix-api}</td>
+						</tr>
+						<tr>
+							<th>Electron Version</th>
+							<td>{code: clientInformation.appVersion}</td>
+						</tr>
+						<tr>
+							<th>User Agent</th>
+							<td>{code: clientInformation.userAgent}</td>
+						</tr>
+					</table>
+					<hr>
+					<h4>Login Credentials</h4>
+					<table>
+						<tr>
+							<th>Username</th>
+							<td>{code: localStorage.auth_username}</td>
+						</tr>
+						<tr>
+							<th>Key</th>
+							<td class="censorContent">{code: localStorage.auth_key}</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+		
+		<!--JavaScript at end of body for optimized loading-->
+		<script type="text/javascript" src="./../materialize/js/materialize.min.js"></script>
+	</body>
+</html>
