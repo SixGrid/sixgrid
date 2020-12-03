@@ -1,84 +1,84 @@
 {
-  "name": "esix-gui",
-  "productName": "SixGrid",
-  "version": "0.1.0",
-  "description": "An Electron Program for the esix-api repo ",
-  "main": "src/index.js",
-  "scripts": {
-    "start": "electron-forge start",
-    "package": "electron-forge package",
-    "make": "electron-forge make",
-    "publish": "electron-forge publish",
-    "build-installer": "electron-builder",
-    "lint": "eslint src --color"
-  },
-  "keywords": [
-    "e621",
-    "esix-api",
-    "esix-cli",
-    "electron-forge",
-    "electron"
-  ],
-  "build":{
-    "appId": "sixgrid",
-    "win":{
-      "target": ["nsis"],
-      "icon": "src/sixgrid.ico"
-    }
-  },
-  "nsis": {
-    "installerIcon": "src/sixgrid.ico",
-    "uninstallerIcon": "src/sixgrid.ico",
-    "uninstallDisplayName": "SixGrid",
-    "oneClick": false,
-    "allowToChangeInstallationDirectory": true
-  },
-  "contributors": [
-    "zyme-xd (https://zyrn.wtf/)",
-    "jylescoad-ward (https://jyles.club)"
-  ],
-  "author": "jyles.coad-ward",
-  "license": "GPL_2.0-only",
-  "config": {
-    "forge": {
-      "make_targets": {
-        "win32": [
-          "squirrel"
-        ],
-        "darwin": [
-          "zip"
-        ],
-        "linux": [
-          "deb",
-          "rpm"
-        ]
-      },
-      "electronPackagerConfig": {
-        "packageManager": "npm"
-      },
-      "electronWinstallerConfig": {
-        "name": "esix_gui"
-      },
-      "electronInstallerDebian": {},
-      "electronInstallerRedhat": {},
-      "github_repository": {
-        "owner": "jylescoad-ward",
-        "name": "esix-gui"
-      }
-    }
-  },
-  "dependencies": {
-    "electron-compile": "^6.4.4",
-    "electron-squirrel-startup": "^1.0.0",
-    "esix-api": "^0.1.2",
-    "jquery": "^3.5.1"
-  },
-  "devDependencies": {
-    "electron-builder": "^22.9.1",
-    "babel-plugin-transform-async-to-generator": "^6.24.1",
-    "babel-preset-env": "^1.7.0",
-    "babel-preset-react": "^6.24.1",
-    "electron-forge": "^5.2.4",
-    "electron-prebuilt-compile": "8.2.0"
-  }
+	"name": "esix-gui",
+	"productName": "SixGrid",
+	"version": "0.1.0",
+	"description": "An Electron Program for the esix-api repo ",
+	"main": "src/index.js",
+	"scripts": {
+		"start": "electron-forge start",
+		"package": "electron-forge package",
+		"make": "electron-forge make",
+		"publish": "electron-forge publish",
+		"build-installer": "electron-builder",
+		"lint": "eslint src --color"
+	},
+	"keywords": [
+		"e621",
+		"esix-api",
+		"esix-cli",
+		"electron-forge",
+		"electron"
+	],
+	"build":{
+		"appId": "sixgrid",
+		"win":{
+			"target": ["nsis"],
+			"icon": "src/sixgrid.ico"
+		}
+	},
+	"nsis": {
+		"installerIcon": "src/sixgrid.ico",
+		"uninstallerIcon": "src/sixgrid.ico",
+		"uninstallDisplayName": "SixGrid",
+		"oneClick": false,
+		"allowToChangeInstallationDirectory": true
+	},
+	"contributors": [
+		"zyme-xd (https://zyrn.wtf/)",
+		"jylescoad-ward (https://jyles.club)"
+	],
+	"author": "jyles.coad-ward",
+	"license": "GPL-2.0-only",
+	"config": {
+		"forge": {
+			"make_targets": {
+				"win32": [
+					"squirrel"
+				],
+				"darwin": [
+					"zip"
+				],
+				"linux": [
+					"deb",
+					"rpm"
+				]
+			},
+			"electronPackagerConfig": {
+				"packageManager": "npm"
+			},
+			"electronWinstallerConfig": {
+				"name": "esix_gui"
+			},
+			"electronInstallerDebian": {},
+			"electronInstallerRedhat": {},
+			"github_repository": {
+				"owner": "jylescoad-ward",
+				"name": "esix-gui"
+			}
+		}
+	},
+	"dependencies": {
+		"electron-compile": "^6.4.4",
+		"electron-squirrel-startup": "^1.0.0",
+		"esix-api": "^0.1.2",
+		"jquery": "^3.5.1"
+	},
+	"devDependencies": {
+		"electron-builder": "^22.9.1",
+		"babel-plugin-transform-async-to-generator": "^6.24.1",
+		"babel-preset-env": "^1.7.0",
+		"babel-preset-react": "^6.24.1",
+		"electron-forge": "^5.2.4",
+		"electron-prebuilt-compile": "8.2.0"
+	}
 }
