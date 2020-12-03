@@ -8,10 +8,6 @@ const createWindow = () => {
 	mainWindow = new BrowserWindow({
 		width: 1024,
 		height: 640,
-		useContentSize: true,
-		transparent: true,
-		titleBarStyle: 'hidden',
-		frame: false,
 		webPreferences: {
 			nodeIntegration: true,
 		},

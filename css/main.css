@@ -5,22 +5,7 @@
 @import url("controlbar.css");
 
 
-div.mainContent {
-	margin-top:28px;
+body {
 	background-color: #303030;
 	color: #ffffff;
-	height: calc(100% - 28px);
-	width: 100%;
-	position: absolute;
-
-	border-radius: 5px;
-	border-top-left-radius:0px;
-	border-top-right-radius:0px;
-	border: 1px solid rgb(120,120,120);
-	border-top:none;
-}
-
-
-* {
-	color: #fff;
 }
