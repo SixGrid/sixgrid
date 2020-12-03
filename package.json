@@ -34,11 +34,11 @@
     "allowToChangeInstallationDirectory": true
   },
   "contributors": [
-    "zyme-xd (https://twitter.com/zyrnwtf)",
+    "zyme-xd (https://zyrn.wtf/)",
     "jylescoad-ward (https://jyles.club)"
   ],
   "author": "jyles.coad-ward",
-  "license": "MIT",
+  "license": "GPL_2.0-only",
   "config": {
     "forge": {
       "make_targets": {
