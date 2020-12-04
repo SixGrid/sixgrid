@@ -1,11 +1,18 @@
 nav.main-navbar {
 	background-color: #121212;
+	height: 46px;
+	line-height: 46px;
+	position: absolute;
+	top:0;
+	z-index: 5;
+}
+nav.main-navbar a.brand-logo {
+	font-size: 1.8em;
+}
+div.contentSeperation {
+	height: 46px;
 }
 
 nav ul a:hover {
 	background-color: #454545;
-}
-
-nav.smallSearch {
-	background-color: #181818;
 }

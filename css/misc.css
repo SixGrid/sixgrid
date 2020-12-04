@@ -1,0 +1,20 @@
+div.scrollToTop {
+	position: fixed;
+	bottom: 25px;
+	right: 25px;
+	z-index: -1;
+}
+div.scrollToTop .btn-large {
+	background-color: #121212;
+	color: #efefef;
+}
+div.scrollToTop .btn-large:hover{
+	background-color: #353535;
+	color: #efefef;
+}
+span#outsidelink {
+	color: #039be5;
+}
+span#outsidelink:hover{
+	cursor:pointer;
+}

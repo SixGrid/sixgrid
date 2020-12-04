@@ -7,7 +7,6 @@ div.control {
 	right:0px;
 	height: 24px;
 	width: 100%;
-	z-index:9001;
 
 	border: 1px solid rgb(120,120,120);
 	border-radius: 5px;
@@ -27,5 +26,4 @@ div.control span.controlButtons a {
 }
 div.control span.controlButtons a span {
 	padding: 2px 20px;
-	z-index: 9002;
 }
