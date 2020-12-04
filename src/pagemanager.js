@@ -8,33 +8,30 @@ class component {
 			if (me.target.localName != 'a') return;
 			var thingClickedOn = me.target.attributes.data.value;
 			var shitToRun = null;
-			switch(thingClickedOn) {
+			switch(thingClickedOn.toLowerCase()) {
 				case "search":
-					shitToRun = new esix.pages.search();
+					shitToRun = esix.pages.search;
 					break;
 				case "home":
-					shitToRun = new esix.pages.home();
+					shitToRun = esix.pages.home;
 					break;
 				case "settings":
-					shitToRun = new esix.pages.settings();
+					shitToRun = esix.pages.settings;
 					break;
 				case "debug":
-					shitToRun = new esix.pages.debug();
+					shitToRun = esix.pages.debug;
 					break;
 				default:
 					return;
 					break;
 			}
+			localStorage.currentTab = thingClickedOn.toLowerCase()
 			var contentToGive = shitToRun.defaultPage()
 			esix.content(contentToGive)
-			shitToRun.listen()
+			setTimeout(()=>{
+				shitToRun.listen()
+			},500)
 		})
-	}
-
-	pageSelect(g_page){
-		switch(g_page.toLowerCase()){
-
-		}
 	}
 }
 
