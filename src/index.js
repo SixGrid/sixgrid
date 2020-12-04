@@ -6,10 +6,11 @@ let mainWindow;
 
 const createWindow = () => {
 	mainWindow = new BrowserWindow({
-		width: 1024,
-		height: 640,
+		width: 1280,
+		height: 720,
 		webPreferences: {
 			nodeIntegration: true,
+			v8CacheOptions: 'none',
 		},
 	});
 	mainWindow.loadURL(`file://${__dirname}/index.html`);
