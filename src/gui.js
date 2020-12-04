@@ -13,22 +13,23 @@ global.esix = {
 	loader: require("./loader"),
 	packageJSON: require("./../package.json"),
 	content: (g_content) => {
-		esix.modules.jquery('div.pageContent').animate({'opacity': 0}, 30, function () {
+		esix.modules.jquery('div.pageContent').animate({'opacity': 0}, 100, function () {
 			$(this).html(g_content);
-		}).animate({'opacity': 1}, 100);
+		}).animate({'opacity': 1}, 200);
 		return;
-	}
+	},
+	searchStorage: { }
 }
 
 // Misc stuff
 const $ = esix.modules.jquery;
-
+$("a#branding").html(esix.packageJSON.productName)
 $(document).ready(()=>{
 	esix.loader.caption("Done!")
 	setTimeout(()=>{
 		esix.loader.hide()
 	},1200)
-})
+})//rating:safe femboy outside
 
 if (localStorage.debugMode.includes("debug") || localStorage.debugMode) {
 	$("#navbarLinks").append(`<li><a data="debug">Debug Menu</a></li>`)

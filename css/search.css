@@ -1,13 +1,248 @@
+/* Search Bar */
+nav.smallSearch {
+	background-color: #181818;
+}
 nav.smallSearch,
 nav.smallSearch *{
-	height: 32px;
-	line-height:32px;
+	height: 34px;
+	line-height:34px;
+}
+div.searchBar{
+	width: 90%;
+
+	position: absolute;
+	top:-50px;
+
+	margin-left: 5%;
+	margin-right: 5%;
+	z-index: 5;
+}
+label#searchButton:hover {
+	cursor:pointer;
+}
+div.input-field input#search[type=search] {
+	color: #efefef;
+}
+div.input-field input#search[type=search]:focus {
+	color: #121212;
+}
+div.searchBar ul.searchBar-list {
+	align-content: center;
+	height: 36px;
+}
+div.searchBar ul.searchBar-list li {
+	display: inline-block;
+	align-content: center;
+}
+div.searchBar ul.searchBar-list li.mainSearch {
+	width: calc(100% - 200px);
+}
+div.searchBar ul.searchBar-list li.searchOptions {
+	position: absolute;
+	top: 13px;
+	height: 34px;
+	line-height: 34px;
+	margin-left: 5px;
+	z-index: -1;
 }
 
-nav.smallSearch {
-	margin-top: 15px;
+/* Search Results */
+div.searchResults {
+	margin-top: 75px;
 }
-
+div.searchResults div.container ul.cardContainer li.post {
+	display: inline-block;
+	height: 400px;
+	width: 250px;
+	align-content: center;
+}
+ul.post-info li {
+	height: 24px;
+	display: inline-block;
+}
+ul.post-info {
+	margin-top: 5px;
+	align-content: center;
+}
+div.searchResults div.card {
+	margin: 25px;
+	transition: 200ms;
+}
+div.searchResults div.card img {
+	transition: 200ms;
+}
+div.searchResults div.card img:hover {
+	cursor: pointer;
+	position: relative;
+	transform: scale(1.05);
+	transition: 300ms;
+}
 nav.smallSearch i.material-icons {
 	line-height: 32px;
+}
+
+/* Small Post Info */
+ul.post-info {
+	text-align:center;
+	align-content: center;
+}
+ul.post-info li {
+	width: 100%;
+	display: inline;
+	padding-left: 5px;
+	padding-right: 5px;
+}
+ul.post-info li.rating {
+	font-weight: bold;
+	color: white;
+}
+ul.post-info li.s-rating {
+	color: green;
+}
+ul.post-info li.q-rating {
+	color: orange;
+}
+ul.post-info li.e-rating {
+	color: red;
+}
+
+/* Fullscreen Search Result */
+div.fullscreenResult {
+	position: fixed;
+	top:0;
+	left:0;
+	width: 100%;
+	height: 100%;
+	backdrop-filter: blur(5px);
+	z-index: 10;
+	box-shadow: 0 0 25px rgb(48,48,48);
+}
+table.post-fullscreen {
+	position: fixed;
+	top:0;
+	left:0;
+	height: calc(100vh - 70px);
+	width: 100%;
+	background-color: rgba(48,48,48,.9);
+	backdrop-filter: blur(5px);
+}
+table.post-fullscreen tr.post {
+	height: 90%;
+}
+
+/* post controls */
+table.post-fullscreen td.post-previous {
+	cursor:pointer;
+	width: 10%;
+	border-right: 1px solid rgba(255,255,255,.3);
+	text-align: center;
+}
+
+table.post-fullscreen td.post-next {
+	cursor:pointer;
+	width: 10%;
+	border-left: 1px solid rgba(255,255,255,.3);
+	text-align: center;
+}
+
+td.post-previous i.material-icons {
+	position: absolute;
+	left: 2vw;
+	top: 50%;
+	font-size: 3.5vw;
+}
+td.post-next i.material-icons {
+	position: absolute;
+	right: 2vw;
+	top: 50%;
+	font-size: 3.5vw;
+}
+
+/* image */
+table.post-fullscreen td.post-image {
+	width: 80%;
+}
+table.post-fullscreen td.post-image img {
+	align-content:center;
+	max-height:calc((100vh - 148px));
+	max-width: 100%;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+/* post info */
+div.fullscreenResult div.post-info {
+	filter: none;
+	background-color: rgba(48,48,48,.9);
+	backdrop-filter: blur(5px);
+	width: 100%;
+	height: 70px;
+	position: fixed;
+	top: calc(100vh - 70px);
+}
+div.fullscreenResult div.post-info table{
+	height: 70px;
+}
+div.fullscreenResult div.post-info table td {
+	height: 70px;
+	text-align:center;
+}
+
+/* fullscreen post control */
+div.fullscreenResult div.post-info .post-control {
+	position: relative;
+	vertical-align: middle;
+	font-size: 40px;
+	padding-left: 15px;
+	padding-right: 15px;
+	transition: 150ms;
+}
+div.fullscreenResult div.post-info .post-control:hover {
+	color: #eeeeee;
+	font-size: 45px;
+	text-shadow: 3px 3px 3px #9f9f9f;
+	cursor: pointer;
+	transition: 300ms;
+}
+
+/* fullscreen window control */
+div.fullscreenResult div.post-info .window-control {
+	position: relative;
+	vertical-align: middle;
+	font-size: 40px;
+	padding-left: 15px;
+	padding-right: 15px;
+	transition: 150ms;
+}
+div.fullscreenResult div.post-info .window-control:hover {
+	color: #eeeeee;
+	font-size: 45px;
+	text-shadow: 0 3px 3px #9f9f9f;
+	cursor: pointer;
+	transition: 300ms;
+}
+
+/* fullscreen post info & control & post control alignment */
+div.fullscreenResult div.post-info td.left {
+	text-align: left;
+}
+div.fullscreenResult div.post-info td.left ul{
+	height:70px;
+	position: relative;
+	bottom: 28px;
+}
+div.fullscreenResult div.post-info td.right *{
+	margin-bottom: 50px;
+}
+div.fullscreenResult div.post-info td.right span {
+	bottom: 25px;
+}
+div.fullscreenResult div.post-info td.left,
+div.fullscreenResult div.post-info td.right {
+	width: calc(50vw - 50px);
+}
+div.fullscreenResult div.post-info td.middle {
+	position: relative;
+	width: 60px;
 }
