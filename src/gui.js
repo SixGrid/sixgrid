@@ -31,7 +31,7 @@ $(document).ready(()=>{
 	},1200)
 })//rating:safe femboy outside
 
-if (localStorage.debugMode.includes("debug") || localStorage.debugMode) {
+if (localStorage.debugMode) {
 	$("#navbarLinks").append(`<li><a data="debug">Debug Menu</a></li>`)
 }
 

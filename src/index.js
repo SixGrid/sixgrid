@@ -20,6 +20,7 @@ const createWindow = () => {
 	});
 };
 app.on('ready', createWindow);
+app.getPath('userData');
 app.on('window-all-closed', () => {
 	if (process.platform !== 'darwin') {
 		app.quit();

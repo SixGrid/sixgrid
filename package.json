@@ -74,7 +74,8 @@
 		"electron-compile": "^6.4.4",
 		"electron-squirrel-startup": "^1.0.0",
 		"esix-api": "0.1.2",
-		"jquery": "^3.5.1"
+		"jquery": "^3.5.1",
+		"yarn": "^1.22.10"
 	},
 	"devDependencies": {
 		"babel-plugin-transform-async-to-generator": "^6.24.1",
