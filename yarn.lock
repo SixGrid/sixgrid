@@ -2893,7 +2893,7 @@ escodegen@^1.6.1:
   optionalDependencies:
     source-map "~0.6.1"
 
-esix-api@^0.1.2:
+esix-api@0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/esix-api/-/esix-api-0.1.2.tgz#5781e724e6539379f7d9d460042e74130aace93e"
   integrity sha512-D6kFmKheSOTto4fbnFhR95s08s9l5/d6vIV9IgQkaEcgt2aIsEy87lGVn1Bo/O5U1I+2Ser1pHIuiu1PgNRxsA==
