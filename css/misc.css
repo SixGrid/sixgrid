@@ -18,3 +18,24 @@ span#outsidelink {
 span#outsidelink:hover{
 	cursor:pointer;
 }
+nav.stepper{
+	height: 40px;
+	line-height: 40px;
+	padding-left: 15px;
+	padding-right: 15px;
+	background-color: #121212;
+}
+nav.stepper a#next {
+	position: relative;
+	top:5px;
+	height: 30px;
+	line-height: 30px;
+}
+nav.stepper a.breadcrumb{
+	color: #9f9f9f;
+	cursor: default;
+}
+nav.stepper a.breadcrumb.active{
+	color: #efefef;
+	cursor: default;
+}
