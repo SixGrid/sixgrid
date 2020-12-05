@@ -23,12 +23,12 @@ module.exports = {
 			<div class="downloadSettings">
 				<h4>Download Settings</h4>
 				<div class="row">
-					Current Download Location <code id="currentDownloadLocation">${localStorage.downloadLocation-string || 'No Set Download Location'}</code>
+					Current Download Location <code id="currentDownloadLocation">${localStorage.downloadLocation|| 'No Set Download Location'}</code>
 				</div>
 				<div class="row">
 					<div class="changeDownloadLocation">
 						<a class="waves-effect waves-light btn" id="changeDownloadLoc_btn">Change Download Location</a><br>
-						<input placeholder="${localStroage.downloadLocation-string || 'No Set Download Location'}" id="changeDownloadLocation_textbox" type="text" class="validate">
+						<input placeholder="${localStroage.downloadLocation || 'No Set Download Location'}" id="changeDownloadLocation_textbox" type="text" class="validate">
 					</div>
 				</div>
 			</div>
