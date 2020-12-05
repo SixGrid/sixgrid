@@ -69,6 +69,7 @@ module.exports = {
 			console.debug(`[search.js] Tags given`,t_tags);
 	
 			var returnedPosts = await api.getPostsByTag({tags:[t_tags],limit:localStorage.postsPerPage || '90'});
+			localStorage.currentTags = t_tags;
 			console.debug(`[search.js] Recieved ${returnedPosts.posts.length} posts`,returnedPosts);
 			esix.searchStorage.currentPosts = returnedPosts.posts;
 			var htmlPostArray = [];
@@ -218,9 +219,11 @@ module.exports = {
 			module.exports.fullScreen(esix.searchStorage.currentPosts[localStorage.previousPostIndex]);
 			return;
 		})
-
+		$("i.post-control#download").click((me)=>{
+			var postID = me.target.attributes.data.value;
+			var post = esix.searchStorage.currentPosts[currentPostIndex];
+			var downloadURL = post.file.url || post.sample.url || post.preview.url;
+		})
 		return;
-
-		//rating:safe femboy outside
 	}
 }
