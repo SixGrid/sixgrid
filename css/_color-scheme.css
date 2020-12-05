@@ -13,6 +13,13 @@ body {
 input[type=text] {
 	color: #fff;
 }
+input[type=password] {
+	color: #fff;
+}
+input[type=password]:focus {
+	border-bottom: 1px solid #bbbbbb !important; 
+	box-shadow: 0 1px 0 0 #bbbbbb !important;
+}
 input[type=text]:focus {
 	border-bottom: 1px solid #bbbbbb !important; 
 	box-shadow: 0 1px 0 0 #bbbbbb !important;

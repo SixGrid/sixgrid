@@ -1,7 +1,49 @@
-div.btn, .btn-large, .btn-small{
+div.btn,
+.btn-large,
+.btn-small {
     background-color: black;
 
 }
-div.button:hover, .btn-large:hover, .btn-small:hover{
+
+div.swal-button,
+.swal-button--confirm {
+    background-color: #181818
+}
+
+div.swal-button:focus,
+.swal-button--confirm:focus {
+    background-color: #181818
+}
+.swal-button:not([disabled]):hover {
+    background-color: #949494;
+}
+div.swal-button:hover,
+.swal-button--confirm:hover {
+    background-color: #949494;
+    color: #121212
+}
+div.swal-text{
+    color:white
+}
+
+div.input:not([type]):focus:not([readonly])+label, input[type=text]:not(.browser-default):focus:not([readonly])+label, input[type=password]:not(.browser-default):focus:not([readonly])+label, input[type=email]:not(.browser-default):focus:not([readonly])+label, input[type=url]:not(.browser-default):focus:not([readonly])+label, input[type=time]:not(.browser-default):focus:not([readonly])+label, input[type=date]:not(.browser-default):focus:not([readonly])+label, input[type=datetime]:not(.browser-default):focus:not([readonly])+label, input[type=datetime-local]:not(.browser-default):focus:not([readonly])+label, input[type=tel]:not(.browser-default):focus:not([readonly])+label, input[type=number]:not(.browser-default):focus:not([readonly])+label, input[type=search]:not(.browser-default):focus:not([readonly])+label, textarea.materialize-textarea:focus:not([readonly])+label{
+    color: white
+}
+div.input:not([type]):focus:not([readonly]), input[type=text]:not(.browser-default):focus:not([readonly]), input[type=password]:not(.browser-default):focus:not([readonly]), input[type=email]:not(.browser-default):focus:not([readonly]), input[type=url]:not(.browser-default):focus:not([readonly]), input[type=time]:not(.browser-default):focus:not([readonly]), input[type=date]:not(.browser-default):focus:not([readonly]), input[type=datetime]:not(.browser-default):focus:not([readonly]), input[type=datetime-local]:not(.browser-default):focus:not([readonly]), input[type=tel]:not(.browser-default):focus:not([readonly]), input[type=number]:not(.browser-default):focus:not([readonly]), input[type=search]:not(.browser-default):focus:not([readonly]), textarea.materialize-textarea:focus:not([readonly]){
+    border-bottom: 1px solid rgb(158, 158, 158);
+    box-shadow: 0 1px 0 0 rgb(158, 158, 158);
+}
+
+div.button:hover,
+.btn-large:hover,
+.btn-small:hover {
     background-color: gray;
+}
+
+div.swal-modal {
+    background-color: #3f3f3f
+}
+
+div.swal-title {
+    color: white
 }

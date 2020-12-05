@@ -28,7 +28,7 @@ module.exports = {
 				<div class="row">
 					<div class="changeDownloadLocation">
 						<a class="waves-effect waves-light btn" id="changeDownloadLoc_btn">Change Download Location</a><br>
-						<input placeholder="${localStroage.downloadLocation || 'No Set Download Location'}" id="changeDownloadLocation_textbox" type="text" class="validate">
+						<input placeholder="${localStorage.downloadLocation || 'No Set Download Location'}" id="changeDownloadLocation_textbox" type="text" class="validate">
 					</div>
 				</div>
 			</div>
@@ -60,7 +60,7 @@ module.exports = {
 			// It works
 			swat("Valid Credentials","The credentials you gave works and are now stored.","success")
 			localStorage.credentialsValidated = true;
-			localStorage.auth_username = $("div.authSettings imput#username[type=text]").val();
+			localStorage.auth_username = $("div.authSettings input#username[type=text]").val();
 			localStorage.auth_key = $("div.authSettings input#key[type=password]").val();
 			return true;
 		}
@@ -71,17 +71,17 @@ module.exports = {
 		console.debug("[settings.js] listen => called");
 		// Login
 		$("div.authSettings a#authSettings_change").click(()=>{
-			if ($("div.authSettings imput#username[type=text]").val().length < 1) {
+			if ($("div.authSettings input#first_name[type=text]").val().length < 1) {
 				// No username
 				swat("No Username","No username was given so we can't log you in. Try again!","error")
 				return;
 			}
-			if ($("div.authSettings input#key[type=password]").val().length < 1) {
+			if ($("div.authSettings input#[type=last_name]").val().length < 1) {
 				// No key
 				swat("No Key","No key was given so we can't log you in. Try again!","error")
 				return;
 			}
-			module.exports.validate({username:$("div.authSettings imput#username[type=text]").val(),key:$("div.authSettings input#key[type=password]").val()})
+			module.exports.validate({username:$("div.authSettings input#username[type=text]").val(),key:$("div.authSettings input#key[type=password]").val()})
 		})
 	}
 }
