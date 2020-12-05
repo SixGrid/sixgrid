@@ -8,6 +8,7 @@ global.esix = {
 		home: require("./home"),
 		settings: require("./settings"),
 		debug: require("./debugpage"),
+		gettingstarted: require("./gettingstarted"),
 	},
 	pageManager: require("./pagemanager"),
 	loader: require("./loader"),
@@ -34,8 +35,12 @@ $(document).ready(()=>{
 if (localStorage.debugMode) {
 	$("#navbarLinks").append(`<li><a data="debug">Debug Menu</a></li>`)
 }
+if  (localStorage.firstTime || localStorage.firstTime == undefined) {
+	new esix.pageManager().function('gettingstarted');
+}else {
+	new esix.pageManager().pageListen()
+}
 
 console.debug(`[gui.js] esix global`,esix)
 
 // Start Page Listener
-new esix.pageManager().pageListen()
