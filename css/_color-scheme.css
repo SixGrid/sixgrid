@@ -17,3 +17,12 @@ input[type=text]:focus {
 	border-bottom: 1px solid #bbbbbb !important; 
 	box-shadow: 0 1px 0 0 #bbbbbb !important;
 }
+div.progress {
+	color: #efefef;
+	background-color: #efefef;
+}
+div.progress div.determinate,
+div.progress div.indeterminate {
+	color: #039be5;
+	background-color: #039be5;
+}
