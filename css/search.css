@@ -50,6 +50,9 @@ div.searchBar ul.searchBar-list li.searchOptions {
 div.searchResults {
 	margin-top: 75px;
 }
+div.searchResults div.container ul.cardContainer {
+	text-align: center;
+}
 div.searchResults div.container ul.cardContainer li.post {
 	display: inline-block;
 	height: 400px;
