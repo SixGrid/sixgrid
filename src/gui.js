@@ -19,7 +19,86 @@ global.esix = {
 		}).animate({'opacity': 1}, 200);
 		return;
 	},
-	searchStorage: { }
+	searchStorage: { },
+	electron: require("electron"),
+	downloadPost: (post)=>{
+		// Save variable to know progress
+		var b_dll = `${localStorage.downloadLocation || require("electron").remote.app.getPath("downloads")}${esix.osSeperator}${esix.packageJSON.productName}`;
+		var dll = `${b_dll}${esix.osSeperator}${localStorage.currentTags.replace(":","").replace("*","").replace("?","").replace("<","").replace(">","").replace('"',"'").replace('|',"")}`;
+		
+		var received_bytes = 0;
+		var total_bytes = 0;
+		var request = require("request");
+		var fs = require("fs");
+		var md5 = require("md5")
+
+		if (!fs.existsSync(b_dll)) {
+			fs.mkdirSync(b_dll)
+		}
+
+		var g_url = post.file.url || post.sample.url || post.preview.url;
+		var g_md5 = post.file.md5 || post.sample.md5 || post.preview.md5;
+		if (g_url == null || g_url == undefined) {
+			return;
+		}
+
+		var req = request({
+			method: 'GET',
+			uri: g_url
+		});
+
+		// filter download location because windows is a prick
+		var downloadLocation = dll.replace("*","").replace("?","").replace("<","").replace(">","").replace('"',"'").replace('|',"");
+		var osSeperator = "/";
+		if (esix.electron.remote.process.platform == 'win32') {
+			osSeperator = "\\";
+			downloadLocation = downloadLocation.replace("/","\\");
+		}
+		console.debug(downloadLocation)
+		if (!fs.existsSync(downloadLocation)) {
+			fs.mkdirSync(downloadLocation)
+		}
+		var targetPath = `${downloadLocation}${esix.osSeperator}${post.id}.${post.file.ext}`;
+		var out = fs.createWriteStream(targetPath);
+		req.pipe(out);
+		$("div.downloadStatus div.determinate").width("0%");
+		$("div.downloadStatus").addClass('downloading');
+
+		req.on('response', function ( data ) {
+			// Change the total bytes value to get progress later.
+			total_bytes = parseInt(data.headers['content-length' ]);
+		});
+	
+		req.on('data', function(chunk) {
+			// Update the received bytes
+			received_bytes += chunk.length;
+			$("div.downloadStatus div.determinate").width(`${Math.round((received_bytes/total_bytes)*100)}%`)
+		});
+
+		out.on('finish', function() {
+			// Validate File
+			fs.readFile(targetPath,(e,b)=>{
+				var fileMD5 = md5(b);
+				if (g_md5 != fileMD5) {
+					fs.unlinkSync(targetPath);
+				}
+			})
+			console.debug(`[f: downloadFile] Downloaded url ${g_url}`)
+			$("div.downloadStatus div.determinate").width("100%")
+			if (localStorage.multiDL) {
+				localStorage.multiDL_completedCount++;
+			}else{
+				setTimeout(()=>{
+					$("div.downloadStatus").removeClass('downloading');
+				},500)
+			}
+		});
+	},
+	osSeperator: "/",
+}
+
+if (esix.electron.remote.process.platform == 'win32') {
+	esix.osSeperator = "\\";
 }
 
 // Misc stuff
@@ -31,11 +110,10 @@ $(document).ready(()=>{
 		esix.loader.hide()
 	},1200)
 })//rating:safe femboy outside
-
 if (localStorage.debugMode) {
 	$("#navbarLinks").append(`<li><a data="debug">Debug Menu</a></li>`)
 }
-if  (localStorage.firstTime || localStorage.firstTime == undefined) {
+if  (localStorage.firstTime == true || localStorage.firstTime == undefined) {
 	new esix.pageManager().function('gettingstarted');
 }else {
 	new esix.pageManager().pageListen()
