@@ -39,7 +39,7 @@ module.exports = {
 		return `
 		<li class="post">
 			<div class="card small">
-				<img src="${p.preview.url || p.sample.url || p.file.url}" data="${Buffer.from(JSON.stringify(p)).toString("base64")}">
+				<img src="${p.preview.url || p.sample.url || p.file.url}" data="${Buffer.from(JSON.stringify(p)).toString("base64")}" onerror="this.src='https://cdn.jyles.club/missing-post.png'">
 				<ul class="post-info">
 					<li class="score_total">
 						S${p.score.total}
@@ -67,14 +67,25 @@ module.exports = {
 			if (me.which != 13) return;
 			var t_tags = $("div.input-field input#search[type=search]").val().split(' ').join("+");
 			console.debug(`[search.js] Tags given`,t_tags);
-	
-			var returnedPosts = await api.getPostsByTag({tags:[t_tags],limit:localStorage.postsPerPage || '90'});
+			var oposts = await api.getPostsByTag({tags:[t_tags],limit:localStorage.postsPerPage || '90'});
+			var returnedPosts = {posts:[]};
+			oposts.posts.forEach((post)=>{
+				if ((post.file.url == null || post.file.url.length < 1) && (post.sample.url == null || post.sample.url.length < 1) && (post.preview.url == null || post.preview.url.length < 1)) {
+					return;
+				} else {
+					returnedPosts.posts.push(post);
+				}
+			})
 			localStorage.currentTags = t_tags;
 			console.debug(`[search.js] Recieved ${returnedPosts.posts.length} posts`,returnedPosts);
 			esix.searchStorage.currentPosts = returnedPosts.posts;
 			var htmlPostArray = [];
 			returnedPosts.posts.forEach((post)=>{
-				htmlPostArray.push(module.exports.generateCard(post))
+				if (post.file.url.length < 1 && post.sample.url.length < 1 &&post.preview.url.length < 1) {
+					return;
+				} else {
+					htmlPostArray.push(module.exports.generateCard(post))
+				}
 			})
 			var finalResultHTML = `
 <div class="container">
@@ -125,7 +136,7 @@ module.exports = {
 					${previousPostButton}
 				</td>
 				<td class="post-image">
-					<img src="${postData.file.url || postData.sample.url || postData.preview.url}">
+					<img src="${postData.file.url || postData.sample.url || postData.preview.url}" onerror="this.src='https://cdn.jyles.club/missing-post.png'">
 				</td>
 				<td class="post-next">
 					${nextPostButton}
@@ -219,10 +230,9 @@ module.exports = {
 			module.exports.fullScreen(esix.searchStorage.currentPosts[localStorage.previousPostIndex]);
 			return;
 		})
-		$("i.post-control#download").click((me)=>{
-			var postID = me.target.attributes.data.value;
+		$("i.post-control#download").click(()=>{
 			var post = esix.searchStorage.currentPosts[currentPostIndex];
-			var downloadURL = post.file.url || post.sample.url || post.preview.url;
+			esix.downloadPost(post);
 		})
 		return;
 	}
