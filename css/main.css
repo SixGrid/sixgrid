@@ -13,6 +13,10 @@ div.pageContent {
 	position: relative;
 	top: 25px;
 }
+div.container{
+	width:90%;
+	margin-top: 50px;
+}
 .censorContent {
 	filter: blur(5px);
 	transition: 150ms;
