@@ -36,32 +36,41 @@
 					<div class="authSettings">
 						<h4 id="authSettings_header">Change Login Details</h4>
 						<div class="row">
-							<div class="row">
-								<div class="input-field col s6">
-									<input id="first_name" type="text">
-									<label for="first_name">Username</label>
-								</div>
-								<div class="input-field col s6">
-									<input id="last_name" type="password">
-									<label for="last_name">API Key</label>
-								</div>
-								<a class="waves-effect waves-light btn" id="authSettings_change">Change & Verify Login Details</a>
-								<a class="waves-effect waves-light btn" id="authSettings_verify">Verify Current Login Details</a>
+							<div class="input-field col s6">
+								<input id="first_name" type="text">
+								<label for="first_name">Username</label>
 							</div>
+							<div class="input-field col s6">
+								<input id="last_name" type="password">
+								<label for="last_name">API Key</label>
+							</div>
+							<a class="waves-effect waves-light btn" id="authSettings_change">Change & Verify Login Details</a>
+							<a class="waves-effect waves-light btn" id="authSettings_verify">Verify Current Login Details</a>
 						</div>
 					</div>
+					<hr>
 					<div class="downloadSettings">
 						<h4>Download Settings</h4>
 						<div class="row">
-							Current Download Location <code id="currentDownloadLocation">${localStorage.downloadLocation-string || "No Download Location"}</code>
+							Current Download Location <code id="currentDownloadLocation">${localStorage.downloadLocation-string || 'No Set Download Location'}</code>
 						</div>
 						<div class="row">
 							<div class="changeDownloadLocation">
 								<a class="waves-effect waves-light btn" id="changeDownloadLoc_btn">Change Download Location</a><br>
-								<input placeholder="${localStroage.downloadLocation-string || 'No Download Location'}" id="changeDownloadLocation_textbox" type="text" class="validate">
+								<input placeholder="${localStroage.downloadLocation-string || 'No Set Download Location'}" id="changeDownloadLocation_textbox" type="text" class="validate">
 							</div>
 						</div>
 					</div>
+					<hr>
+					<div class="apiSettings">
+						<h4>API Settings</h4>
+						<div class="row">
+							<label for="postsPerPage">Posts per Page</label>
+							<input placeholder="Default: 90; Current: ${localStorage.postsPerPage || '90'}" id="postsPerPage" type="number">
+						</div>
+						<a class="waves-effect waves-light btn" id="save">save</a>
+					</div>
+					<hr>
 				</div>
 			</div>
 			<div class="scrollToTop">
