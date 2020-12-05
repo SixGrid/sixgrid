@@ -39,3 +39,25 @@ nav.stepper a.breadcrumb.active{
 	color: #efefef;
 	cursor: default;
 }
+div.downloadStatus {
+	z-index: -1;
+	width: 20vw;
+	position: fixed;
+	top: -16px;
+	left: 40vw;
+	right: 40vw;
+	transition: 500ms;
+}
+div.downloadStatus.downloading {
+	z-index: 10000;
+	width: 40vw;
+	position: fixed;
+	top: -8px;
+	left: 30vw;
+	right: 30vw;
+	transition: 100ms;
+}
+div.downloadStatus div.progress {
+	height: 8px;
+	border-radius: 0 0 3px 3px;
+}
