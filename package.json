@@ -75,6 +75,7 @@
 		"electron-squirrel-startup": "^1.0.0",
 		"esix-api": "0.1.2",
 		"jquery": "^3.5.1",
+		"sweetalert": "^2.1.2",
 		"yarn": "^1.22.10"
 	},
 	"devDependencies": {
