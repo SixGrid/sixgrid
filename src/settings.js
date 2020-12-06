@@ -1,8 +1,4 @@
-const {
-	localStorage,
-	console,
-	setTimeout
-} = require("globalthis/implementation");
+const { localStorage, console, setTimeout} = require("globalthis/implementation");
 const axios = require('axios');
 
 module.exports = {
