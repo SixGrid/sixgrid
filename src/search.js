@@ -32,7 +32,7 @@ module.exports = {
 			<div class="container">
 				<h1>Login to e621</h1>
 				<p>
-					You have not validated your credentials or you have not set them, please go over to the settings tab to set them or read Getting Started for more information. You will not be allowed to use the search function until you have logged in/authorized your credentials.
+					You have not validated your credentials or you have not set them, please go over to the settings tab to set them or read Getting Started for more information. You will not be allowed to  the search function until you have logged in/authorized your credentials.
 				</p>
 			</div>`;
 		}

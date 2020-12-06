@@ -67,7 +67,7 @@ module.exports = {
 	validate: async (credentials)=>{
 		var $ = require("jquery");
 		var swat = require("sweetalert");
-		var testDetails = new api(credentials)
+		var testDetails = new esix.modules.api(credentials)
 		var output = await testDetails._req("posts.json?tags=esix&limit=1")
 		if (output.posts == undefined) {
 			// It does not work
@@ -76,7 +76,7 @@ module.exports = {
 			return false;
 		} else {
 			// It works
-			swat("Valid Credentials","The credentials you gave works and are now stored.","success")
+			swat("Valid Credentials","The credentials you gave works and are now stored.","success") // this is cap i need to add diff check
 			localStorage.credentialsValidated = true;
 			localStorage.auth_username = $("div.authSettings input#username[type=text]").val();
 			localStorage.auth_key = $("div.authSettings input#key[type=password]").val();
@@ -148,7 +148,7 @@ module.exports = {
 				swat("No Username","No username was given so we can't log you in. Try again!","error")
 				return;
 			}
-			if ($("div.authSettings input#[type=key]").val().length < 1) {
+			if ($("div.authSettings input#key[type=password]").val().length < 1) {
 				// No key
 				swat("No Key","No key was given so we can't log you in. Try again!","error")
 				return;
