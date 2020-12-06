@@ -21,10 +21,10 @@ label#searchButton:hover {
 	cursor:pointer;
 }
 div.input-field input#search[type=search] {
-	color: #efefef;
+	color: #efefef !important;
 }
 div.input-field input#search[type=search]:focus {
-	color: #121212;
+	color: #121212 !important;
 }
 div.searchBar ul.searchBar-list {
 	align-content: center;
