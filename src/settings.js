@@ -1,7 +1,12 @@
-const { localStorage, console, setTimeout } = require("globalthis/implementation");
+const {
+	localStorage,
+	console,
+	setTimeout
+} = require("globalthis/implementation");
+const axios = require('axios');
 
 module.exports = {
-	defaultPage: ()=>{
+	defaultPage: () => {
 		return `
 		
 		<div class="container">
@@ -64,46 +69,57 @@ module.exports = {
 
 				`;
 	},
-	validate: async (credentials)=>{
+	validate: async () => {
 		var $ = require("jquery");
 		var swat = require("sweetalert");
-		var testDetails = new esix.modules.api(credentials)
-		var output = await testDetails._req("posts.json?tags=esix&limit=1")
-		if (output.posts == undefined) {
-			// It does not work
-			swat("Invalid Credentials","The credentials you have given are invald or an error occurred.","error")
-			localStorage.credentialsValidated = false;
-			return false;
-		} else {
-			// It works
-			swat("Valid Credentials","The credentials you gave works and are now stored.","success") // this is cap i need to add diff check
-			localStorage.credentialsValidated = true;
-			localStorage.auth_username = $("div.authSettings input#username[type=text]").val();
-			localStorage.auth_key = $("div.authSettings input#key[type=password]").val();
-			return true;
-		}
+		let user = $("div.authSettings input#username[type=text]").val();
+		let key = $("div.authSettings input#key[type=password]").val();
+		axios.post(`https://e621.net/posts/777/votes.json?score=0&login=${user}&api_key=${key}`, {})
+			.then(function (response) {
+				console.log(response.data);
+			})
+			.catch(function (error) {
+				console.log(error);
+				if (error.response.status == 401) {
+					swat("Invalid Credentials", "The credentials you have given are invald or an error occurred.", "error")
+					localStorage.credentialsValidated = false;
+					return false;
+				} else if (error.response.status == 422) {
+					// It works
+					swat("Valid Credentials", "The credentials you gave works and are now stored.", "success") // this is cap i need to add diff check
+					localStorage.credentialsValidated = true;
+					localStorage.auth_username = $("div.authSettings input#username[type=text]").val();
+					localStorage.auth_key = $("div.authSettings input#key[type=password]").val();
+					return true;
+				}
+				else{
+					swat("Server Error", "Something failed on e621's server, try again later.", "error")
+					localStorage.credentialsValidated = false;
+					return false;
+				}
+			});
 	},
-	chip: (storagePopulated)=>{
+	chip: (storagePopulated) => {
 		var t_storage = [];
 		if (storagePopulated) {
 			t_storage = localStorage.blacklistedTags.split(",");
 		}
 		module.exports.blacklistedTagsListen();
 	},
-	blacklistedTagsListen: ()=>{
+	blacklistedTagsListen: () => {
 		var $ = esix.modules.jquery;
-		$("div.apiSettings div.tagBlacklist span.chipContain i.close").click(()=>{
-			setTimeout(()=>{
+		$("div.apiSettings div.tagBlacklist span.chipContain i.close").click(() => {
+			setTimeout(() => {
 				module.exports.updateBlacklistedChipsStorage();
-			},50)
+			}, 50)
 		})
-		$("div.apiSettings div.tagBlacklist div.chips input").focusin(()=>{
+		$("div.apiSettings div.tagBlacklist div.chips input").focusin(() => {
 			$("div.apiSettings div.tagBlacklist div.chips").addClass('input-field-focus');
 		})
-		$("div.apiSettings div.tagBlacklist div.chips input").focusout(()=>{
+		$("div.apiSettings div.tagBlacklist div.chips input").focusout(() => {
 			$("div.apiSettings div.tagBlacklist div.chips").removeClass('input-field-focus');
 		})
-		$("div.apiSettings div.tagBlacklist div.chips input").keyup((me)=>{
+		$("div.apiSettings div.tagBlacklist div.chips input").keyup((me) => {
 			if (me.which == 8 && $("div.apiSettings div.tagBlacklist div.chips input").val().length < 1) {
 				// Remove previous tag
 				var $chipContain = $("div.apiSettings div.tagBlacklist div.chips span.chipContain")
@@ -128,8 +144,8 @@ module.exports = {
 		//$("div.apiSettings div.tagBlacklist div.chips")
 		var chipsInDIV = esix.modules.jquery("div.apiSettings div.tagBlacklist div.chips span.chipContain").children();
 		var finalChips = []
-		Array.from(chipsInDIV).forEach((chip)=>{
-			Array.from(chip.children).forEach((c)=>{
+		Array.from(chipsInDIV).forEach((chip) => {
+			Array.from(chip.children).forEach((c) => {
 				if (c.localName.toLowerCase() == 'span') {
 					finalChips.push(c.innerHTML.trim())
 				}
@@ -137,23 +153,26 @@ module.exports = {
 		})
 		localStorage.blacklistedTags = finalChips;
 	},
-	listen: ()=>{
+	listen: () => {
 		var $ = require("jquery");
 		var swat = require("sweetalert");
 		console.debug("[settings.js] listen => called");
 		// Login
-		$("div.authSettings a#authSettings_change").click(()=>{
+		$("div.authSettings a#authSettings_change").click(() => {
 			if ($("div.authSettings input#username[type=text]").val().length < 1) {
 				// No username
-				swat("No Username","No username was given so we can't log you in. Try again!","error")
+				swat("No Username", "No username was given so we can't log you in. Try again!", "error")
 				return;
 			}
 			if ($("div.authSettings input#key[type=password]").val().length < 1) {
 				// No key
-				swat("No Key","No key was given so we can't log you in. Try again!","error")
+				swat("No Key", "No key was given so we can't log you in. Try again!", "error")
 				return;
 			}
-			module.exports.validate({username:$("div.authSettings input#username[type=text]").val(),key:$("div.authSettings input#key[type=password]").val()})
+			module.exports.validate({
+				username: $("div.authSettings input#username[type=text]").val(),
+				key: $("div.authSettings input#key[type=password]").val()
+			})
 		})
 
 		// Blacklisted Tags
@@ -162,7 +181,7 @@ module.exports = {
 			if (typeof localStorage.blacklistedTags == 'string') {
 				t_blackListedTags = localStorage.blacklistedTags.split(",");
 			}
-			t_blackListedTags.forEach((tag)=>{
+			t_blackListedTags.forEach((tag) => {
 				if (tag.length < 1) return;
 				$("div.apiSettings div.tagBlacklist div.chips span.chipContain").append(`
 					<div class="chip">
