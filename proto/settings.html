@@ -37,12 +37,12 @@
 						<h4 id="authSettings_header">Change Login Details</h4>
 						<div class="row">
 							<div class="input-field col s6">
-								<input id="first_name" type="text">
-								<label for="first_name">Username</label>
+								<input id="username" type="text">
+								<label for="username">Username</label>
 							</div>
 							<div class="input-field col s6">
-								<input id="last_name" type="password">
-								<label for="last_name">API Key</label>
+								<input id="key" type="password">
+								<label for="key">API Key</label>
 							</div>
 							<a class="waves-effect waves-light btn" id="authSettings_change">Change & Verify Login Details</a>
 							<a class="waves-effect waves-light btn" id="authSettings_verify">Verify Current Login Details</a>
@@ -52,12 +52,12 @@
 					<div class="downloadSettings">
 						<h4>Download Settings</h4>
 						<div class="row">
-							Current Download Location <code id="currentDownloadLocation">${localStorage.downloadLocation-string || 'No Set Download Location'}</code>
+							Current Download Location <code id="currentDownloadLocation">${localStorage.downloadLocation || 'No Set Download Location'}</code>
 						</div>
 						<div class="row">
 							<div class="changeDownloadLocation">
 								<a class="waves-effect waves-light btn" id="changeDownloadLoc_btn">Change Download Location</a><br>
-								<input placeholder="${localStroage.downloadLocation-string || 'No Set Download Location'}" id="changeDownloadLocation_textbox" type="text" class="validate">
+								<input placeholder="${localStroage.downloadLocation|| 'No Set Download Location'}" id="changeDownloadLocation_textbox" type="text" class="validate">
 							</div>
 						</div>
 					</div>
@@ -67,6 +67,23 @@
 						<div class="row">
 							<label for="postsPerPage">Posts per Page</label>
 							<input placeholder="Default: 90; Current: ${localStorage.postsPerPage || '90'}" id="postsPerPage" type="number">
+						</div>
+						<div class="row"> 
+							<div class="currentData tagBlacklist">
+								<label for="chips">Tag Blacklist</label>
+								<div class="chips chips-initial input-field">
+									<!-- every div.chip is generated, everything else in this div is static. there will
+											be some code detecting when enter is pressed (key 13) and it will add
+											the new tag to an array. -->
+									
+									<span class="chipContain">
+		
+									</span>
+									<input class="colorScheme input">
+								</div>
+							</div>
+							<a class="waves-effect waves-light btn" id="clear">clear blacklist</a>
+							<i>Note:</i> The e621 enforces the global blacklist (things that would be considered illegal in most countries), and you know what? If you bring up the removal of the global blacklist you're getting a beating.
 						</div>
 						<a class="waves-effect waves-light btn" id="save">save</a>
 					</div>
