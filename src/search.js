@@ -1,3 +1,5 @@
+const { localStorage, console } = require("globalthis/implementation");
+
 module.exports = {
 	defaultPage: ()=>{
 		
@@ -69,13 +71,29 @@ module.exports = {
 			console.debug(`[search.js] Tags given`,t_tags);
 			var oposts = await api.getPostsByTag({tags:[t_tags],limit:localStorage.postsPerPage || '90'});
 			var returnedPosts = {posts:[]};
+			var filtercount = 0;
 			oposts.posts.forEach((post)=>{
 				if ((post.file.url == null || post.file.url.length < 1) && (post.sample.url == null || post.sample.url.length < 1) && (post.preview.url == null || post.preview.url.length < 1)) {
 					return;
 				} else {
-					returnedPosts.posts.push(post);
+					var allow = true;
+					Object.entries(post.tags).forEach((tagArray)=>{
+						tagArray[1].forEach((tag)=>{
+							localStorage.blacklistedTags.split(",").forEach((btag)=>{
+								console.log(tag,btag)
+								if (tag.toLowerCase() == btag.toLowerCase()) {
+									allow = false;
+									filtercount++;
+								}
+							})
+						})
+					})
+					if (allow) {
+						returnedPosts.posts.push(post);
+					}
 				}
 			})
+			console.debug(`[search.js] Filteded out '${filtercount}' posts.`);
 			localStorage.currentTags = t_tags;
 			console.debug(`[search.js] Recieved ${returnedPosts.posts.length} posts`,returnedPosts);
 			esix.searchStorage.currentPosts = returnedPosts.posts;
