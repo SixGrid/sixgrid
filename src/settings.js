@@ -143,12 +143,12 @@ module.exports = {
 		console.debug("[settings.js] listen => called");
 		// Login
 		$("div.authSettings a#authSettings_change").click(()=>{
-			if ($("div.authSettings input#first_name[type=text]").val().length < 1) {
+			if ($("div.authSettings input#username[type=text]").val().length < 1) {
 				// No username
 				swat("No Username","No username was given so we can't log you in. Try again!","error")
 				return;
 			}
-			if ($("div.authSettings input#[type=last_name]").val().length < 1) {
+			if ($("div.authSettings input#[type=key]").val().length < 1) {
 				// No key
 				swat("No Key","No key was given so we can't log you in. Try again!","error")
 				return;
