@@ -3,7 +3,7 @@ const { localStorage, console } = require("globalthis/implementation");
 module.exports = {
 	defaultPage: ()=>{
 		
-		if (localStorage.credentialsValidated) {
+		if (localStorage.credentialsValidated == 'true') {
 			return `
 <div class="searchBar">
 	<ul class="searchBar-list">
@@ -27,7 +27,7 @@ module.exports = {
 <div class="searchResults">
 
 </div>`;
-		} else {
+		} else if(localStorage.credentialsValidated == 'false') {
 			return `
 			<div class="container">
 				<h1>Login to e621</h1>

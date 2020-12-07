@@ -82,10 +82,38 @@ module.exports = {
 					return false;
 				} else if (error.response.status == 422) {
 					// It works
-					swat("Valid Credentials", "The credentials you gave works and are now stored.", "success") // this is cap i need to add diff check
+					swat("Valid Credentials", "The credentials you provided are valid.", "success") // this is cap i need to add diff check
 					localStorage.credentialsValidated = true;
 					localStorage.auth_username = $("div.authSettings input#username[type=text]").val();
 					localStorage.auth_key = $("div.authSettings input#key[type=password]").val();
+					return true;
+				}
+				else{
+					swat("Server Error", "Something failed on e621's server, try again later.", "error")
+					localStorage.credentialsValidated = false;
+					return false;
+				}
+			});
+	},
+	check: async () => {
+		var $ = require("jquery");
+		var swat = require("sweetalert");
+		let username = localStorage.auth_username
+		let key = localStorage.auth_key
+		axios.post(`https://e621.net/posts/777/votes.json?score=0&login=${username}&api_key=${key}`, {})
+			.then(function (response) {
+				console.log(response.data);
+			})
+			.catch(function (error) {
+				console.log(error);
+				if (error.response.status == 401) {
+					swat("Invalid Credentials", "The credentials you have given are invald or an error occurred.", "error")
+					localStorage.credentialsValidated = false;
+					return false;
+				} else if (error.response.status == 422) {
+					// It works
+					swat("Valid Credentials", "The credentials you provided are valid.", "success") // this is cap i need to add diff check
+					localStorage.credentialsValidated = true;
 					return true;
 				}
 				else{
@@ -154,6 +182,25 @@ module.exports = {
 		var swat = require("sweetalert");
 		console.debug("[settings.js] listen => called");
 		// Login
+		$("div.authSettings a#authSettings_verify").click(() => {
+			console.log(localStorage.auth_username)
+			console.log(localStorage.auth_key)
+			if (localStorage.auth_username == undefined) {
+				// No username
+				swat("No Username", "No username was given so we can't log you in. Try again!", "error")
+				return;
+			}}),
+			$("div.authSettings a#authSettings_verify").click(() => {
+				if (localStorage.auth_key == undefined) {
+					// No username
+					swat("No key", "No key was given so we can't log you in. Try again!", "error")
+					return;
+				}
+			module.exports.check({
+				username: localStorage.auth_username,
+				key: localStorage.auth_key
+			})
+			}),
 		$("div.authSettings a#authSettings_change").click(() => {
 			if ($("div.authSettings input#username[type=text]").val().length < 1) {
 				// No username
@@ -170,6 +217,7 @@ module.exports = {
 				key: $("div.authSettings input#key[type=password]").val()
 			})
 		})
+		
 
 		// Blacklisted Tags
 		if (localStorage.blacklistedTags.split(",").length > 1 || localStorage.blacklistedTags != undefined || localStorage.blacklistedTags.length > 1) {
