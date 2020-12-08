@@ -116,6 +116,7 @@ if (localStorage.debugMode) {
 if  (localStorage.firstTime == true || localStorage.firstTime == undefined) {
 	new esix.pageManager().function('gettingstarted');
 }else {
+	global.esix.api = new esix.modules.api({username: localStorage.auth_username,key: localStorage.auth_key,});
 	new esix.pageManager().pageListen()
 }
 
