@@ -58,7 +58,6 @@ module.exports = {
 					</div>
 					<i>Note:</i> The e621 enforces the global blacklist (things that would be considered illegal in most countries), and you know what? If you bring up the removal of the global blacklist you're getting a beating.
 				</div>
-				<a class="waves-effect waves-light btn" id="save">save</a>
 			</div>
 			<hr>
 		</div>
@@ -217,7 +216,10 @@ module.exports = {
 				key: $("div.authSettings input#key[type=password]").val()
 			})
 		})
-		
+		$("div.changeDownloadLocation a#changeDownloadLoc_btn").click(() => {
+			console.debug("i pray to god, if this button finally logs SOMETHING i will be so happy and i will finally go relax")
+			// finish this shit later, im too fucking tired to work on this 
+		})
 
 		// Blacklisted Tags
 		if (localStorage.blacklistedTags.split(",").length > 1 || localStorage.blacklistedTags != undefined || localStorage.blacklistedTags.length > 1) {

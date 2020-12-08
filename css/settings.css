@@ -9,3 +9,6 @@ div.apiSettings div.tagBlacklist input {
 	width: 300px;
 	max-width: 100%;
 }
+div.chips .input{
+    width: 100% !important; 
+}
