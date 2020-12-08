@@ -30,8 +30,8 @@ module.exports = {
 				</div>
 				<div class="row">
 					<div class="changeDownloadLocation">
-						<a class="waves-effect waves-light btn" id="changeDownloadLoc_btn">Change Download Location</a><br>
 						<input placeholder="${localStorage.downloadLocation|| 'No Set Download Location'}" id="changeDownloadLocation_textbox" type="text" class="validate">
+						<a class="waves-effect waves-light btn" id="changeDownloadLoc_btn">Change Download Location</a>
 					</div>
 				</div>
 			</div>
@@ -216,9 +216,18 @@ module.exports = {
 				key: $("div.authSettings input#key[type=password]").val()
 			})
 		})
+
+		// Change Download Location
 		$("div.changeDownloadLocation a#changeDownloadLoc_btn").click(() => {
-			console.debug("i pray to god, if this button finally logs SOMETHING i will be so happy and i will finally go relax")
-			// finish this shit later, im too fucking tired to work on this 
+			console.debug("[settings.js => eventClick] 'Change Download Location' button")
+			if ($("div.downloadSettings input#changeDownloadLocation_textbox[type=text]").val() != localStorage.downloadLocation && localStorage.downloadLocation != undefined) {
+				// new download location was typed in the textbox, or something change idk
+			} else {
+				// new download location was from the button click, that means they want a directory dialogue.
+
+			}
+			// Clear the input of the textbox. because we can?
+			$("div.downloadSettings input#changeDownloadLocation_textbox[type=text]").val("")
 		})
 
 		// Blacklisted Tags
