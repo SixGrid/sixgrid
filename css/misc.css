@@ -61,3 +61,15 @@ div.downloadStatus div.progress {
 	height: 8px;
 	border-radius: 0 0 3px 3px;
 }
+div.pageControl {
+	margin: auto;
+	width: 50%;
+	align-content: center;
+	text-align:center;
+	padding-bottom: 15px;
+}
+div.pageControl ul.pagination {
+	width: max-content;
+	margin-left: auto;
+	margin-right: auto;
+}
