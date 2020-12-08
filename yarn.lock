@@ -2913,10 +2913,10 @@ escodegen@^1.6.1:
   optionalDependencies:
     source-map "~0.6.1"
 
-esix-api@0.1.2:
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/esix-api/-/esix-api-0.1.2.tgz#5781e724e6539379f7d9d460042e74130aace93e"
-  integrity sha512-D6kFmKheSOTto4fbnFhR95s08s9l5/d6vIV9IgQkaEcgt2aIsEy87lGVn1Bo/O5U1I+2Ser1pHIuiu1PgNRxsA==
+esix-api@^0.1.4:
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/esix-api/-/esix-api-0.1.4.tgz#e69d294a65b28eeb8884aef91919961b9d042d6a"
+  integrity sha512-BaN9LGDdSd+0MFCaiUGRDq0/fBj8jQ/eXp75wZsdOflXfsyBQfHSH2zxp24RW6T1e7cWV0K18R4U4QZWXkMUFg==
   dependencies:
     axios "^0.21.0"
     form-data "^3.0.0"
