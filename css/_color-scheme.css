@@ -84,3 +84,10 @@ div.swal-modal {
 div.swal-title {
     color: white
 }
+.pagination li.active {
+	background-color: #32a852 !important;
+}
+.pagination li a {
+	cursor: pointer;
+	color: #999;
+}
