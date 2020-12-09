@@ -3,7 +3,6 @@ if (require('electron-squirrel-startup')) {
 	app.quit();
 }
 let mainWindow;
-
 const createWindow = () => {
 	mainWindow = new BrowserWindow({
 		width: 1280,
