@@ -58,6 +58,7 @@ div.swal-button:hover,
 .swal-button--confirm:hover {
     background-color: #949494;
     color: #121212
+	transition: 300ms;
 }
 div.swal-text{
     color:white
@@ -74,13 +75,25 @@ div.input:not([type]):focus:not([readonly]), input[type=text]:not(.browser-defau
 div.button:hover,
 .btn-large:hover,
 .btn-small:hover {
-    background-color: gray;
+	background-color: gray;
+	transition: 300ms;
 }
 
 div.swal-modal {
     background-color: #3f3f3f
 }
-
+div.swal-modal ::before {
+	background: #3f3f3f;
+}
+div.swal-modal ::after {
+	background: #3f3f3f;
+}
+div.swal-modal div.swal-icon--success__hide-corners{
+	background: #3f3f3f;
+}
+div.swal-modal div.swal-icon--success__ring {
+	border-color: #909090;
+}
 div.swal-title {
     color: white
 }
