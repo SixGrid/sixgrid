@@ -99,7 +99,6 @@ module.exports = {
 							default:
 								swal("Server Error", `Something failed on e621's server, try again later. Error Code ${response.status.toString()}`, "error")
 								localStorage.credentialsValidated = false;
-
 								break;
 						}
 					})
