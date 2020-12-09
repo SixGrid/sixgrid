@@ -67,6 +67,7 @@ div.pageControl {
 	align-content: center;
 	text-align:center;
 	padding-bottom: 15px;
+	display: none;
 }
 div.pageControl ul.pagination {
 	width: max-content;
