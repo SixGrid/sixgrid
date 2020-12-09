@@ -1,5 +1,3 @@
-const { localStorage, console } = require("globalthis/implementation");
-
 module.exports = {
 	defaultPage: ()=>{
 		
