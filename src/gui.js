@@ -8,7 +8,7 @@ global.esix = {
 		home: require("./home.js"),
 		settings: require("./settings.js"),
 		debug: require("./debugpage.js"),
-		gettingstarted: require("./gettingstarted.js"),
+		gettingstarted: require("./gettingStarted.js"),
 	},
 	pageManager: require("./pagemanager"),
 	loader: require("./loader"),
