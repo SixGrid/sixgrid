@@ -94,11 +94,18 @@ module.exports = {
 			});
 	},
 	check: async () => {
-		var $ = require("jquery");
 		var swat = require("sweetalert");
-		let username = localStorage.auth_username
-		let key = localStorage.auth_key
-		axios.post(`https://e621.net/posts/777/votes.json?score=0&login=${username}&api_key=${key}`, {})
+		const options = {
+			method: 'get',
+			url: `https://e621.net/posts/1890798.json`,
+			headers: {
+				'content-type': 'application/x-www-form-urlencoded',
+			},
+			data: {
+				login: localStorage.auth_username, password_hash: localStorage.auth_username
+			},
+		}
+		axios(options)
 			.then(function (response) {
 				console.log(response.data);
 			})
