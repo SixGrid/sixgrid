@@ -4,11 +4,11 @@ global.esix = {
 		jquery: require("jquery")
 	},
 	pages: {
-		search: require("./search"),
-		home: require("./home"),
-		settings: require("./settings"),
-		debug: require("./debugpage"),
-		gettingstarted: require("./gettingstarted"),
+		search: require("./search.js"),
+		home: require("./home.js"),
+		settings: require("./settings.js"),
+		debug: require("./debugpage.js"),
+		gettingstarted: require("./gettingstarted.js"),
 	},
 	pageManager: require("./pagemanager"),
 	loader: require("./loader"),
