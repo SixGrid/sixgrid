@@ -103,6 +103,7 @@ module.exports = {
 		})
 		localStorage.currentPage++;
 		localStorage.totalPages++;
+		$("div.pageControl #pageCount").html(localStorage.totalPages);
 		return `
 <div class="container">
 	<div id="pageheader page${localStorage.currentPage}"></div>
@@ -149,7 +150,8 @@ module.exports = {
 			})
 			$("div.pageControl a#next_page").click(async()=>{
 				// Append contents of next page to "searchResults"
-					var pageToGoto = localStorage.currentPage + 1;
+					var pageToGoto = parseInt(localStorage.currentPage) + 1;
+					console.log(pageToGoto, localStorage.currentPage, localStorage.currentPostIndex)
 				if ($(`div.searchResults div.page${pageToGoto}`).length) {
 					// Scroll to page
 					$([document.documentElement, document.body]).animate({
@@ -157,7 +159,8 @@ module.exports = {
 					}, 2000);
 				} else {
 					// Append then scroll to top of new page.
-					var newPage = await api.getPostsByTag({tags:[t_tags],limit:localStorage.postsPerPage || '90',page:pageToGoto});
+					var newPage = await esix.api.getPostsByTag({tags:[t_tags],limit:localStorage.postsPerPage || '90',page:pageToGoto});
+					console.log(newPage)
 					$("div.searchResults").append(module.exports.generatePageHTML(newPage));
 					$("div.pageControl #pageCount").html(localStorage.totalPages);
 				}
