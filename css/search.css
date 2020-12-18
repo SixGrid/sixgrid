@@ -29,6 +29,7 @@ div.input-field input#search[type=search]:focus {
 div.searchBar ul.searchBar-list {
 	align-content: center;
 	height: 36px;
+	margin-bottom: 3px;
 }
 div.searchBar ul.searchBar-list li {
 	display: inline-block;
@@ -43,6 +44,36 @@ div.searchBar ul.searchBar-list li.searchOptions {
 	height: 34px;
 	line-height: 34px;
 	margin-left: 5px;
+}
+div.searchBar div.chips {
+	border: none;
+	position: fixed;
+	bottom: 0;
+}
+div.searchBar div.chips div.chip {
+	box-shadow: 0 0 4px black;
+}
+div.searchBar div.chips div.chip span {
+	transition: 75ms;
+}
+div.searchBar div.chips div.chip span:hover {
+	cursor:pointer;
+	transition: 150ms;
+}
+div.searchBar div.chips i.refresh {
+	cursor: pointer;
+	float:left;
+	font-size: 16px;
+	line-height: 32px;
+	padding-right: 8px;
+}
+div.searchBar div.chips i {
+	transition: 75ms;
+}
+div.searchBar div.chips i:hover {
+	transition: 150ms;
+	transform: scale(1.2);
+	text-shadow: 0 0 2px black;
 }
 
 /* Search Results */
