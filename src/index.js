@@ -2,6 +2,15 @@ import { app, BrowserWindow } from 'electron';
 if (require('electron-squirrel-startup')) {
 	app.quit();
 }
+
+function isStandalone() {
+	if (module.filename.includes("app.asar")) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
 let mainWindow;
 const createWindow = () => {
 	mainWindow = new BrowserWindow({
@@ -13,7 +22,9 @@ const createWindow = () => {
 		},
 	});
 	mainWindow.loadURL(`file://${__dirname}/index.html`);
-	mainWindow.webContents.openDevTools(); //
+	if (!isStandalone()) {
+		mainWindow.webContents.openDevTools();
+	}
 	mainWindow.on('closed', () => {
 		mainWindow = null;
 	});
