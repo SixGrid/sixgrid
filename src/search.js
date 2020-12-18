@@ -2,6 +2,23 @@ module.exports = {
 	defaultPage: ()=>{
 		
 		if (localStorage.credentialsValidated == 'true') {
+			var savedTags = "<!-- -->";
+			if (localStorage.savedTags != undefined && localStorage.savedTags.split(',')[0] != undefined) {
+				var tempChip = ``;
+				var t_savedPosts = localStorage.savedTags.split(',');
+				t_savedPosts.forEach((p)=>{
+					tempChip=`${tempChip}
+					<div class="chip" data="${p}">
+						<span>${p}</span>
+						<i class="close material-icons">close</i>
+					</div>`
+				})
+				var savedTags = `
+				<div class="chips">
+					${tempChip}
+				</div>
+				`
+			}
 			return `
 				<div class="searchBar">
 					<ul class="searchBar-list">
@@ -21,6 +38,7 @@ module.exports = {
 							<a class="waves-effect waves-light btn-small" id="optionsDropdown">Options</a>
 						</li>
 					</ul>
+					${savedTags}
 				</div>
 				<div class="searchResults">
 
@@ -41,6 +59,27 @@ module.exports = {
 					You have not validated your credentials or you have not set them, please go over to the settings tab to set them or read Getting Started for more information. You will not be allowed to  the search function until you have logged in/authorized your credentials.
 				</p>
 			</div>`;
+		}
+	},
+	generateSavedTagsChips: ()=> {
+		var $ = esix.modules.jquery;
+		if (localStorage.savedTags != undefined && localStorage.savedTags.split(',')[0] != undefined) {
+			var tempChip = ``;
+			var t_savedPosts = localStorage.savedTags.split(',');
+			t_savedPosts.forEach((p)=>{
+				tempChip=`${tempChip}
+				<div class="chip" data="${p}">
+					<span>${p}</span>
+					<i class="close material-icons">close</i>
+				</div>`
+			})
+			var savedTags = `
+			<div class="chips">
+				${tempChip}
+			</div>
+			`;
+			console.debug(`[search] Updated chips with content of ${tempChip} and JSON data of `,t_savedPosts)
+			$("div.searchBar div.chips").html(tempChip)
 		}
 	},
 	generateCard: (p) => {
@@ -113,82 +152,94 @@ module.exports = {
 			</ul>
 		</div>`;
 	},
+	generateSearchResults: async (t_tags) => {
+		var api = esix.api;
+		var $ = esix.modules.jquery;
+		$("div.pageControl").fadeIn("fast");
+		console.debug(`[search.js] Tags given`,t_tags);
+		var oposts = await api.getPostsByTag({tags:[t_tags],limit:localStorage.postsPerPage || '90'});
+		var returnedPosts = module.exports.filterPosts(oposts);
+		
+		localStorage.currentTags = t_tags;
+		console.debug(`[search.js] Recieved ${returnedPosts.posts.length} posts`,returnedPosts);
+		esix.searchStorage.currentPosts = [];
+		
+		localStorage.currentPage = 0;
+		localStorage.totalPages = 0;
+		$(".searchResults").html(module.exports.generatePageHTML(returnedPosts))
+		$("div.searchBar li.searchOptions a#saveTag").click(()=>{
+			// Save current tag, if there are none then show message saying there are no tags selected/searched`
+			var tempTags = []
+			if (localStorage.savedTags != undefined && localStorage.savedTags.length > 1){
+				tempTags = localStorage.savedTags.split(',');
+			}
+			if (!tempTags.includes(t_tags)) {
+				tempTags.push(t_tags)
+				esix.notification('info','Tags Saved')
+			} else {
+				esix.notification('warn','Tags Already Exists')
+			}
+			console.debug(`[search] Saved ${tempTags.length} tags.`,tempTags)
+			localStorage.savedTags = tempTags.join(',');
+			module.exports.generateSavedTagsChips();
+		});
+		$("div.searchBar li.searchOptions a#optionsDropdown").click(()=>{
+			// Toggle display of options dropdown menu.
+
+		});
+		$("div.pageControl a#prev_page").click(()=>{
+			// scroll to the top of the previous page
+				var pageToGoto = localStorage.currentPage - 1;
+			if ($(`div.searchResults div.page${pageToGoto}`).length) {
+				// Scroll to page
+				$([document.documentElement, document.body]).animate({
+					scrollTop: $(`div.searchResults div.page${localStorage.currentPage}`).offset().top
+				}, 2000);
+			}
+		})
+		$("div.pageControl a#next_page").click(async()=>{
+			// Append contents of next page to "searchResults"
+				var pageToGoto = parseInt(localStorage.currentPage) + 1;
+				console.log(pageToGoto, localStorage.currentPage, localStorage.currentPostIndex)
+			if ($(`div.searchResults div.page${pageToGoto}`).length) {
+				// Scroll to page
+				$([document.documentElement, document.body]).animate({
+					scrollTop: $(`div.searchResults div.page${pageToGoto}`).offset().top
+				}, 2000);
+			} else {
+				// Append then scroll to top of new page.
+				var newPage = await esix.api.getPostsByTag({tags:[t_tags],limit:localStorage.postsPerPage || '90',page:pageToGoto});
+				console.log(newPage)
+				$("div.searchResults").append(module.exports.generatePageHTML(newPage));
+				$("div.pageControl #pageCount").html(localStorage.totalPages);
+			}
+		})
+	},
 	listen: ()=>{
 		if (!localStorage.credentialsValidated) return;
 		console.debug("[settings.js] listen => called");
 		var $ = esix.modules.jquery;
-		const api = new esix.modules.api({username: localStorage.auth_username,key: localStorage.auth_key,});
 		console.debug(esix)
 		$("div.pageControl").fadeOut("fast");
 		$("div.input-field input#search[type=search]").keyup(async (me)=>{
 			if (me.which != 13) return;
-			$("div.pageControl").fadeIn("fast");
-			var t_tags = $("div.input-field input#search[type=search]").val().split(' ').join("+");
-			console.debug(`[search.js] Tags given`,t_tags);
-			var oposts = await api.getPostsByTag({tags:[t_tags],limit:localStorage.postsPerPage || '90'});
-			var returnedPosts = module.exports.filterPosts(oposts);
-			
-			localStorage.currentTags = t_tags;
-			console.debug(`[search.js] Recieved ${returnedPosts.posts.length} posts`,returnedPosts);
-			esix.searchStorage.currentPosts = [];
-			
-			localStorage.currentPage = 0;
-			localStorage.totalPages = 0;
-			$(".searchResults").html(module.exports.generatePageHTML(returnedPosts))
-			
-			$("div.searchResults li.post img").click((me)=>{
-				module.exports.fullScreen(imageJSON);
-			});
-			$("div.searchBar li.searchOptions a#saveTag").click(()=>{
-				// Save current tag, if there are none then show message saying there are no tags selected/searched`
-				var tempTags = []
-				if (localStorage.savedTags != undefined && localStorage.savedTags.length > 1){
-					tempTags = localStorage.savedTags.split(',');
-				}
-				if (!tempTags.includes(t_tags)) {
-					tempTags.push(t_tags)
-					esix.notification('info','Tags Saved')
-				} else {
-					esix.notification('warn','Tags Already Exists')
-				}
-				console.debug(`[search] Saved ${tempTags.length} tags.`,tempTags)
-				localStorage.savedTags = tempTags.join(',');
-			});
-			$("div.searchBar li.searchOptions a#optionsDropdown").click(()=>{
-				// Toggle display of options dropdown menu.
-
-			});
-			$("div.pageControl a#prev_page").click(()=>{
-				// scroll to the top of the previous page
-					var pageToGoto = localStorage.currentPage - 1;
-				if ($(`div.searchResults div.page${pageToGoto}`).length) {
-					// Scroll to page
-					$([document.documentElement, document.body]).animate({
-						scrollTop: $(`div.searchResults div.page${localStorage.currentPage}`).offset().top
-					}, 2000);
-				}
-			})
-			$("div.pageControl a#next_page").click(async()=>{
-				// Append contents of next page to "searchResults"
-					var pageToGoto = parseInt(localStorage.currentPage) + 1;
-					console.log(pageToGoto, localStorage.currentPage, localStorage.currentPostIndex)
-				if ($(`div.searchResults div.page${pageToGoto}`).length) {
-					// Scroll to page
-					$([document.documentElement, document.body]).animate({
-						scrollTop: $(`div.searchResults div.page${pageToGoto}`).offset().top
-					}, 2000);
-				} else {
-					// Append then scroll to top of new page.
-					var newPage = await esix.api.getPostsByTag({tags:[t_tags],limit:localStorage.postsPerPage || '90',page:pageToGoto});
-					console.log(newPage)
-					$("div.searchResults").append(module.exports.generatePageHTML(newPage));
-					$("div.pageControl #pageCount").html(localStorage.totalPages);
-				}
-			})
+			module.exports.generateSearchResults($("div.input-field input#search[type=search]").val().split(' ').join("+"))
 		});
+		$("div.searchBar div.chips div.chip span").click((me)=>{
+			$("div.input-field input#search[type=search]").val(me.target.attributes.data.value.split("+").join(" "))
+			module.exports.generateSearchResults(me.target.attributes.data.value)
+		})
+		$("div.searchBar div.chips div.chip i.close").click((me)=>{
+			var tagtoRemove = me.target.parentElement.attributes.data.value;
+			console.debug(`[search] Removed Saved Tag '${tagtoRemove}'`)
+			var t_savedTags = localStorage.savedTags.split(',').filter((el)=>{return el != tagtoRemove});
+			console.debug(t_savedTags)
+			localStorage.savedTags = t_savedTags.join(',');
+			esix.notification('info',`Removed tag '${tagtoRemove}'`)
+			module.exports.generateSavedTagsChips();
+		})
 	},
 	fullScreen: (imgDATA)=>{
-		console.debug(imgDATA);
 		var postData = imgDATA;
 		if (typeof imgDATA == 'string') {
 			postData = JSON.parse(atob(imgDATA));
@@ -204,7 +255,6 @@ module.exports = {
 			}
 			esixPostIndex++;
 		})
-		console.debug(esixPostLimit,esixPostLimit,currentPostIndex)
 		var previousPostButton = `
 			<i class="material-icons">navigate_before</i>
 		`;
