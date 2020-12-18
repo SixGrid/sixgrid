@@ -35,7 +35,7 @@ module.exports = {
 						</li>
 						<li class="searchOptions">
 							<a class="waves-effect waves-light btn-small" id="saveTag">Save Tag</a>
-							<a class="waves-effect waves-light btn-small" id="optionsDropdown">Options</a>
+							<a class="waves-effect waves-light btn-small" id="options">Options</a>
 						</li>
 					</ul>
 					${savedTags}
@@ -183,9 +183,9 @@ module.exports = {
 			localStorage.savedTags = tempTags.join(',');
 			module.exports.generateSavedTagsChips();
 		});
-		$("div.searchBar li.searchOptions a#optionsDropdown").click(()=>{
+		$("div.searchBar li.searchOptions a#options").click(()=>{
 			// Toggle display of options dropdown menu.
-
+			$("div.searchSettings").addClass("show");
 		});
 		$("div.pageControl a#prev_page").click(()=>{
 			// scroll to the top of the previous page
@@ -226,8 +226,8 @@ module.exports = {
 			module.exports.generateSearchResults($("div.input-field input#search[type=search]").val().split(' ').join("+"))
 		});
 		$("div.searchBar div.chips div.chip span").click((me)=>{
-			$("div.input-field input#search[type=search]").val(me.target.attributes.data.value.split("+").join(" "))
-			module.exports.generateSearchResults(me.target.attributes.data.value)
+			$("div.input-field input#search[type=search]").val(me.target.parentElement.attributes.data.value.split("+").join(" "))
+			module.exports.generateSearchResults(me.target.parentElement.attributes.data.value)
 		})
 		$("div.searchBar div.chips div.chip i.close").click((me)=>{
 			var tagtoRemove = me.target.parentElement.attributes.data.value;
@@ -249,6 +249,7 @@ module.exports = {
 		var esixPostIndex = 0;
 		var esixPostLimit = esix.searchStorage.currentPosts.length;
 		var currentPostIndex = 0;
+		localStorage.search_isFullscreen = true;
 		esix.searchStorage.currentPosts.forEach((p)=>{
 			if (p.id == postData.id) {
 				currentPostIndex = esixPostIndex;
@@ -333,8 +334,7 @@ module.exports = {
 		}
 
 		$("div.post-info i.window-control").click(()=>{
-			$("div.fullscreenResult").fadeOut('fast')
-			$("div.fullscreenResult").remove()
+			module.exports.keylisten_fullscreen('exit')
 		})
 
 		$('span#outsidelink').on('click', (event) => {
@@ -362,17 +362,17 @@ module.exports = {
 			localStorage.previousPostID = esix.searchStorage.currentPosts[currentPostIndex-1].id;
 			localStorage.previousPostIndex = currentPostIndex-1;
 		}
+		localStorage.currentPostIndex = currentPostIndex;
 		$("div.fullscreenResult table.post-fullscreen td.post-next").click(()=>{
-			module.exports.fullScreen(esix.searchStorage.currentPosts[localStorage.nextPostIndex]);
+			module.exports.keylisten_fullscreen('next')
 			return;
 		})
 		$("div.fullscreenResult table.post-fullscreen td.post-previous").click(()=>{
-			module.exports.fullScreen(esix.searchStorage.currentPosts[localStorage.previousPostIndex]);
+			module.exports.keylisten_fullscreen('previous')
 			return;
 		})
 		$("i.post-control#download").click(()=>{
-			var post = esix.searchStorage.currentPosts[currentPostIndex];
-			esix.downloadPost(post);
+			module.exports.keylisten_fullscreen('download')
 		})
 		// Favorite
 		$("i.post-control#favorite.favourite-false").click(()=>{
@@ -387,18 +387,61 @@ module.exports = {
 		})
 		// Upvote
 		$("i.post-control#upvote").click(()=>{
-			var postID = esix.searchStorage.currentPosts[currentPostIndex].id;
-			esix.searchStorage.currentPosts[currentPostIndex].score.total++;
-			esix.searchStorage.currentPosts[currentPostIndex].score.up++;
-			esix.api._req(`posts/${postID}/votes.json?no_unvote=true&score=1`,'post')
+			module.exports.keylisten_fullscreen('actionup');
 		})
 		// Downvote
 		$("i.post-control#downvote").click(()=>{
-			var postID = esix.searchStorage.currentPosts[currentPostIndex].id;
-			esix.searchStorage.currentPosts[currentPostIndex].score.total = `${esix.searchStorage.currentPosts[currentPostIndex].score.total-1}`;
-			esix.searchStorage.currentPosts[currentPostIndex].score.down = `${esix.searchStorage.currentPosts[currentPostIndex].score.down-1}`;
-			esix.api._req(`posts/${postID}/votes.json?no_unvote=true&score=-1`,'post')
+			module.exports.keylisten_fullscreen('actiondown');
 		})
 		return;
+	},
+	vote: (direction) => {
+		switch(direction) {
+			case "up":
+				var postID = esix.searchStorage.currentPosts[localStorage.currentPostIndex].id;
+				esix.searchStorage.currentPosts[localStorage.currentPostIndex].score.total++;
+				esix.searchStorage.currentPosts[localStorage.currentPostIndex].score.up++;
+				esix.api._req(`posts/${postID}/votes.json?no_unvote=true&score=1`,'post')
+				break;
+			case "down":
+				var postID = esix.searchStorage.currentPosts[localStorage.currentPostIndex].id;
+				esix.searchStorage.currentPosts[localStorage.currentPostIndex].score.total = `${esix.searchStorage.currentPosts[currentPostIndex].score.total-1}`;
+				esix.searchStorage.currentPosts[localStorage.currentPostIndex].score.down = `${esix.searchStorage.currentPosts[currentPostIndex].score.down-1}`;
+				esix.api._req(`posts/${postID}/votes.json?no_unvote=true&score=-1`,'post')
+				break;
+		}
+	},
+	keylisten: (keyAction) => {
+		if (localStorage.search_isFullscreen == 'true') {
+			module.exports.keylisten_fullscreen(keyAction);
+		}
+		return;
+	},
+	keylisten_fullscreen: (keyAction)=> {
+		if (localStorage.search_isFullscreen == 'false') return;
+		var $ = esix.modules.jquery;
+		switch(keyAction.toLowerCase()) {
+			case "previous": 
+				module.exports.fullScreen(esix.searchStorage.currentPosts[localStorage.previousPostIndex]);
+				break;
+			case "next":
+				module.exports.fullScreen(esix.searchStorage.currentPosts[localStorage.nextPostIndex]);
+				break;
+			case "actionup":
+				module.exports.vote('up')
+				break;
+			case "actiondown":
+				module.exports.vote('down')
+				break;
+			case "download":
+				var post = esix.searchStorage.currentPosts[localStorage.currentPostIndex];
+				esix.downloadPost(post);
+				break;
+			case "exit":
+				localStorage.search_isFullscreen = 'false';
+				$("div.fullscreenResult").fadeOut('fast')
+				$("div.fullscreenResult").remove()
+				break;
+		}
 	}
 }
