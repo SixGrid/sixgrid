@@ -241,5 +241,9 @@ module.exports = {
 		} else {
 			module.exports.chip(false);
 		}
+	},
+	keylisten: (keyAction) => {
+		// This will be populated when we start working on customization.
+		return;
 	}
 }
