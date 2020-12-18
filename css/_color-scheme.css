@@ -104,3 +104,9 @@ div.swal-title {
 	cursor: pointer;
 	color: #999;
 }
+select.browser-default {
+	background-color: #3f3f3f;
+	color: #fff;
+	height: 2rem;
+	padding: 2px;
+}
