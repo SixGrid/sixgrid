@@ -20,7 +20,6 @@ module.exports = {
 		})
 	},
 	defaultPage: ()=>{
-
 		return `
 		<div class="container">
 			<h3>Debug Page</h3>
