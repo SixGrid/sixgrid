@@ -1,7 +1,9 @@
 global.esix = {
 	modules: {
 		api: require("esix-api"),
-		jquery: require("jquery")
+		jquery: require("jquery"),
+		md5: require("md5"),
+		salert: require("sweetalert")
 	},
 	pages: {
 		search: require("./search.js"),
@@ -19,6 +21,24 @@ global.esix = {
 		}).animate({'opacity': 1}, 200);
 		return;
 	},
+	notification: (g_type,g_context,g_duration) => {
+		$("div.notification").removeClass('show')
+		$("div.notification span").html(g_context)
+		$("div.notification").removeClass('info')
+		$("div.notification").removeClass('warn')
+		$("div.notification").removeClass('error')
+		$("div.notification").addClass(g_type.toLowerCase())
+		$("div.notification").addClass('show')
+		setTimeout(()=>{
+			$("div.notification").removeClass('show')
+			$("div.notification").removeClass('info')
+			$("div.notification").removeClass('warn')
+			$("div.notification").removeClass('error')
+			$("div.notification span").html('')
+		},localStorage.notificationDecay || g_duration || 2500);
+		return;
+	},
+	queue: require("./queue.js"),
 	searchStorage: { },
 	electron: require("electron"),
 	downloadPost: (post)=>{
