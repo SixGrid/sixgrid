@@ -10,12 +10,12 @@ nav.smallSearch *{
 div.searchBar{
 	width: 90%;
 
-	position: absolute;
-	top:-50px;
+	position: fixed;
+	top: 50px;
 
 	margin-left: 5%;
 	margin-right: 5%;
-	z-index: 5;
+	z-index: 1;
 }
 label#searchButton:hover {
 	cursor:pointer;
@@ -278,4 +278,49 @@ div.fullscreenResult div.post-info td.right {
 div.fullscreenResult div.post-info td.middle {
 	position: relative;
 	width: 60px;
+}
+
+/* Search Options */
+div.searchOptions {
+	background-color: rgba(28,28,28,.5);
+	backdrop-filter: blur(3px);
+	display: hidden;
+	transition: 150ms;
+}
+div.searchOptions.show {
+	position:fixed;
+	top:0;
+	left:0;
+	width:100vw;
+	height:100vh;
+	z-index: 1000;
+	transition: 150ms;
+}
+div.searchOptions.show div.content{
+	height: 80vh;
+	width: 60vw;
+	background-color: #292929;
+	border-radius: 5px;
+
+	position: fixed;
+	top: 10vh;
+	left: 20vw;
+
+	padding: 15px;
+}
+div.searchOptions div.content i.close {
+	float: right;
+	position: fixed;
+	top:calc(10vh + 5px);
+	right: calc(20vw + 5px);
+	transition: 150ms;
+}
+div.searchOptions div.content i.close:hover {
+	cursor:pointer;
+	transform: scale(1.2);
+	text-shadow: 0 0 3px white;
+	transition: 150ms;
+}
+div.searchOptions select {
+	width: 30%;
 }
