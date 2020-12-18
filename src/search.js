@@ -33,7 +33,7 @@ module.exports = {
 								</div>
 							</nav>
 						</li>
-						<li class="searchOptions">
+						<li class="searchButtons">
 							<a class="waves-effect waves-light btn-small" id="saveTag">Save Tag</a>
 							<a class="waves-effect waves-light btn-small" id="options">Options</a>
 						</li>
@@ -42,6 +42,21 @@ module.exports = {
 				</div>
 				<div class="searchResults">
 
+				</div>
+				<div class="searchOptionsWindow">
+					<div class="content">
+						
+						<label>Rating Filter</label>
+						<select class="browser-default" id="rating">
+							<option value="" disabled selected>Rating Filter</option>
+							<option value="none" selected>No Rating Filter</option>
+							<option value="s">Safe</option>
+							<option value="q">Questionable</option>
+							<option value="e">Explicit</option>
+						</select>
+
+						<i class="close material-icons">close</i>
+					</div>
 				</div>
 				<div class="pageControl">
 					<ul class="pagination">
@@ -157,6 +172,9 @@ module.exports = {
 		var $ = esix.modules.jquery;
 		$("div.pageControl").fadeIn("fast");
 		console.debug(`[search.js] Tags given`,t_tags);
+		if (localStorage.ratingFilter != 'none') {
+			t_tags=`rating:${localStorage.ratingFilter}+${t_tags}`
+		}
 		var oposts = await api.getPostsByTag({tags:[t_tags],limit:localStorage.postsPerPage || '90'});
 		var returnedPosts = module.exports.filterPosts(oposts);
 		
@@ -215,16 +233,50 @@ module.exports = {
 			}
 		})
 	},
+	searchOptionsManager: () => {
+		var $ = esix.modules.jquery;
+		console.debug($("div.searchOptionsWindow"))
+		$("div.searchOptionsWindow").addClass("show");
+		$("div.searchOptionsWindow select#rating").click((me)=>{
+			var selectedRating = me.target.selectedOptions[0].value
+			switch(selectedRating) {
+				case "s":
+					localStorage.ratingFilter = 'safe';
+					break;
+				case "q":
+					localStorage.ratingFilter = 'questionable';
+					break;
+				case "e":
+					localStorage.ratingFilter = 'explicit';
+					break;
+				case "null":
+					localStorage.ratingFilter = 'none';
+					break;
+			}
+			console.debug(me)
+		})
+		$("div.searchOptionsWindow div.content i.close").click(()=>{
+			$("div.searchOptionsWindow").removeClass("show")
+		})
+	},
 	listen: ()=>{
 		if (!localStorage.credentialsValidated) return;
 		console.debug("[settings.js] listen => called");
 		var $ = esix.modules.jquery;
 		console.debug(esix)
+
+		if (localStorage.ratingFilter == undefined) {
+			localStorage.ratingFilter = 'none';
+		}
+
 		$("div.pageControl").fadeOut("fast");
 		$("div.input-field input#search[type=search]").keyup(async (me)=>{
 			if (me.which != 13) return;
 			module.exports.generateSearchResults($("div.input-field input#search[type=search]").val().split(' ').join("+"))
-		});
+		})
+		$("div.searchBar li.searchButtons a#options").click(()=>{
+			module.exports.searchOptionsManager();
+		})
 		$("div.searchBar div.chips div.chip span").click((me)=>{
 			$("div.input-field input#search[type=search]").val(me.target.parentElement.attributes.data.value.split("+").join(" "))
 			module.exports.generateSearchResults(me.target.parentElement.attributes.data.value)
