@@ -33,6 +33,7 @@ class component {
 	}
 
 	pageListen(){
+		localStorage.currentTab = 'null';
 		this.$("nav.main-navbar").click((me)=>{
 			if (me.target.localName != 'a') return;
 			var thingClickedOn = me.target.attributes.data.value;
