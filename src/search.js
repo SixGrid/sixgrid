@@ -3,35 +3,36 @@ module.exports = {
 		
 		if (localStorage.credentialsValidated == 'true') {
 			return `
-<div class="searchBar">
-	<ul class="searchBar-list">
-		<li class="mainSearch">
-			<nav class="smallSearch">
-				<div class="nav-wrapper">
-					<div class="input-field">
-						<input id="search" type="search">
-						<label class="label-icon" for="search" id="searchButton"><i class="material-icons">search</i></label>
-						<i class="material-icons">close</i>
-					</div>
+				<div class="searchBar">
+					<ul class="searchBar-list">
+						<li class="mainSearch">
+							<nav class="smallSearch">
+								<div class="nav-wrapper">
+									<div class="input-field">
+										<input id="search" type="search">
+										<label class="label-icon" for="search" id="searchButton"><i class="material-icons">search</i></label>
+										<i class="material-icons">close</i>
+									</div>
+								</div>
+							</nav>
+						</li>
+						<li class="searchOptions">
+							<a class="waves-effect waves-light btn-small" id="saveTag">Save Tag</a>
+							<a class="waves-effect waves-light btn-small" id="optionsDropdown">Options</a>
+						</li>
+					</ul>
 				</div>
-			</nav>
-		</li>
-		<li class="searchOptions">
-			<a class="waves-effect waves-light btn-small">Save Tag</a>
-			<a class="waves-effect waves-light btn-small">Options</a>
-		</li>
-	</ul>
-</div>
-<div class="searchResults">
+				<div class="searchResults">
 
-</div>
-<div class="pageControl">
-	<ul class="pagination">
-		<li class="waves-effect"><a id="prev_page"><i class="material-icons">chevron_left</i></a></li>
-		<li class="active"><a id="pageCount">1</a></li>
-		<li class="waves-effect"><a id="next_page"><i class="material-icons">chevron_right</i></a></li>
-	</ul>
-</div>`;
+				</div>
+				<div class="pageControl">
+					<ul class="pagination">
+						<li class="waves-effect"><a id="prev_page"><i class="material-icons">chevron_left</i></a></li>
+						<li class="active"><a id="pageCount">1</a></li>
+						<li class="waves-effect"><a id="next_page"><i class="material-icons">chevron_right</i></a></li>
+					</ul>
+				</div>
+			`;
 		} else if(localStorage.credentialsValidated == 'false') {
 			return `
 			<div class="container">
@@ -105,12 +106,12 @@ module.exports = {
 		localStorage.totalPages++;
 		$("div.pageControl #pageCount").html(localStorage.totalPages);
 		return `
-<div class="container">
-	<div id="pageheader page${localStorage.currentPage}"></div>
-	<ul class="cardContainer">
-		${htmlPostArray.join('\n')}
-	</ul>
-</div>`;
+		<div class="container">
+			<div id="pageheader page${localStorage.currentPage}"></div>
+			<ul class="cardContainer">
+				${htmlPostArray.join('\n')}
+			</ul>
+		</div>`;
 	},
 	listen: ()=>{
 		if (!localStorage.credentialsValidated) return;
@@ -137,6 +138,25 @@ module.exports = {
 			
 			$("div.searchResults li.post img").click((me)=>{
 				module.exports.fullScreen(imageJSON);
+			});
+			$("div.searchBar li.searchOptions a#saveTag").click(()=>{
+				// Save current tag, if there are none then show message saying there are no tags selected/searched`
+				var tempTags = []
+				if (localStorage.savedTags != undefined && localStorage.savedTags.length > 1){
+					tempTags = localStorage.savedTags.split(',');
+				}
+				if (!tempTags.includes(t_tags)) {
+					tempTags.push(t_tags)
+					esix.notification('info','Tags Saved')
+				} else {
+					esix.notification('warn','Tags Already Exists')
+				}
+				console.debug(`[search] Saved ${tempTags.length} tags.`,tempTags)
+				localStorage.savedTags = tempTags.join(',');
+			});
+			$("div.searchBar li.searchOptions a#optionsDropdown").click(()=>{
+				// Toggle display of options dropdown menu.
+
 			});
 			$("div.pageControl a#prev_page").click(()=>{
 				// scroll to the top of the previous page
@@ -251,10 +271,10 @@ module.exports = {
 		`;
 
 		var finalHTML = `
-<div class="fullscreenResult">
-		${postTable}
-		${postInfo}
-</div>
+		<div class="fullscreenResult">
+				${postTable}
+				${postInfo}
+		</div>
 		`;
 		if ($("div.fullscreenResult").length) {
 			$("div.fullscreenResult").html(`${postTable}${postInfo}`)
