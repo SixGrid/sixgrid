@@ -12,6 +12,7 @@ global.esix = {
 		debug: require("./debugpage.js"),
 		gettingstarted: require("./gettingStarted.js"),
 	},
+	keyListener: require("./keylisten.js"),
 	pageManager: require("./pagemanager"),
 	loader: require("./loader"),
 	packageJSON: require("./../package.json"),
@@ -137,6 +138,7 @@ if  (localStorage.firstTime == true || localStorage.firstTime == undefined) {
 	new esix.pageManager().function('gettingstarted');
 }else {
 	global.esix.api = new esix.modules.api({username: localStorage.auth_username,key: localStorage.auth_key,});
+	esix.keyListener();
 	new esix.pageManager().pageListen()
 }
 
