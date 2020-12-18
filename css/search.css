@@ -281,22 +281,26 @@ div.fullscreenResult div.post-info td.middle {
 }
 
 /* Search Options */
-div.searchOptions {
+div.searchOptionsWindow {
 	background-color: rgba(28,28,28,.5);
 	backdrop-filter: blur(3px);
-	display: hidden;
 	transition: 150ms;
+	display:none;
+	opacity: 0;
 }
-div.searchOptions.show {
+div.searchOptionsWindow.show {
 	position:fixed;
+	display: block;
 	top:0;
 	left:0;
 	width:100vw;
 	height:100vh;
 	z-index: 1000;
+	content: initial;
 	transition: 150ms;
+	opacity: 100%;
 }
-div.searchOptions.show div.content{
+div.searchOptionsWindow div.content{
 	height: 80vh;
 	width: 60vw;
 	background-color: #292929;
@@ -308,19 +312,19 @@ div.searchOptions.show div.content{
 
 	padding: 15px;
 }
-div.searchOptions div.content i.close {
+div.searchOptionsWindow div.content i.close {
 	float: right;
 	position: fixed;
 	top:calc(10vh + 5px);
 	right: calc(20vw + 5px);
 	transition: 150ms;
 }
-div.searchOptions div.content i.close:hover {
+div.searchOptionsWindow div.content i.close:hover {
 	cursor:pointer;
 	transform: scale(1.2);
 	text-shadow: 0 0 3px white;
 	transition: 150ms;
 }
-div.searchOptions select {
+div.searchOptionsWindow select {
 	width: 30%;
 }
