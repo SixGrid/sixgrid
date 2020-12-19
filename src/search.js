@@ -94,6 +94,10 @@ module.exports = {
 			</div>
 			`;
 			console.debug(`[search] Updated chips with content of ${tempChip} and JSON data of `,t_savedPosts)
+			if ($("div.searchBar div.chips").length == 0) {
+				// Chips do not exist
+				$("div.searchBar").append(`<div class="chips"> </div>`)
+			}
 			$("div.searchBar div.chips").html(tempChip)
 		}
 	},
@@ -188,9 +192,12 @@ module.exports = {
 		localStorage.currentPage = 0;
 		localStorage.totalPages = 0;
 		$(".searchResults").html(module.exports.generatePageHTML(returnedPosts))
-		$("div.searchBar li.searchOptions a#saveTag").click(()=>{
+		$("div.searchBar li.searchButtons a#saveTag").click(()=>{
 			// Save current tag, if there are none then show message saying there are no tags selected/searched`
 			var tempTags = []
+			if (localStorage.savedTags == undefined) {
+				localStorage.savedTags = '';
+			}
 			if (localStorage.savedTags != undefined && localStorage.savedTags.length > 1){
 				tempTags = localStorage.savedTags.split(',');
 			}
@@ -204,7 +211,7 @@ module.exports = {
 			localStorage.savedTags = tempTags.join(',');
 			module.exports.generateSavedTagsChips();
 		});
-		$("div.searchBar li.searchOptions a#options").click(()=>{
+		$("div.searchBar li.searchButtons a#options").click(()=>{
 			// Toggle display of options dropdown menu.
 			$("div.searchSettings").addClass("show");
 		});
