@@ -12,3 +12,46 @@ div.apiSettings div.tagBlacklist input {
 div.chips .input{
     width: 100% !important; 
 }
+div.bindingContainer {
+	min-width: 600px;
+	max-width: 60vw;
+	background-color: #353535;
+	padding-top:calc(1.25%/12);
+	padding-bottom:1.25%;
+}
+div.bindingContainer table {
+	width: 95%;
+	margin: 2.5%;
+	background-color: #3f3f3f;
+}
+div.bindingContainer div.tableContainer {
+	overflow-y:auto;
+	max-height: 300px;
+}
+div.bindingContainer ul.selectedOptions {
+	list-style: none;
+	text-align:center;
+	margin:auto;
+}
+div.bindingContainer ul.selectedOptions li {
+	display: inline;
+}
+div.bindingContainer ul.selectedOptions li a {
+	width: 150px;
+}
+div.bindingContainer td,
+div.bindingContainer th {
+	padding: 5px 8px;
+}
+div.bindingContainer tbody tr {
+	transition: 250ms;
+}
+div.bindingContainer tbody tr:hover {
+	background-color: #168bb5;
+	cursor:pointer;
+	transition:125ms;
+}
+div.bindingContainer tbody tr.active {
+	background-color: #9816b5;
+	transition: 150ms;
+}
