@@ -121,6 +121,9 @@ module.exports = {
 		`;
 	},
 	filterPosts: (posts) => {
+		if (localStorage.blacklistedTags == undefined) {
+			localStorage.blacklistedTags = '';
+		}
 		var filtercount = 0;
 		var returnedPosts = {posts:[]}
 		posts.posts.forEach((post)=>{
