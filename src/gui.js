@@ -121,7 +121,11 @@ global.esix = {
 if (esix.electron.remote.process.platform == 'win32') {
 	esix.osSeperator = "\\";
 }
-
+global.esix.loadSixgrid = () => {
+	global.esix.api = new esix.modules.api({username: localStorage.auth_username,key: localStorage.auth_key,});
+	esix.keyListener();
+	new esix.pageManager().pageListen();
+}
 // Misc stuff
 const $ = esix.modules.jquery;
 $("a#branding").html(esix.packageJSON.productName)
@@ -137,9 +141,7 @@ if (localStorage.debugMode) {
 if  (localStorage.firstTime == true || localStorage.firstTime == undefined) {
 	new esix.pageManager().function('gettingstarted');
 }else {
-	global.esix.api = new esix.modules.api({username: localStorage.auth_username,key: localStorage.auth_key,});
-	esix.keyListener();
-	new esix.pageManager().pageListen()
+	esix.loadSixgrid();
 }
 
 console.debug(`[gui.js] esix global`,esix)
