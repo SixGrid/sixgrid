@@ -95,6 +95,10 @@ module.exports = {
 							case '422':
 								swal("Valid Credentials", "The credentials you provided are valid.", "success") // this is cap i need to add diff check
 								localStorage.credentialsValidated = true;
+								localStorage.auth_username = $("div.steppercontent div.login input#username").val()
+								localStorage.auth_key = $("div.steppercontent div.login input#key").val()
+								localStorage.firstTime = false;
+								esix.loadSixgrid();
 								break;
 							default:
 								swal("Server Error", `Something failed on e621's server, try again later. Error Code ${response.status.toString()}`, "error")
@@ -113,6 +117,10 @@ module.exports = {
 							case '422':
 								swal("Valid Credentials", "The credentials you provided are valid.", "success") // this is cap i need to add diff check
 								localStorage.credentialsValidated = true;
+								localStorage.auth_username = $("div.steppercontent div.login input#username").val()
+								localStorage.auth_key = $("div.steppercontent div.login input#key").val()
+								localStorage.firstTime = false;
+								esix.loadSixgrid();
 								break;
 							default:
 								swal("Server Error", `Something failed on e621's server, try again later. Error Code ${error.response.status.toString()}`, "error")
@@ -129,6 +137,7 @@ module.exports = {
 					$("nav.stepper#gettingStarted a.breadcrumb#3").addClass('active');
 					$("nav.stepper#gettingStarted a.btn.right#next").fadeOut('slow');
 					$("div.steppercontent").html(module.exports.content[2]());
+
 				} else {
 					// Bring up msg saying that credentials are not validated.
 					swal("YOU SHALL NOT PASS", "Your Credentials have not been validated, You cannot continue until they have been validated and saved.", "error");
