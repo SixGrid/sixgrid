@@ -2,8 +2,41 @@ const axios = require('axios');
 
 module.exports = {
 	defaultPage: () => {
+		var keybindData = [];
+		var t_keymap = JSON.parse(localStorage.keymap)
+		var keymapLookup = {
+			"previous": "Aciton: Previous",
+			"next": "Action: Next",
+			"actionup": "Post: Upvote",
+			"actiondown": "Post: Downvote",
+			"download": "Post: Download",
+			"exit": "Action: Exit",
+			"favorite": "Post: Favorite",
+			"save": "Tag: Bookmark",
+		}
+		t_keymap = Object.entries(t_keymap);
+		t_keymap.forEach((key)=>{
+			var keymapString = key[0];
+			var keymapDescription = keymapLookup[key[1]];
+			if (keymapString.includes("key")) {
+				keymapString = keymapString.replace("key","").toUpperCase()
+			}
+			else if (keymapString.includes("arrow")) {
+				keymapString = keymapString.replace("arrow","")
+				keymapString = `Arrow ${keymapString.charAt(0).toUpperCase() + keymapString.slice(1)}`
+			}
+			else {
+				keymapString = keymapString.charAt(0).toUpperCase() + keymapString.slice(1)
+			}
+			var shitToPush = `
+			<tr data="${key[1]}">
+				<td><span>${keymapDescription}</span></td>
+				<td>${keymapString}</td>
+			</tr>
+			`
+			keybindData.push(shitToPush)
+		})
 		return `
-		
 		<div class="container">
 			<h3>Settings</h3>
 			<div class="authSettings">
@@ -32,6 +65,35 @@ module.exports = {
 						<input placeholder="${localStorage.downloadLocation|| 'No Set Download Location'}" id="changeDownloadLocation_textbox" type="text" class="validate">
 						<a class="waves-effect waves-light btn" id="changeDownloadLoc_btn">Change Download Location</a>
 					</div>
+				</div>
+			</div>
+			<hr>
+			<div class="keyboardEditor">
+				<h4>Edit Keybindings</h4>
+				<div class="bindingContainer">
+					<div class="tableContainer">
+						<table>
+							<thead>
+								<tr>
+									<th>Action</th>
+									<th>Binding</th>
+								</tr>
+							</thead>
+							${keybindData.join('\n')}
+							<!--tr data="next">
+								<td>
+									<span>Action: Next</span>
+								</td>
+								<td>Left Arrow</td>
+							</tr-->
+						</table>
+					</div>
+					<ul class="selectedOptions">
+						<li><a class="waves-effect waves-light btn" id="defaults">Reset All</a></li>
+						<li><a class="waves-effect waves-light btn disabled" id="advanced">Advanced</a></li>
+						<li><a class="waves-effect waves-light btn disabled" id="edit">Edit Binding</a></li>
+						<li><a class="waves-effect waves-light btn disabled	" id="remove">Remove Binding</a></li>
+					</ul>
 				</div>
 			</div>
 			<hr>
@@ -167,10 +229,62 @@ module.exports = {
 		})
 		localStorage.blacklistedTags = finalChips;
 	},
+	keybindOptionToggle: (g_keybind,g_enableButtons) => {
+		var $ = esix.modules.jquery
+		var t_keymap = Object.entries(JSON.parse(localStorage.keymap))
+		t_keymap.forEach((fg_key)=>{
+			if (fg_key[1] == g_keybind) return;
+			$(`div.keyboardEditor div.bindingContainer tbody tr[data=${fg_key[1]}`).removeClass("active")
+		})
+		if (g_enableButtons == undefined) {
+			$("div.keyboardEditor ul.selectedOptions a#advanced").toggleClass("disabled")
+			$("div.keyboardEditor ul.selectedOptions a#edit").toggleClass("disabled")
+			$("div.keyboardEditor ul.selectedOptions a#remove").toggleClass("disabled")
+			return
+		}
+		if (g_enableButtons) {
+			$("div.keyboardEditor ul.selectedOptions a#advanced").removeClass("disabled")
+			$("div.keyboardEditor ul.selectedOptions a#edit").removeClass("disabled")
+			$("div.keyboardEditor ul.selectedOptions a#remove").removeClass("disabled")
+			return
+		} else {
+			$("div.keyboardEditor ul.selectedOptions a#advanced").addClass("disabled")
+			$("div.keyboardEditor ul.selectedOptions a#edit").addClass("disabled")
+			$("div.keyboardEditor ul.selectedOptions a#remove").addClass("disabled")
+			return
+		}
+	},
+	keybindOptionListen: () => {
+		var $ = esix.modules.jquery
+		$("div.keyboardEditor div.bindingContainer table tbody tr").click((me)=>{
+			var keybindClicked = "";
+			switch (me.target.localName) {
+				case "span":
+					keybindClicked = me.target.parentElement.parentElement.attributes.data.value;
+					break;
+				case "td":
+					keybindClicked = me.target.parentElement.attributes.data.value;
+					break;
+				case "tr":
+					keybindClicked = me.target.attributes.data.value;
+					break;
+			}
+			console.debug(`[settings] Keybind for '${keybindClicked}' is active.`)
+			if (localStorage.settings_activeKeybind != keybindClicked) {
+				$(`div.keyboardEditor div.bindingContainer tbody tr[data=${localStorage.settings_activeKeybind}]`).toggleClass("active")
+				module.exports.keybindOptionToggle(keybindClicked,true)
+			} else {
+				module.exports.keybindOptionToggle(keybindClicked,false)
+			}
+			localStorage.settings_activeKeybind = keybindClicked;
+			$(`div.keyboardEditor div.bindingContainer tbody tr[data=${keybindClicked}`).toggleClass("active")
+		})
+	},
 	listen: () => {
 		var $ = require("jquery");
 		var swat = require("sweetalert");
 		console.debug("[settings.js] listen => called");
+		module.exports.keybindOptionListen();
 		// Login
 		$("div.authSettings a#authSettings_verify").click(() => {
 				console.log(localStorage.auth_username)
