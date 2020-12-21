@@ -1,0 +1,17 @@
+div.downloadHistory table.historyList tr {
+	border-bottom: 1px solid rgb(28,28,28);
+	line-height: 70px;
+	height: 70px;
+}
+table.historyList img {
+	float: left;
+	height: 60px;
+}
+table.historyList td.thumbnail {
+	width: max-content;
+	box-sizing: content-box;
+}
+table.historyList ul.postInfo {
+	min-width: 20%;
+	margin: 0;
+}
