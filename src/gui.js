@@ -10,6 +10,7 @@ global.esix = {
 		home: require("./home.js"),
 		settings: require("./settings.js"),
 		debug: require("./debugpage.js"),
+		download: require("./downloadManager.js"),
 		gettingstarted: require("./gettingStarted.js"),
 	},
 	keyListener: require("./keylisten.js"),
@@ -45,7 +46,7 @@ global.esix = {
 	downloadPost: (post)=>{
 		// Save variable to know progress
 		var b_dll = `${localStorage.downloadLocation || require("electron").remote.app.getPath("downloads")}${esix.osSeperator}${esix.packageJSON.productName}`;
-		var dll = `${b_dll}${esix.osSeperator}${localStorage.currentTags.replace(":","").replace("*","").replace("?","").replace("<","").replace(">","").replace('"',"'").replace('|',"")}`;
+		var dll = `${b_dll}${esix.osSeperator}${localStorage.currentTags.replace(":","").replace(":","").replace("*","").replace("?","").replace("<","").replace(">","").replace('"',"'").replace('|',"")}`;
 		
 		var received_bytes = 0;
 		var total_bytes = 0;

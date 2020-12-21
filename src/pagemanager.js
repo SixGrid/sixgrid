@@ -17,6 +17,9 @@ class component {
 			case "debug":
 				shitToRun = esix.pages.debug;
 				break;
+			case "download":
+				shitToRun = esix.pages.download;
+				break;
 			case "gettingstarted":
 				shitToRun = esix.pages.gettingstarted;
 				break;
