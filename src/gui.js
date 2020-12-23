@@ -117,6 +117,7 @@ global.esix = {
 			}
 		});
 	},
+	base64: require("./base64.js"),
 	ratingParse: (g_rating) => {
 		g_rating = g_rating.toLowerCase()
 		var lookup = {
