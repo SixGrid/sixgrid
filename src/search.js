@@ -458,7 +458,13 @@ module.exports = {
 		})
 		// Add to Queue
 		$("i.post-control#addToQueue").click(()=>{
-			esix.pages.download.addToQueue(esix.searchStorage.currentPosts[currentPostIndex])
+			var didThePostGetAdded = esix.pages.download.addToQueue(esix.searchStorage.currentPosts[currentPostIndex]);
+			console.debug(didThePostGetAdded,esix.searchStorage.currentPosts[currentPostIndex])
+			if (didThePostGetAdded) {
+				esix.notification('info','Post Added to Download Queue')
+			} else {
+				esix.notification('error','Post Already Exists in Download Queue')
+			}
 		})
 		return;
 	},
