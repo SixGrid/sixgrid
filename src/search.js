@@ -372,6 +372,7 @@ module.exports = {
 						<i class="material-icons window-control" id="close-window">close</i>
 					</td>
 					<td class="right">
+						<i class="material-icons post-control" id="addToQueue" data="${postData.id}">add_to_photos</i>
 						<i class="material-icons post-control" id="upvote" data="${postData.id}">arrow_upward</i>
 						<span class="post-control" id="postscore">${postData.score.total}</span>
 						<i class="material-icons post-control" id="downvote" data="${postData.id}">arrow_downward</i>
@@ -454,6 +455,10 @@ module.exports = {
 		// Downvote
 		$("i.post-control#downvote").click(()=>{
 			module.exports.keylisten_fullscreen('actiondown');
+		})
+		// Add to Queue
+		$("i.post-control#addToQueue").click(()=>{
+			esix.pages.download.addToQueue(esix.searchStorage.currentPosts[currentPostIndex])
 		})
 		return;
 	},
