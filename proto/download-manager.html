@@ -34,23 +34,43 @@
 			<div class="pageContent">
 				<div class="container">
 					<h1>Download Manager</h1>
-					<div class="donwloadHistory">
+					<div class="downloadHistory">
 						<div class="dl-title">
-							<span>History</span>
+							<span>Download Queue</span>
 						</div>
-						<table class="historyList">
-							<tr>
-								<td class="thumbnail">
-									<img src="https://via.placeholder.com/150">
-								</td>
-								<td>
-									<ul class="postInfo">
-										<li data-type="id" data="2530507">2530507</li>
-										<li data-type="rating" data="s" class="rating-s">safe</li>
-									</ul>
-								</td>
-							</tr>
-						</table>
+						<div class="downloadQueue-control">
+							<ul>
+								<li>
+									<a class="waves-effect waves-light btn" id="startQueue">Start Queue</a>
+								</li>
+							</ul>
+						</div>
+						<div class="queueContainer">
+							<table class="historyList">
+								<tr data-type="b64_post" data="">
+									<td class="thumbnail">
+										<img src="https://via.placeholder.com/150">
+									</td>
+									<td>
+										<ul class="postInfo">
+											<li data-type="id" data="${post.id}">${post.id}</li>
+											<li data-type="rating" data="${post.rating}" class="rating-${post.rating}">${esix.ratingParse(post.rating)}</li>
+											<li data-type="uploader" data="${post.uploader}"><a href="https://e621.net/users/562248" class="uploader-level-${pUploader.level_string.toLowerCase()}">${pUploader.name}</a></li>
+											<li data-type="b64_artist" data="${btoa(post.artist)}">${post.artist.join(", ")}</li>
+										</ul>
+									</td>
+									<td>
+										<span data-type="b64_description" data="${btoa(post.description)}">${esix.modules.removeMarkdown(post.description).replace("\r\n","<br>")}</span>
+									</td>
+									<td class="postOptions">
+										<ul class="postOptions">
+											<li><i class="material-icons" id="closePost" data-type="id" data="${post.id}">close</i></li>
+										</ul>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
