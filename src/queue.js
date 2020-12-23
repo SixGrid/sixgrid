@@ -32,10 +32,6 @@ class queue {
 			messages: [],
 			currentMessage: 'IDLE'
 		}
-		// Custom Settings for SeedBot
-		if (SB != undefined && SB.parameters.debugMode) {
-			this.storage.logging = true;
-		}
 		this._message(`QUEUE_NEW-${this.storage.UID}`);
 	}
 	add (callBack) {

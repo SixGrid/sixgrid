@@ -263,7 +263,7 @@ module.exports = {
 					localStorage.ratingFilter = 'none';
 					break;
 			}
-			console.debug(me)
+			localStorage.ratingFilter = selectedRating;
 		})
 		$("div.searchOptionsWindow div.content i.close").click(()=>{
 			$("div.searchOptionsWindow").removeClass("show")
@@ -399,12 +399,6 @@ module.exports = {
 		$("div.post-info i.window-control").click(()=>{
 			module.exports.keylisten_fullscreen('exit')
 		})
-
-		$('span#outsidelink').on('click', (event) => {
-			event.preventDefault();
-			let link = event.target.attributes.data.value;
-			require("electron").shell.openExternal(link);
-		});
 		if (currentPostIndex == 0) {
 			// No Back Button, we are at the begining.
 			localStorage.nextPostID = esix.searchStorage.currentPosts[currentPostIndex+1].id
