@@ -1,18 +1,38 @@
+async function asyncForEach (array, callback) {
+	for (let index = 0; index < array.length; index++) {
+		await callback(array[index], index, array)
+	}
+}
+
 module.exports = {
 	addToQueue: (g_postData) => {
 		if (localStorage.downloadQueue == undefined) {
 			localStorage.downloadQueue = JSON.stringify({queue: []})
 		}
-		JSON.parse(localStorage.downloadQueue).queue.forEach((queueObject)=>{
-			if (g_postData.id == queueObject.postData.id) return;
+		if (JSON.parse(localStorage.downloadQueue).queue.length < 1) {
 			var t_dlQueue = JSON.parse(localStorage.downloadQueue);
 			t_dlQueue.queue.push({
 				postData: g_postData,
 				addedTimestamp: Math.round(Date.now() / 1000)
 			});
+			localStorage.downloadQueue = JSON.stringify(t_dlQueue)
+			return true;
+		}
+		var existsAlready = false;
+		JSON.parse(localStorage.downloadQueue).queue.forEach((queueObject)=>{
+			if (g_postData.id == queueObject.postData.id) {
+				existsAlready = true;
+			}
 		})
-
-		return
+		if (!existsAlready) {
+			var t_dlQueue = JSON.parse(localStorage.downloadQueue);
+			t_dlQueue.queue.push({
+				postData: g_postData,
+				addedTimestamp: Math.round(Date.now() / 1000)
+			});
+			localStorage.downloadQueue = JSON.stringify(t_dlQueue)
+		}
+		return !existsAlready;
 	},
 	defaultPage: ()=>{
 		return `
@@ -36,7 +56,10 @@ module.exports = {
 		</div>
 		`;
 	},
-	listen: ()=>{
+	generateTable: ()=>{
+
+	},
+	listen: async ()=>{
 		var $ = esix.modules.jquery;
 		console.debug("[downloadManager] listen => called");
 		if (localStorage.downloadQueue == undefined) {
@@ -53,7 +76,12 @@ module.exports = {
 		}
 		*/
 		var t_queueTableContent = [];
-		JSON.parse(localStorage.downloadQueue).queue.forEach((queueObject)=>{
+		await asyncForEach(JSON.parse(localStorage.downloadQueue).queue,async (queueObject)=>{
+			var pUploader = await esix.api._req(`users/${queueObject.postData.uploader}.json`)
+			console.debug(queueObject.postData.id,queueObject.postData,pUploader)
+			if (pUploader.name.toLowerCase() == 'undefined') {
+				pUploader.name = 'Anonymous User';
+			}
 			var content = `
 			<tr data-type="b64_post" data="${btoa(JSON.stringify(queueObject.postData))}">
 				<td class="thumbnail">
@@ -63,8 +91,8 @@ module.exports = {
 					<ul class="postInfo">
 						<li data-type="id" data="${queueObject.postData.id}">${queueObject.postData.id}</li>
 						<li data-type="rating" data="${queueObject.postData.rating}" class="rating-${queueObject.postData.rating}">${esix.ratingParse(queueObject.postData.rating)}</li>
-						<li data-type="uploader" data="${queueObject.postData.uploader}"><a href="https://e621.net/users/562248" class="uploader-level-${pUploader.level_string.toLowerCase()}">${pUploader.name}</a></li>
-						<li data-type="b64_artist" data="${btoa(queueObject.postData.artist)}">${queueObject.postData.artist.join(", ")}</li>
+						<li data-type="uploader" data="${queueObject.postData.uploader}">Uploaded by <span id="outsidelink" data="https://e621.net/users/${queueObject.postData.uploader}">${pUploader.name}</span> (${queueBoject.postData.uploader})</li>
+						<li data-type="b64_artist" data="${btoa(queueObject.postData.artist)}">${queueObject.postData.tags.artist.join(", ")}</li>
 					</ul>
 				</td>
 				<td>
@@ -77,6 +105,7 @@ module.exports = {
 				</td>
 			</tr>
 			`;
+			t_queueTableContent.push(content)
 		})
 		$("div.downloadHistory div.queueContainer").html(`<table class="historyList">\r\n${t_queueTableContent.join("\r\n")}\r\n</table>`)
 	}
