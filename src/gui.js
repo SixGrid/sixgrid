@@ -3,7 +3,8 @@ global.esix = {
 		api: require("esix-api"),
 		jquery: require("jquery"),
 		md5: require("md5"),
-		salert: require("sweetalert")
+		salert: require("sweetalert"),
+		removeMarkdown: require("remove-markdown")
 	},
 	pages: {
 		search: require("./search.js"),

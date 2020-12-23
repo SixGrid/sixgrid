@@ -81,6 +81,7 @@
 		"fs": "^0.0.1-security",
 		"jquery": "^3.5.1",
 		"md5": "^2.3.0",
+		"remove-markdown": "^0.3.0",
 		"request": "^2.88.2",
 		"sweetalert": "^2.1.2",
 		"yarn": "^1.22.10"
