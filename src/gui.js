@@ -117,6 +117,19 @@ global.esix = {
 			}
 		});
 	},
+	ratingParse: (g_rating) => {
+		g_rating = g_rating.toLowerCase()
+		var lookup = {
+			"s": "safe",
+			"q": "questionable",
+			"e": "explicit",
+		};
+		if (lookup[g_rating] != undefined) {
+			return lookup[g_rating]
+		} else {
+			throw "Rating does not exist";
+		}
+	},
 	osSeperator: "/",
 }
 
