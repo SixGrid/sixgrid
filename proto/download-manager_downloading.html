@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--Import Google Icon Font-->
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<!--Import materialize.css-->
+		<link type="text/css" rel="stylesheet" href="./../materialize/css/materialize.min.css"  media="screen,projection"/>
+		<!--Let browser know website is optimized for mobile-->
+		<meta name="viewport" content="width=device-width, initial-scale=0.8"/>
+
+		<link rel="stylesheet" href="//cdn.materialdesignicons.com/5.4.55/css/materialdesignicons.min.css">
+
+		<!-- Custom CSS -->
+		<link type="text/css" rel="stylesheet" href="./../css/main.css" />
+	</head>
+
+	<body>
+		<div class="mainContent">
+			<nav class="main-navbar">
+				<div class="row">
+					<div class="nav-wrapper">
+						<div class="col s12">
+							<a class="brand-logo">sixgrid</a>
+							<ul class="right hide-on-med-and-down" id="navbarLinks">
+								<li><a data="home">Home</a></li>
+								<li><a data="download">Downloads</a></li>
+								<li><a data="search">Search</a></li>
+								<li><a data="settings">Settings</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</nav>
+			<div class="pageContent">
+				<div class="container">
+					<h1>Download Manager</h1>
+					<div class="queueDownloader">
+						<table>
+							<tr>
+								<th>Download Statistics</th>
+								<th>Queued Items</th>
+							</tr>
+							<tr>
+								<td style="vertical-align: top;">
+									<table class="totalStats">
+										<tr>
+											<td class="stats"><span id="postcount">1/12</span> <span id="downloadedSize">(3mb/37mb)</span></td>
+											<td class="totalProgress">
+												<div class="progress">
+													<div class="determinate" style="width: 8%"></div>
+												</div>
+											</td>
+										</tr>
+									</table>
+								</td>
+								<td>
+									<table class="queuedItems">
+										<tr data="postID">
+											<td class="thumbnail"><img src="test.jpg"></td>
+											<td class="downloadedSize">3mb</td>
+											<td class="totalProgress">
+												<div class="progress">
+													<div class="determinate" style="width: 70%"></div>
+												</div>
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<!--JavaScript at end of body for optimized loading-->
+		<script type="text/javascript" src="./../materialize/js/materialize.min.js"></script>
+	</body>
+</html>
