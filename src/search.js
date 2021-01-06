@@ -1,3 +1,13 @@
+function UIDGen() {
+	var length = 6
+	var charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+	var retVal = "";
+	for (var i = 0, n = charset.length; i < length; ++i) {
+		retVal += charset.charAt(Math.floor(Math.random() * n));
+	}
+	return retVal;
+}
+
 module.exports = {
 	defaultPage: ()=>{
 		
@@ -54,6 +64,10 @@ module.exports = {
 							<option value="q">Questionable</option>
 							<option value="e">Explicit</option>
 						</select>
+						<hr>
+						<label>Page Preload</label>
+						<input id="preloadPageCount" type="number" placeholder="Page Count"></input>
+							<a class="waves-effect waves-light btn-small" id="preloadPageButton">Preload Pages</a>
 
 						<i class="close material-icons">close</i>
 					</div>
@@ -131,6 +145,20 @@ module.exports = {
 		var filtercount = 0;
 		var returnedPosts = {posts:[]}
 		posts.posts.forEach((post)=>{
+			if (post.file.md5 != undefined && post.file.ext != undefined) {
+				post.file.url = 'https://static1.e621.net/data/' + post.file.md5.slice(0, 2)  + '/' + post.file.md5.slice(2, 4) + '/' + post.file.md5 + '.' + post.file.ext;
+				if (post.sample.has) {
+					post.sample.url = 'https://static1.e621.net/data/sample/' + post.file.md5.slice(0, 2)  + '/' + post.file.md5.slice(2, 4) + '/' + post.file.md5 + '.jpg';
+				}
+				switch (post.file.ext) {
+					case "png":
+					case "jpg":
+					case "webm":
+						post.preview.url = 'https://static1.e621.net/data/preview/' + post.file.md5.slice(0, 2)  + '/' + post.file.md5.slice(2, 4) + '/' + post.file.md5 + '.jpg';
+						break;
+				}
+				
+			}
 			if ((post.file.url == null || post.file.url.length < 1) && (post.sample.url == null || post.sample.url.length < 1) && (post.preview.url == null || post.preview.url.length < 1)) {
 				return;
 			} else {
@@ -156,7 +184,7 @@ module.exports = {
 	generatePageHTML: (posts) => {
 		var htmlPostArray = [];
 		posts.posts.forEach((post)=>{
-			if (post.file.url.length < 1 && post.sample.url.length < 1 &&post.preview.url.length < 1) {
+			if (post.file.url == undefined  && post.sample.url == undefined  && post.preview.url == undefined ) {
 				return;
 			} else {
 				htmlPostArray.push(module.exports.generateCard(post))
@@ -227,8 +255,8 @@ module.exports = {
 		})
 		$("div.pageControl a#next_page").click(async()=>{
 			// Append contents of next page to "searchResults"
-				var pageToGoto = parseInt(localStorage.currentPage) + 1;
-				console.log(pageToGoto, localStorage.currentPage, localStorage.currentPostIndex)
+			var pageToGoto = parseInt(localStorage.currentPage) + 1;
+			console.log(pageToGoto, localStorage.currentPage, localStorage.currentPostIndex)
 			if ($(`div.searchResults div.page${pageToGoto}`).length) {
 				// Scroll to page
 				$([document.documentElement, document.body]).animate({
@@ -243,10 +271,64 @@ module.exports = {
 			}
 		})
 	},
-	searchOptionsManager: () => {
+	preloadSearchPages: async (ourID) => {
+		console.debug(ourID,localStorage.local_currentTabID)
+		if (ourID != localStorage.local_currentTabID) return;
+		var $ = esix.modules.jquery
+		if ($("div.searchOptionsWindow input#preloadPageCount").val().length < 1) {
+			// Empty
+			return;
+		}
+		if ($("div.searchBar nav.smallSearch input#search").val().length < 1){
+			// No tags
+			return;
+		}
+		localStorage.preloadPageCount = parseInt($("div.searchOptionsWindow input#preloadPageCount").val());
+		localStorage.currentPage = 0;
+		localStorage.totalPages = 0;
+		$("div.searchResults").html(' ');
+		$("div.preloader").fadeIn("fast")
+		$("div.preloader div.container h4").html("Processing Posts")
+		esix.searchStorage.currentPosts = [];
+		var preloadQueue = new esix.queue({log:true})
+		for (let i = 0; i < localStorage.preloadPageCount; i++) {
+			preloadQueue.add(async ()=>{
+				if (i > localStorage.preloadPageCount) return;
+				var pageToGoto = i+1;
+				console.debug(i > localStorage.preloadPageCount,i,localStorage.preloadPageCount)
+				$("div.preloader div.container h5#loadingStatus").html(`Fetching Page '${pageToGoto}'`)
+				console.debug(`[search -> preloadSearchPages] ${localStorage.currentPage} -> (${pageToGoto}, ${localStorage.preloadPageCount})`)
+				var newPage = await esix.api.getPostsByTag({tags:[localStorage.currentTags],limit:localStorage.postsPerPage || '90',page:pageToGoto});
+				console.debug(`[search -> preloadSearchPages] Recieved posts for page '${pageToGoto}'`,newPage)
+				$("div.preloader div.container h5#loadingStatus").html(`Recieved '${newPage.posts.length}' posts for Page '${pageToGoto}'`)
+				$("div.searchResults").append(module.exports.generatePageHTML(newPage));
+				localStorage.currentPage = i + 1;
+				console.debug(`PAGE ${localStorage.currentPage} DONE`)
+			})
+		}
+		await preloadQueue.start(()=>{
+			console.debug(`[search -> preloadSearchPages] Preloaded '${localStorage.preloadPageCount}' page(s) with ${esix.searchStorage.currentPosts.length} posts.`);
+			
+			$("div.preloader div.container h5#loadingStatus").html(`Done!`)
+			$("div.preloader div.container h4").html('Loading')
+			setTimeout(()=>{
+				$("div.preloader").fadeOut('fast')
+			},2500)
+			return;
+		});
+	},
+	searchOptionsManager: (ourID) => {
+		if (ourID != localStorage.local_currentTabID) return;
 		var $ = esix.modules.jquery;
 		console.debug($("div.searchOptionsWindow"))
 		$("div.searchOptionsWindow").addClass("show");
+		$("div.searchOptionsWindow input#preloadPageCount").keyup((me)=>{
+			if (me.keyCode != 13) return;
+			module.exports.preloadSearchPages(ourID)
+		})
+		$("div.searchOptionsWindow a#preloadPageButton").click((me)=>{
+			module.exports.preloadSearchPages(ourID)
+		})
 		$("div.searchOptionsWindow select#rating").click((me)=>{
 			var selectedRating = me.target.selectedOptions[0].value
 			switch(selectedRating) {
@@ -267,10 +349,12 @@ module.exports = {
 		})
 		$("div.searchOptionsWindow div.content i.close").click(()=>{
 			$("div.searchOptionsWindow").removeClass("show")
+			return;
 		})
 	},
-	listen: ()=>{
+	listen: (ourID)=>{
 		if (!localStorage.credentialsValidated) return;
+		if (ourID != localStorage.currentTabID) return;
 		console.debug("[settings.js] listen => called");
 		var $ = esix.modules.jquery;
 		console.debug(esix)
@@ -285,7 +369,10 @@ module.exports = {
 			module.exports.generateSearchResults($("div.input-field input#search[type=search]").val().split(' ').join("+"))
 		})
 		$("div.searchBar li.searchButtons a#options").click(()=>{
-			module.exports.searchOptionsManager();
+			var localUID = UIDGen();
+			localStorage.local_currentTabID = localUID;
+			module.exports.searchOptionsManager(localUID);
+			return;
 		})
 		$("div.searchBar div.chips div.chip span").click((me)=>{
 			$("div.input-field input#search[type=search]").val(me.target.parentElement.attributes.data.value.split("+").join(" "))
@@ -300,6 +387,14 @@ module.exports = {
 			esix.notification('info',`Removed tag '${tagtoRemove}'`)
 			module.exports.generateSavedTagsChips();
 		})
+		$(window).scroll(function() {
+			if ($(window).scrollTop() > 100) {
+				$("div.searchBar").removeClass("topOfPage")
+			}
+			else {
+				$("div.searchBar").addClass("topOfPage")
+			}
+		});
 	},
 	fullScreen: (imgDATA)=>{
 		var postData = imgDATA;
@@ -332,6 +427,17 @@ module.exports = {
 			// No Forward Button, we are at the end
 			nextPostButton = `<!--${nextPostButton}-->`;
 		}
+		var postImageContent = `<img src="${postData.file.url || postData.sample.url || postData.preview.url}" onerror="this.src='https://cdn.jyles.club/missing-post.png'">`;
+		if (postData.file.ext.toLowerCase().trim() == "webm") {
+			if (localStorage.additionalVideoOptions == undefined) {
+				localStorage.additionalVideoOptions = "autoplay loop";
+			}
+			postImageContent = `
+					<video controls="controls" poster="${postData.preview.url || postData.sample.url}" ${localStorage.additionalVideoOptions}>
+						<source src="${postData.file.url}" type="video/${postData.file.ext}">
+					</video>
+			`;
+		}
 		var postTable = `
 		<table class="post-fullscreen">
 			<tr class="post">
@@ -339,7 +445,7 @@ module.exports = {
 					${previousPostButton}
 				</td>
 				<td class="post-image">
-					<img src="${postData.file.url || postData.sample.url || postData.preview.url}" onerror="this.src='https://cdn.jyles.club/missing-post.png'">
+					${postImageContent}
 				</td>
 				<td class="post-next">
 					${nextPostButton}
@@ -433,14 +539,14 @@ module.exports = {
 		})
 		// Favorite
 		$("i.post-control#favorite.favourite-false").click(()=>{
-			var postID = esix.searchStorage.currentPosts[currentPostIndex].id;
-			esix.searchStorage.currentPosts[currentPostIndex].is_favorited = true;
-			esix.api._req(`favorites.json?post_id=${postID}`,'post')
+			var postID = esix.searchStorage.currentPosts[localStorage.currentPostIndex].id;
+			esix.searchStorage.currentPosts[localStorage.currentPostIndex].is_favorited = true;
+			esix.api._req(`favorites.json?post_id=${postID}`,'post',{post_id:postID})
 		})
 		$("i.post-control#favorite.favourite-true").click(()=>{
-			var postID = esix.searchStorage.currentPosts[currentPostIndex].id;
-			esix.searchStorage.currentPosts[currentPostIndex].is_favorited = false;
-			esix.api._req(`favorites/${postID}.json`,'delete')
+			var postID = esix.searchStorage.currentPosts[localStorage.currentPostIndex].id;
+			esix.searchStorage.currentPosts[localStorage.currentPostIndex].is_favorited = false;
+			esix.api._req(`favorites.json?post_id=${postID}`,'delete',{post_id:postID})
 		})
 		// Upvote
 		$("i.post-control#upvote").click(()=>{
@@ -452,8 +558,8 @@ module.exports = {
 		})
 		// Add to Queue
 		$("i.post-control#addToQueue").click(()=>{
-			var didThePostGetAdded = esix.pages.download.addToQueue(esix.searchStorage.currentPosts[currentPostIndex]);
-			console.debug(didThePostGetAdded,esix.searchStorage.currentPosts[currentPostIndex])
+			var didThePostGetAdded = esix.pages.download.addToQueue(esix.searchStorage.currentPosts[localStorage.currentPostIndex]);
+			console.debug(didThePostGetAdded,esix.searchStorage.currentPosts[localStorage.currentPostIndex])
 			if (didThePostGetAdded) {
 				esix.notification('info','Post Added to Download Queue')
 			} else {
@@ -466,15 +572,17 @@ module.exports = {
 		switch(direction) {
 			case "up":
 				var postID = esix.searchStorage.currentPosts[localStorage.currentPostIndex].id;
+				var currentPost = esix.searchStorage.currentPosts[localStorage.currentPostIndex];
 				esix.searchStorage.currentPosts[localStorage.currentPostIndex].score.total++;
 				esix.searchStorage.currentPosts[localStorage.currentPostIndex].score.up++;
-				esix.api._req(`posts/${postID}/votes.json?no_unvote=true&score=1`,'post')
+				currentPost.vote(true,true);
 				break;
 			case "down":
 				var postID = esix.searchStorage.currentPosts[localStorage.currentPostIndex].id;
-				esix.searchStorage.currentPosts[localStorage.currentPostIndex].score.total = `${esix.searchStorage.currentPosts[currentPostIndex].score.total-1}`;
-				esix.searchStorage.currentPosts[localStorage.currentPostIndex].score.down = `${esix.searchStorage.currentPosts[currentPostIndex].score.down-1}`;
-				esix.api._req(`posts/${postID}/votes.json?no_unvote=true&score=-1`,'post')
+				var currentPost = esix.searchStorage.currentPosts[localStorage.currentPostIndex];
+				esix.searchStorage.currentPosts[localStorage.currentPostIndex].score.total = `${esix.searchStorage.currentPosts[localStorage.currentPostIndex].score.total-1}`;
+				esix.searchStorage.currentPosts[localStorage.currentPostIndex].score.down = `${esix.searchStorage.currentPosts[localStorage.currentPostIndex].score.down-1}`;
+				currentPost.vote(false,true);
 				break;
 		}
 	},
@@ -503,6 +611,15 @@ module.exports = {
 			case "download":
 				var post = esix.searchStorage.currentPosts[localStorage.currentPostIndex];
 				esix.downloadPost(post);
+				break;
+			case "save":
+				var didThePostGetAdded = esix.pages.download.addToQueue(esix.searchStorage.currentPosts[localStorage.currentPostIndex]);
+				console.debug(didThePostGetAdded,esix.searchStorage.currentPosts[localStorage.currentPostIndex])
+				if (didThePostGetAdded) {
+					esix.notification('info','Post Added to Download Queue')
+				} else {
+					esix.notification('error','Post Already Exists in Download Queue')
+				}
 				break;
 			case "exit":
 				localStorage.search_isFullscreen = 'false';

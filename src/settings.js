@@ -336,6 +336,16 @@ module.exports = {
 			$("div.downloadSettings input#changeDownloadLocation_textbox[type=text]").val("")
 		})
 
+		// Set Max Posts per Page
+		$("div.apiSettings input#postsPerPage").keyup((me)=>{
+			if (me.keyCode != 13) return;
+			if ($("div.apiSettings input#postsPerPage").val() > 320) {
+				localStorage.postsPerPage = 320
+			} else {
+				localStorage.postsPerPage = $("div.apiSettings input#postsPerPage").val()
+			}
+		})
+
 		// Blacklisted Tags
 		if (localStorage.blacklistedTags.split(",").length > 1 || localStorage.blacklistedTags != undefined || localStorage.blacklistedTags.length > 1) {
 			var t_blackListedTags = localStorage.blacklistedTags;
