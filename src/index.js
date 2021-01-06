@@ -19,6 +19,7 @@ const createWindow = () => {
 		webPreferences: {
 			nodeIntegration: true,
 			v8CacheOptions: 'none',
+			kiosk: true,
 		},
 	});
 	mainWindow.loadURL(`file://${__dirname}/index.html`);
@@ -29,6 +30,7 @@ const createWindow = () => {
 		mainWindow = null;
 	});
 };
+app.commandLine.appendSwitch("autoplay-policy", "no-user-gesture-required") 
 app.on('ready', createWindow);
 app.getPath('userData');
 app.on('window-all-closed', () => {
