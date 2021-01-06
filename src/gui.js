@@ -132,6 +132,7 @@ global.esix = {
 		}
 	},
 	osSeperator: "/",
+	queue: require("./queue.js"),
 }
 
 if (esix.electron.remote.process.platform == 'win32') {
