@@ -195,7 +195,8 @@ td.post-next i.material-icons {
 table.post-fullscreen td.post-image {
 	width: 80%;
 }
-table.post-fullscreen td.post-image img {
+table.post-fullscreen td.post-image img, 
+table.post-fullscreen td.post-image video {
 	align-content:center;
 	max-height:calc((100vh - 100px));
 	max-width: 100%;
