@@ -1,3 +1,12 @@
+function UIDGen() {
+	var charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+	var retVal = "";
+	for (var i = 0, n = charset.length; i < length; ++i) {
+		retVal += charset.charAt(Math.floor(Math.random() * n));
+	}
+	return retVal;
+}
+
 class component {
 	constructor() {
 		this.$ = esix.modules.jquery;
@@ -31,7 +40,9 @@ class component {
 		var contentToGive = shitToRun.defaultPage()
 		esix.content(contentToGive)
 		setTimeout(()=>{
-			shitToRun.listen()
+			var currentUID = UIDGen()
+			localStorage.currentTabID = currentUID
+			shitToRun.listen(currentUID)
 		},500)
 	}
 
