@@ -109,6 +109,11 @@ module.exports = {
 	downloadQueue: () => {
 		var $ = esix.modules.jquery;
 		if (JSON.parse(localStorage.downloadQueue).queue.length < 1) return;
+
+		if (!fs.existsSync(`${localStorage.downloadLocation || require("electron").remote.app.getPath("downloads")}${esix.osSeperator}${esix.packageJSON.productName}`)) {
+			fs.mkdirSync(`${localStorage.downloadLocation || require("electron").remote.app.getPath("downloads")}${esix.osSeperator}${esix.packageJSON.productName}`);
+		}
+
 		$("div.queueContainer").fadeOut("fast");
 		$("div.main-navbar").fadeOut("fast");
 		var baseHTML = `
