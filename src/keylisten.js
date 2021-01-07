@@ -30,6 +30,7 @@ module.exports = () => {
 module.exports.listener = (g_keypress) => {
 	if (!listenablePages.includes(localStorage.currentTab)) return;
 	if (keymap[g_keypress.code.toLowerCase()] == undefined) return;
+	if (localStorage.acceptKeyboardInput == 'false') return;
 	console.debug(`[keylisten] page{${localStorage.currentTab}} => Recieved Valid Keyboard Input '${g_keypress.code}'`)
 	switch(localStorage.currentTab) {
 		case "search":
