@@ -17,3 +17,4 @@ module.exports = {
 		$("div.preloader div.container h4").html(contentHeader || "Loading");
 	}
 }
+module.exports.content = module.exports.caption;
