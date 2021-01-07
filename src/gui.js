@@ -133,34 +133,69 @@ global.esix = {
 	},
 	osSeperator: "/",
 	queue: require("./queue.js"),
+	externalLink: () => {
+		require("jquery")("span#outsidelink").click((me)=>{
+			var outsideLink = me.target.attributes.data.value;
+			require("electron").shell.openExternal(outsideLink);
+		});
+	},
+	isFullscreen: () => {
+		if (localStorage.search_isFullscreen.toLowerCase().trim().includes('true')) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }
 
+// Reset Temporary Variables
+localStorage.currentTags = '';
+localStorage.currentPage = '';
+localStorage.nextPostID = '';
+localStorage.currentPostIndex = '';
+localStorage.currentPostID = '';
+localStorage.previousPostIndex = '';
+localStorage.nextPostID = '';
+localStorage.acceptKeyboardInput = true;
+localStorage.previousPostID = '';
+localStorage.nextPageLoading = false;
+localStorage.totalPages = '';
+localStorage.search_isFullscreen = false;
+localStorage.nextPostIndex = '';
+
+// Set OS Seperator
 if (esix.electron.remote.process.platform == 'win32') {
 	esix.osSeperator = "\\";
 }
+
+// Create API Instance and Fire off Key listener.
 global.esix.loadSixgrid = () => {
 	global.esix.api = new esix.modules.api({username: localStorage.auth_username,key: localStorage.auth_key,});
 	esix.keyListener();
 	new esix.pageManager().pageListen();
 }
-// Misc stuff
+
+// Initalize More essential stuff
 const $ = esix.modules.jquery;
-$("a#branding").html(esix.packageJSON.productName)
+$("a#branding").html(esix.packageJSON.productName);
 $(document).ready(()=>{
-	esix.loader.caption("Done!")
+	esix.loader.caption("Done!");
 	setTimeout(()=>{
-		esix.loader.hide()
+		esix.loader.hide();
 	},1200)
-})//rating:safe femboy outside
+})
+
+// Add debug menu if were in debug mode.
 if (localStorage.debugMode) {
-	$("#navbarLinks").append(`<li><a data="debug">Debug Menu</a></li>`)
+	$("#navbarLinks").append(`<li><a data="debug">Debug Menu</a></li>`);
 }
+
+// When its our first time only allow user to access 'Getting Started'
 if  (localStorage.firstTime == true || localStorage.firstTime == undefined) {
 	new esix.pageManager().function('gettingstarted');
 }else {
+	// When its not our first time laod sixgrid
 	esix.loadSixgrid();
 }
 
-console.debug(`[gui.js] esix global`,esix)
-
-// Start Page Listener
+console.debug(`[gui.js] esix global`,esix);
