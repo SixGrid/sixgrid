@@ -72,7 +72,7 @@ module.exports = {
 						<i class="close material-icons">close</i>
 					</div>
 				</div>
-				<div class="pageControl">
+				<div class="pageControl" style="display: none;">
 					<ul class="pagination">
 						<li class="waves-effect"><a id="prev_page"><i class="material-icons">chevron_left</i></a></li>
 						<li class="active"><a id="pageCount">1</a></li>
@@ -211,11 +211,12 @@ module.exports = {
 	generateSearchResults: async (t_tags) => {
 		var api = esix.api;
 		var $ = esix.modules.jquery;
-		$("div.pageControl").fadeIn("fast");
 		console.debug(`[search.js] Tags given`,t_tags);
 		if (localStorage.ratingFilter != 'none') {
 			t_tags=`rating:${localStorage.ratingFilter}+${t_tags}`
 		}
+		esix.loader.show()
+		esix.loader.content(`Querying tag(s); "${t_tags}"`,`Processing Request`);
 		var oposts = await api.getPostsByTag({tags:[t_tags],limit:localStorage.postsPerPage || '90'});
 		var returnedPosts = module.exports.filterPosts(oposts);
 		
@@ -226,6 +227,11 @@ module.exports = {
 		localStorage.currentPage = 0;
 		localStorage.totalPages = 0;
 		$(".searchResults").html(module.exports.generatePageHTML(returnedPosts))
+		$("div.pageControl").fadeIn("200ms");
+		esix.loader.content(undefined,`Request Completed`)
+		setTimeout(()=>{
+			esix.loader.hide()
+		},2500)
 		$("div.searchBar li.searchButtons a#saveTag").click(()=>{
 			// Save current tag, if there are none then show message saying there are no tags selected/searched`
 			var tempTags = []
@@ -383,8 +389,6 @@ module.exports = {
 		if (localStorage.ratingFilter == undefined) {
 			localStorage.ratingFilter = 'none';
 		}
-
-		$("div.pageControl").fadeOut("fast");
 		$("div.input-field input#search[type=search]").keyup(async (me)=>{
 			if (me.which != 13) return;
 			module.exports.generateSearchResults($("div.input-field input#search[type=search]").val().split(' ').join("+"))
