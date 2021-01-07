@@ -119,7 +119,7 @@ module.exports = {
 		return `
 		<li class="post">
 			<div class="card small">
-				<img onclick="esix.pages.search.fullScreen('${Buffer.from(JSON.stringify(p)).toString("base64")}')" src="${p.preview.url || p.sample.url || p.file.url}" onerror="this.src='https://cdn.jyles.club/missing-post.png'">
+				<img onclick="esix.pages.search.fullScreen('${p.id}')" src="${p.preview.url || p.sample.url || p.file.url}" onerror="this.src='https://cdn.jyles.club/missing-post.png'">
 				<ul class="post-info">
 					<li class="score_total">
 						S${p.score.total}
@@ -145,7 +145,13 @@ module.exports = {
 		var filtercount = 0;
 		var returnedPosts = {posts:[]}
 		posts.posts.forEach((post)=>{
-			if (post.file.md5 != undefined && post.file.ext != undefined) {
+			if (post.file.ext == "swf") {
+				post.file.old_url = post.file.url;
+				post.file.url = "https://cdn.jyles.club/flash_not_supported.png";
+				post.preview.url = "https://cdn.jyles.club/flash_not_supported.png";
+				post.sample.url = "https://cdn.jyles.club/flash_not_supported.png";
+			}
+			if (post.file.md5 != undefined && post.file.ext != undefined && post.file.ext != "swf") {
 				post.file.url = 'https://static1.e621.net/data/' + post.file.md5.slice(0, 2)  + '/' + post.file.md5.slice(2, 4) + '/' + post.file.md5 + '.' + post.file.ext;
 				if (post.sample.has) {
 					post.sample.url = 'https://static1.e621.net/data/sample/' + post.file.md5.slice(0, 2)  + '/' + post.file.md5.slice(2, 4) + '/' + post.file.md5 + '.jpg';
@@ -244,32 +250,47 @@ module.exports = {
 			$("div.searchSettings").addClass("show");
 		});
 		$("div.pageControl a#prev_page").click(()=>{
-			// scroll to the top of the previous page
-				var pageToGoto = localStorage.currentPage - 1;
-			if ($(`div.searchResults div.page${pageToGoto}`).length) {
-				// Scroll to page
-				$([document.documentElement, document.body]).animate({
-					scrollTop: $(`div.searchResults div.page${localStorage.currentPage}`).offset().top
-				}, 2000);
-			}
+			module.exports.generatePreviousPage();
 		})
 		$("div.pageControl a#next_page").click(async()=>{
+			module.exports.generateNextPage();
+		})
+	},
+	generateNextPage: async () => {
+		console.debug("[search] [generateNextPage] Called")
+		try {
+			var $ = esix.modules.jquery;
 			// Append contents of next page to "searchResults"
 			var pageToGoto = parseInt(localStorage.currentPage) + 1;
+			if (localStorage.nextPageLoading == "true") return;
+			localStorage.acceptKeyboardInput = false;
+			localStorage.nextPageLoading = true;
 			console.log(pageToGoto, localStorage.currentPage, localStorage.currentPostIndex)
-			if ($(`div.searchResults div.page${pageToGoto}`).length) {
-				// Scroll to page
-				$([document.documentElement, document.body]).animate({
-					scrollTop: $(`div.searchResults div.page${pageToGoto}`).offset().top
-				}, 2000);
-			} else {
-				// Append then scroll to top of new page.
-				var newPage = await esix.api.getPostsByTag({tags:[t_tags],limit:localStorage.postsPerPage || '90',page:pageToGoto});
-				console.log(newPage)
-				$("div.searchResults").append(module.exports.generatePageHTML(newPage));
-				$("div.pageControl #pageCount").html(localStorage.totalPages);
-			}
-		})
+			esix.loader.show();
+			esix.loader.caption("Loading Page "+pageToGoto);
+			var newPage = await esix.api.getPostsByTag({tags:[localStorage.currentTags],limit:localStorage.postsPerPage || '90',page:pageToGoto});
+			$("div.searchResults").append(module.exports.generatePageHTML(newPage));
+			$("div.pageControl #pageCount").html(localStorage.totalPages);
+			esix.loader.caption("Loaded Page "+pageToGoto);
+			setTimeout(()=>{
+				esix.loader.hide();
+				localStorage.nextPageLoading = false;
+			},1500)
+			localStorage.acceptKeyboardInput = true;
+		} catch (e) {
+			console.error(e)
+		}
+
+	},
+	generatePreviousPage: () => {
+		// scroll to the top of the previous page
+			var pageToGoto = localStorage.currentPage - 1;
+		if ($(`div.searchResults div.page${pageToGoto}`).length) {
+			// Scroll to page
+			$([document.documentElement, document.body]).animate({
+				scrollTop: $(`div.searchResults div.page${localStorage.currentPage}`).offset().top
+			}, 2000);
+		}
 	},
 	preloadSearchPages: async (ourID) => {
 		console.debug(ourID,localStorage.local_currentTabID)
@@ -396,23 +417,42 @@ module.exports = {
 			}
 		});
 	},
-	fullScreen: (imgDATA)=>{
-		var postData = imgDATA;
+	fullScreen: (g_post)=>{
+		var postData = g_post;
 		if (typeof imgDATA == 'string') {
-			postData = JSON.parse(atob(imgDATA));
+			postData = JSON.parse(atob(g_post));
 			console.debug(`[search.js] Decoded image ${postData.id} post data`,postData);
+		} else if (/^\d+$/.test(g_post)) {
+			esix.searchStorage.currentPosts.forEach((fp)=>{
+				if (fp.id == g_post) {
+					postData = fp;
+				}
+			})
 		}
+
+		if (g_post == undefined) {
+			return;
+		}
+
 		var $ = esix.modules.jquery;
 		var esixPostIndex = 0;
 		var esixPostLimit = esix.searchStorage.currentPosts.length;
 		var currentPostIndex = 0;
 		localStorage.search_isFullscreen = true;
+
 		esix.searchStorage.currentPosts.forEach((p)=>{
 			if (p.id == postData.id) {
 				currentPostIndex = esixPostIndex;
 			}
 			esixPostIndex++;
 		})
+
+		localStorage.currentPostIndex = currentPostIndex;
+		if (parseInt(localStorage.currentPostIndex) >= esix.searchStorage.currentPosts.length - 21 && (parseInt(localStorage.currentPage) < parseInt(localStorage.totalPages) || parseInt(localStorage.totalPages) == 1)) {
+			// Load next page.
+			module.exports.generateNextPage();
+		}
+
 		var previousPostButton = `
 			<i class="material-icons">navigate_before</i>
 		`;
@@ -496,36 +536,36 @@ module.exports = {
 				${postInfo}
 		</div>
 		`;
+		// Create HTML and fire external link listener.
 		if ($("div.fullscreenResult").length) {
 			$("div.fullscreenResult").html(`${postTable}${postInfo}`)
 		} else {
 			$("div.pageContent").append(finalHTML)
 		}
+		esix.externalLink();
 
 		$("div.post-info i.window-control").click(()=>{
 			module.exports.keylisten_fullscreen('exit')
 		})
-		if (currentPostIndex == 0) {
+		localStorage.currentPostIndex = currentPostIndex;
+		if (parseInt(localStorage.currentPostIndex) == 0) {
 			// No Back Button, we are at the begining.
-			localStorage.nextPostID = esix.searchStorage.currentPosts[currentPostIndex+1].id
-			localStorage.nextPostIndex = currentPostIndex+1;
+			localStorage.nextPostID = esix.searchStorage.currentPosts[parseInt(localStorage.currentPostIndex)+1].id
+			localStorage.nextPostIndex = parseInt(localStorage.currentPostIndex)+1;
 			localStorage.previousPostID = null
 			localStorage.previousPostIndex = null;
-		}
-		if (currentPostIndex == esixPostLimit) {
+		} else if (parseInt(localStorage.currentPostIndex) == esix.searchStorage.currentPosts.length - 1) {
 			// No Forward Button, we are at the end
 			localStorage.nextPostID = null;
 			localStorage.nextPostIndex = null;
 			localStorage.previousPostID = esix.searchStorage.currentPosts[currentPostIndex-1].id;
-			localStorage.previousPostIndex = currentPostIndex-1;
+			localStorage.previousPostIndex = parseInt(localStorage.currentPostIndex)-1;
+		} else if (parseInt(localStorage.currentPostIndex) != 0 && parseInt(localStorage.currentPostIndex) != parseInt(esix.searchStorage.currentPosts.length) - 1) {
+			localStorage.nextPostID = esix.searchStorage.currentPosts[parseInt(localStorage.currentPostIndex)+1].id
+			localStorage.nextPostIndex = parseInt(localStorage.currentPostIndex)+1;
+			localStorage.previousPostID = esix.searchStorage.currentPosts[parseInt(localStorage.currentPostIndex)-1].id;
+			localStorage.previousPostIndex = parseInt(localStorage.currentPostIndex)-1;
 		}
-		if (currentPostIndex != 0 && currentPostIndex != esixPostLimit) {
-			localStorage.nextPostID = esix.searchStorage.currentPosts[currentPostIndex+1].id
-			localStorage.nextPostIndex = currentPostIndex+1;
-			localStorage.previousPostID = esix.searchStorage.currentPosts[currentPostIndex-1].id;
-			localStorage.previousPostIndex = currentPostIndex-1;
-		}
-		localStorage.currentPostIndex = currentPostIndex;
 		$("div.fullscreenResult table.post-fullscreen td.post-next").click(()=>{
 			module.exports.keylisten_fullscreen('next')
 			return;
@@ -568,25 +608,38 @@ module.exports = {
 		})
 		return;
 	},
-	vote: (direction) => {
+	vote: async (direction) => {
+		var $ = esix.modules.jquery;
 		switch(direction) {
 			case "up":
 				var postID = esix.searchStorage.currentPosts[localStorage.currentPostIndex].id;
 				var currentPost = esix.searchStorage.currentPosts[localStorage.currentPostIndex];
-				esix.searchStorage.currentPosts[localStorage.currentPostIndex].score.total++;
-				esix.searchStorage.currentPosts[localStorage.currentPostIndex].score.up++;
-				currentPost.vote(true,true);
+				var response = await esix.api.votePost(true,postID,true);
+				esix.searchStorage.currentPosts[localStorage.currentPostIndex].score = response;
+				esix.searchStorage.currentPosts[localStorage.currentPostIndex].score.total = response.score;
+				console.debug(response)
+				if (esix.isFullscreen()) {
+					$(`span.post-control#postscore`).html(esix.searchStorage.currentPosts[localStorage.currentPostIndex].score.total)
+					$(`i.post-conntrol#upvote[data=${postID}]`).addClass("toggleStatus");
+					$(`i.post-conntrol#downvote[data=${postID}]`).addClass("toggleStatus");
+				}
 				break;
 			case "down":
 				var postID = esix.searchStorage.currentPosts[localStorage.currentPostIndex].id;
 				var currentPost = esix.searchStorage.currentPosts[localStorage.currentPostIndex];
-				esix.searchStorage.currentPosts[localStorage.currentPostIndex].score.total = `${esix.searchStorage.currentPosts[localStorage.currentPostIndex].score.total-1}`;
-				esix.searchStorage.currentPosts[localStorage.currentPostIndex].score.down = `${esix.searchStorage.currentPosts[localStorage.currentPostIndex].score.down-1}`;
-				currentPost.vote(false,true);
+				var response = await esix.api.votePost(false,postID,true);
+				esix.searchStorage.currentPosts[localStorage.currentPostIndex].score = response;
+				esix.searchStorage.currentPosts[localStorage.currentPostIndex].score.total = response.score;
+				if (esix.isFullscreen()) {
+					$(`span.post-control#postscore`).html(esix.searchStorage.currentPosts[localStorage.currentPostIndex].score.total)
+					$(`i.post-conntrol#downvote[data=${postID}]`).addClass("toggleStatus");
+					$(`i.post-conntrol#upvote[data=${postID}]`).addClass("toggleStatus");
+				}
 				break;
 		}
 	},
 	keylisten: (keyAction) => {
+		if (localStorage.acceptKeyboardInput == 'false') return;
 		if (localStorage.search_isFullscreen == 'true') {
 			module.exports.keylisten_fullscreen(keyAction);
 		}
