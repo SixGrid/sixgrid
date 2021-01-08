@@ -233,11 +233,18 @@ div.fullscreenResult div.post-info .post-control {
 	transition: 150ms;
 }
 div.fullscreenResult div.post-info .post-control:hover {
-	color: #eeeeee;
 	font-size: 45px;
 	text-shadow: 3px 3px 3px #9f9f9f;
 	cursor: pointer;
 	transition: 300ms;
+}
+i.favorite-true {
+	color: #fcba03;
+	transition: 130ms;
+}
+i.favorite-false {
+	color: #eeeeee;
+	transition: 130ms;
 }
 
 /* fullscreen window control */
