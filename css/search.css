@@ -238,11 +238,11 @@ div.fullscreenResult div.post-info .post-control:hover {
 	cursor: pointer;
 	transition: 300ms;
 }
-i.favorite-true {
+i#favorite[status=true]{
 	color: #fcba03;
 	transition: 130ms;
 }
-i.favorite-false {
+i#favorite[status=false]{
 	color: #eeeeee;
 	transition: 130ms;
 }
