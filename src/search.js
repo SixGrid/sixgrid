@@ -584,24 +584,7 @@ module.exports = {
 		})
 		// Favorite
 		$("i.post-control#favorite").click((me)=>{
-			var currentStatus = me.target.attributes.status.value;
-			console.log(currentStatus)
-			if (currentStatus == "true") {
-				var postID = esix.searchStorage.currentPosts[localStorage.currentPostIndex].id;
-				esix.searchStorage.currentPosts[localStorage.currentPostIndex].is_favorited = 'false';
-				esix.api._req(`favorites/${postID}.json`,'delete',{post_id:postID})
-				$("i.post-control#favorite").attr("status","false")
-				$("i.post-control#favorite").removeClass("favorite-true");
-				$("i.post-control#favorite").addClass("favorite-false");
-			} else {
-				var postID = esix.searchStorage.currentPosts[localStorage.currentPostIndex].id;
-				esix.searchStorage.currentPosts[localStorage.currentPostIndex].is_favorited = 'true';
-				esix.api._req(`favorites.json?post_id=${postID}`,'post',{post_id:postID})
-				$("i.post-control#favorite").attr("status","true")
-				$("i.post-control#favorite").addClass("favorite-true");
-				$("i.post-control#favorite").removeClass("favorite-false");
-
-			}
+			module.exports.favoriteHandle();
 		})
 		// Upvote
 		$("i.post-control#upvote").click(()=>{
@@ -622,6 +605,26 @@ module.exports = {
 			}
 		})
 		return;
+	},
+	favoriteHandle: () => {
+		var currentStatus = $("i.post-control#favorite").attr("status");
+		console.log(currentStatus)
+		if (currentStatus == "true") {
+			var postID = esix.searchStorage.currentPosts[localStorage.currentPostIndex].id;
+			esix.searchStorage.currentPosts[localStorage.currentPostIndex].is_favorited = 'false';
+			esix.api._req(`favorites/${postID}.json`,'delete',{post_id:postID})
+			$("i.post-control#favorite").attr("status","false")
+			$("i.post-control#favorite").removeClass("favorite-true");
+			$("i.post-control#favorite").addClass("favorite-false");
+		} else {
+			var postID = esix.searchStorage.currentPosts[localStorage.currentPostIndex].id;
+			esix.searchStorage.currentPosts[localStorage.currentPostIndex].is_favorited = 'true';
+			esix.api._req(`favorites.json?post_id=${postID}`,'post',{post_id:postID})
+			$("i.post-control#favorite").attr("status","true")
+			$("i.post-control#favorite").addClass("favorite-true");
+			$("i.post-control#favorite").removeClass("favorite-false");
+
+		}
 	},
 	vote: async (direction) => {
 		var $ = esix.modules.jquery;
@@ -688,6 +691,9 @@ module.exports = {
 				} else {
 					esix.notification('error','Post Already Exists in Download Queue')
 				}
+				break;
+			case "favorite":
+				module.exports.favoriteHandle();
 				break;
 			case "exit":
 				localStorage.search_isFullscreen = 'false';
