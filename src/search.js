@@ -452,6 +452,7 @@ module.exports = {
 		})
 
 		localStorage.currentPostIndex = currentPostIndex;
+		console.debug(`[search] Parsed Image Data`,postData)
 		if (parseInt(localStorage.currentPostIndex) >= esix.searchStorage.currentPosts.length - 21 && (parseInt(localStorage.currentPage) < parseInt(localStorage.totalPages) || parseInt(localStorage.totalPages) == 1)) {
 			// Load next page.
 			module.exports.generateNextPage();
@@ -526,7 +527,7 @@ module.exports = {
 						<i class="material-icons post-control" id="upvote" data="${postData.id}">arrow_upward</i>
 						<span class="post-control" id="postscore">${postData.score.total}</span>
 						<i class="material-icons post-control" id="downvote" data="${postData.id}">arrow_downward</i>
-						<i class="material-icons post-control favourite-${postData.is_favorited}" id="favorite" data="${postData.id}">star_border</i>
+						<i class="material-icons post-control favourite-${esix.searchStorage.currentPosts[localStorage.currentPostIndex].is_favorited}" id="favorite" status="${esix.searchStorage.currentPosts[localStorage.currentPostIndex].is_favorited}">star_border</i>
 						<i class="material-icons post-control" id="download" data="${postData.id}">file_download</i>
 					</td>
 				</tr>
@@ -582,15 +583,25 @@ module.exports = {
 			module.exports.keylisten_fullscreen('download')
 		})
 		// Favorite
-		$("i.post-control#favorite.favourite-false").click(()=>{
-			var postID = esix.searchStorage.currentPosts[localStorage.currentPostIndex].id;
-			esix.searchStorage.currentPosts[localStorage.currentPostIndex].is_favorited = true;
-			esix.api._req(`favorites.json?post_id=${postID}`,'post',{post_id:postID})
-		})
-		$("i.post-control#favorite.favourite-true").click(()=>{
-			var postID = esix.searchStorage.currentPosts[localStorage.currentPostIndex].id;
-			esix.searchStorage.currentPosts[localStorage.currentPostIndex].is_favorited = false;
-			esix.api._req(`favorites.json?post_id=${postID}`,'delete',{post_id:postID})
+		$("i.post-control#favorite").click((me)=>{
+			var currentStatus = me.target.attributes.status.value;
+			console.log(currentStatus)
+			if (currentStatus == "true") {
+				var postID = esix.searchStorage.currentPosts[localStorage.currentPostIndex].id;
+				esix.searchStorage.currentPosts[localStorage.currentPostIndex].is_favorited = 'false';
+				esix.api._req(`favorites/${postID}.json`,'delete',{post_id:postID})
+				$("i.post-control#favorite").attr("status","false")
+				$("i.post-control#favorite").removeClass("favorite-true");
+				$("i.post-control#favorite").addClass("favorite-false");
+			} else {
+				var postID = esix.searchStorage.currentPosts[localStorage.currentPostIndex].id;
+				esix.searchStorage.currentPosts[localStorage.currentPostIndex].is_favorited = 'true';
+				esix.api._req(`favorites.json?post_id=${postID}`,'post',{post_id:postID})
+				$("i.post-control#favorite").attr("status","true")
+				$("i.post-control#favorite").addClass("favorite-true");
+				$("i.post-control#favorite").removeClass("favorite-false");
+
+			}
 		})
 		// Upvote
 		$("i.post-control#upvote").click(()=>{
