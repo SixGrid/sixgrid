@@ -389,6 +389,16 @@ module.exports = {
 		if (localStorage.ratingFilter == undefined) {
 			localStorage.ratingFilter = 'none';
 		}
+		$(window).scroll(function() {
+			if (localStorage.currentTab != "search") return;
+			if ($(this).scrollTop() <= 90) {
+				// Remove Custom Action
+				$("div.searchBar").removeClass("scrollPast");
+			} else {
+				// Add Custom Action
+				$("div.searchBar").addClass("scrollPast");
+			}
+		});
 		$("div.input-field input#search[type=search]").keyup(async (me)=>{
 			if (me.which != 13) return;
 			module.exports.generateSearchResults($("div.input-field input#search[type=search]").val().split(' ').join("+"))
