@@ -16,6 +16,49 @@ div.searchBar{
 	margin-left: 5%;
 	margin-right: 5%;
 	z-index: 1;
+	background-color: rgba(0,0,0,0);
+}
+div.searchBar.scrollPast {
+	transition: 250ms;
+
+	top: 5px;
+}
+div.searchBar.scrollPast ul.searchBar-list {
+	transition: 250ms;
+
+	height:60px;
+	width: 100vw;
+
+	position: fixed;
+	top: 0;
+	left: 0;
+
+	margin: 0;
+
+	border-bottom: 2px solid #121212;
+	backdrop-filter: blur(3px);
+	background-color: rgba(0,0,0,.3);
+}
+div.searchBar.scrollPast ul.searchBar-list li.mainSearch {
+	transition: 250ms;
+
+	position: fixed;
+	top: 5px;
+	left: 15px;
+
+	width: calc(100vw - 230px);
+}
+div.searchBar.scrollPast ul.searchBar-list li.searchButtons {
+	transition: 250ms;
+	
+	height: initial;
+
+	position: fixed;
+	top: 5px;
+	right: 15px;
+	
+	line-height: initial;
+	margin: 0;
 }
 label#searchButton:hover {
 	cursor:pointer;
@@ -38,7 +81,7 @@ div.searchBar ul.searchBar-list li {
 div.searchBar ul.searchBar-list li.mainSearch {
 	width: calc(100% - 200px);
 }
-div.searchBar ul.searchBar-list li.searchOptions {
+div.searchBar ul.searchBar-list li.searchButtons {
 	position: absolute;
 	top: 13px;
 	height: 34px;
