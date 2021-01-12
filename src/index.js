@@ -18,6 +18,7 @@ const createWindow = () => {
 		height: 720,
 		webPreferences: {
 			nodeIntegration: true,
+			enableRemoteModule: true,
 			v8CacheOptions: 'none',
 			kiosk: true,
 		},

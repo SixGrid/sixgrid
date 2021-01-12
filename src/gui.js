@@ -4,7 +4,8 @@ global.esix = {
 		jquery: require("jquery"),
 		md5: require("md5"),
 		salert: require("sweetalert"),
-		removeMarkdown: require("remove-markdown")
+		removeMarkdown: require("remove-markdown"),
+		fs: require("fs")
 	},
 	pages: {
 		search: require("./search.js"),

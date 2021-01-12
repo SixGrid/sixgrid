@@ -126,6 +126,7 @@ module.exports = {
 	},
 	downloadQueue: () => {
 		var $ = esix.modules.jquery;
+		var fs = esix.modules.fs;
 		if (JSON.parse(localStorage.downloadQueue).queue.length < 1) return;
 
 		if (!fs.existsSync(`${localStorage.downloadLocation || require("electron").remote.app.getPath("downloads")}${esix.osSeperator}${esix.packageJSON.productName}`)) {
