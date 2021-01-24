@@ -133,7 +133,6 @@ global.esix = {
 		}
 	},
 	osSeperator: "/",
-	queue: require("./queue.js"),
 	externalLink: () => {
 		require("jquery")("span#outsidelink").click((me)=>{
 			var outsideLink = me.target.attributes.data.value;
@@ -146,6 +145,16 @@ global.esix = {
 		} else {
 			return false;
 		}
+	},
+	arrayContains: (obj, list) => {
+		var x;
+		for (x in list) {
+			if (list.hasOwnProperty(x) && list[x] === obj) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 }
 
