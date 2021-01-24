@@ -31,7 +31,6 @@ const noCirculars = v => {
 };
 module.exports = {
 	addToQueue: (g_postData) => {
-		
 		g_postData.rawResponse = undefined;
 		if (localStorage.downloadQueue == undefined) {
 			localStorage.downloadQueue = JSON.stringify({queue: []})
@@ -95,7 +94,7 @@ module.exports = {
 					<ul class="postInfo">
 						<li data-type="id" data="${queueObject.postData.id}">${queueObject.postData.id}</li>
 						<li data-type="rating" data="${queueObject.postData.rating}" class="rating-${queueObject.postData.rating}">Rated as ${esix.ratingParse(queueObject.postData.rating)}</li>
-						<li data-type="uploader" data="${queueObject.postData.uploader_id}">Uploaded by <span id="outsidelink" data="https://e621.net/users/${queueObject.postData.uploader_id}">${queueObject.uploaderData.name}</span> (${queueObject.postData.uploader_id})</li>
+						<li data-type="uploader" data="${queueObject.postData.uploader_id}">Uploaded by <span id="outsidelink" data="https://e621.net/users/${queueObject.postData.uploader_id}">${JSON.parse(localStorage.e621_cachedUsers)[queueObject.postData.uploader_id].name}</span> (${queueObject.postData.uploader_id})</li>
 						<li data-type="b64_artist" data="${btoa(queueObject.postData.artist)}">Artist(s); ${queueObject.postData.tags.artist.join(", ")}</li>
 					</ul>
 				</td>
@@ -175,44 +174,54 @@ module.exports = {
 		$("div.pageContent div.container").append(baseHTML)
 		var downloadQueue = {queue:[]};
 		var totalBytes = 0;
+		var skippedItems = [];
 		JSON.parse(localStorage.downloadQueue).queue.forEach((queueObject) => {
-			var imageURL = '';
-			var imageSize = '';
-			if (queueObject.postData.file.url != undefined) {
-				imageURL = queueObject.postData.file.url
-				imageSize = queueObject.postData.file.size
-				totalBytes = totalBytes + imageSize;
-			}
-			else if (queueObject.postData.sample.url != undefined) {
-				imageURL = queueObject.postData.sample.url
-				imageSize = "unknown size";
-			}
-			else if (queueObject.postData.preview.url != undefined) {
-				imageURL = queueObject.postData.preview.url
-				imageSize = "unknown size";
-			}
-			var dataToEncode = {
-				fullData: queueObject,
-				image: {
-					url: imageURL,
-					size: imageSize
+			var b_dll = `${localStorage.downloadLocation || require("electron").remote.app.getPath("downloads")}${esix.osSeperator}${esix.packageJSON.productName}`;
+			var dll = `${b_dll}${esix.osSeperator}downloadQueue`;
+			if (fs.existsSync(`${dll}${esix.osSeperator}${queueObject.postData.id}.${queueObject.postData.file.ext}`)) {
+				skippedItems.push(queueObject)
+			} else {
+				var imageURL = '';
+				var imageSize = '';
+				if (queueObject.postData.file.url != undefined) {
+					imageURL = queueObject.postData.file.url
+					imageSize = queueObject.postData.file.size
+					totalBytes = totalBytes + imageSize;
 				}
+				else if (queueObject.postData.sample.url != undefined) {
+					imageURL = queueObject.postData.sample.url
+					imageSize = "unknown size";
+				}
+				else if (queueObject.postData.preview.url != undefined) {
+					imageURL = queueObject.postData.preview.url
+					imageSize = "unknown size";
+				}
+				var dataToEncode = {
+					fullData: queueObject,
+					image: {
+						url: imageURL,
+						size: imageSize
+					}
+				}
+				console.debug(`[${queueObject.postData.id}] Item Added to Visual Queue => `,dataToEncode)
+				var rowHTML = `
+					<tr postID="${queueObject.postData.id}" data="${btoa(dataToEncode)}">
+						<td class="thumbnail"><img src="${queueObject.postData.preview.url || queueObject.postData.sample.url || queueObject.file.url}"></td>
+						<td class="downloadedSize">${formatSizeUnits(imageSize)}</td>
+						<td class="totalProgress">
+							<div class="progress">
+								<div class="determinate" style="width: 0%"></div>
+							</div>
+						</td>
+					</tr>
+				`;
+				$("div.queueDownloader table.queuedItems").append(rowHTML);
+				downloadQueue.queue.push(dataToEncode)
 			}
-			console.debug(`[${queueObject.postData.id}] Item Added to Visual Queue => `,dataToEncode)
-			var rowHTML = `
-				<tr postID="${queueObject.postData.id}" data="${btoa(dataToEncode)}">
-					<td class="thumbnail"><img src="${queueObject.postData.preview.url || queueObject.postData.sample.url || queueObject.file.url}"></td>
-					<td class="downloadedSize">${formatSizeUnits(imageSize)}</td>
-					<td class="totalProgress">
-						<div class="progress">
-							<div class="determinate" style="width: 0%"></div>
-						</div>
-					</td>
-				</tr>
-			`;
-			$("div.queueDownloader table.queuedItems").append(rowHTML);
-			downloadQueue.queue.push(dataToEncode)
 		})
+		if (skippedItems.length > 1) {
+			esix.notification('info',`${skippedItems.length} post(s) already downloaded`,2500)
+		}
 		$("div.queueDownloader table.totalStats td.stats span#downloadedSize").html(`0 bytes / ${formatSizeUnits(totalBytes)}`)
 
 		var itemQueue = new queue({log:true})
@@ -268,16 +277,17 @@ module.exports = {
 				received_bytes += chunk.length;
 				$("div.queueDownloader table.totalStats td.totalProgress div.progress div.determinate").width(`${(totalBytesDownloaded/totalBytesToDownload)*100}%`)
 				$("div.queueDownloader table.totalStats td.stats span#downloadedSize").html(`${formatSizeUnits(totalBytesDownloaded)} / ${formatSizeUnits(totalBytesToDownload)}`)
-				console.debug(`${(totalBytesDownloaded/totalBytesToDownload)*100}%`)
+				//console.debug(`${(totalBytesDownloaded/totalBytesToDownload)*100}%`)
 				$(`div.queueDownloader table.queuedItems tr[postID=${objectData.fullData.postData.id}] td.totalProgress div.progress div.determinate`).width(`${Math.round((received_bytes/total_bytes)*100)}%`)
 			});
 
 			out.on('finish', function() {
 				// Validate File
 				console.debug(`[downloadManager] Downloaded url ${g_url}`)
+				console.debug(`[downloadManager] Validating Post '${objectData.fullData.postData.id}'`)
 				$(`div.queueDownloader table.queuedItems tr[postID=${objectData.fullData.postData.id}] td.totalProgress div.progress div.determinate`).width("100%")
 				itemsDownloaded++;
-				$("div.queueDownloader table.totalStats td.stats span#postcount").html(`${itemsDownloaded} / ${JSON.parse(localStorage.downloadQueue).queue.length}`)
+				$("div.queueDownloader table.totalStats td.stats span#postcount").html(`${itemsDownloaded} / ${JSON.parse(localStorage.downloadQueue).queue.length - skippedItems.length}`)
 				setTimeout(()=>{
 					$(`div.queueDownloader table.queuedItems tr[postID=${objectData.fullData.postData.id}]`).fadeOut(50)
 				},500)
@@ -298,9 +308,11 @@ module.exports = {
 		if (localStorage.downloadQueue == undefined) {
 			localStorage.downloadQueue = JSON.stringify({queue: []})
 		}
+		esix.loader.show()
+		esix.loader.caption("Processing")
 		if (JSON.parse(localStorage.downloadQueue).queue.length < 1) return;
 		$("div.downloadHistory div.downloadQueue-control a.btn").removeClass("disabled")
-		$("div.downloadHistory div.queueContainer").html("<h3>Processing</h3>")
+		$("div.downloadHistory div.queueContainer").html("<!-- -->")
 
 		/*
 		queueObejct {
@@ -311,25 +323,46 @@ module.exports = {
 
 		// Get Uploaders Metadata and Cache it.
 		var t_dlQueuegetUploader = {queue:[]}
+		if (localStorage.e621_cachedUsers == undefined || localStorage.e621_cachedUsers.length < 1) {
+			localStorage.e621_cachedUsers = "{}";
+		}
+		var t_e621_cachedUsers = JSON.parse(localStorage.e621_cachedUsers) || {};
+		esix.loader.caption("Updating Cache")
+		await asyncForEach(JSON.parse(localStorage.downloadQueue).queue,async (queueObject)=>{
+			if (t_e621_cachedUsers[queueObject.postData.uploader_id] == undefined) {
+				var pUploader = await esix.api._req(`users/${queueObject.postData.uploader_id}.json`)
+				if (pUploader.name.toLowerCase() == 'undefined' || pUploader.name.length < 1) {
+					pUploader.name = 'Anonymous User';
+				}
+				t_e621_cachedUsers[pUploader.id] = pUploader;
+				console.debug(`[downloadManager] Added user '${pUploader.id}' to cache`)
+			}
+			if (t_e621_cachedUsers[queueObject.postData.approver_id] == undefined && queueObject.postData.approver_id != null) {
+				var pUploader = await esix.api._req(`users/${queueObject.postData.approver_id}.json`)
+				if (pUploader.name.toLowerCase() == 'undefined' || pUploader.name.length < 1) {
+					pUploader.name = 'Anonymous User';
+				}
+				t_e621_cachedUsers[pUploader.id] = pUploader;
+				console.debug(`[downloadManager] Added user '${pUploader.id}' to cache`)
+			}
+		})
+		localStorage.e621_cachedUsers = JSON.stringify(t_e621_cachedUsers);
+		esix.loader.caption("Generating Table")
 		await asyncForEach(JSON.parse(localStorage.downloadQueue).queue,async (queueObject)=>{
 			var t_queueObject = {
 				postData: queueObject.postData,
 				addedTimestamp: queueObject.addedTimestamp,
-				uploaderData: queueObject.uploaderData || undefined,
-			};
-			if (queueObject.uploaderData === undefined) {
-				var pUploader = await esix.api._req(`users/${queueObject.postData.uploader_id}.json`)
-				console.debug(`[downloadManager] Recieved Uploaders Data for '${pUploader.name}'`,pUploader)
-				if (pUploader.name.toLowerCase() == 'undefined' || pUploader.name.length < 1) {
-					pUploader.name = 'Anonymous User';
-				}
-				t_queueObject.uploaderData = pUploader;
 			}
 			t_dlQueuegetUploader.queue.push(t_queueObject)
 		})
 		localStorage.downloadQueue = JSON.stringify(t_dlQueuegetUploader);
+		localStorage.e621_cachedUsers = JSON.stringify(t_e621_cachedUsers);
 
 		await module.exports.generateTable();
+		esix.loader.caption("Done!")
+		setTimeout(()=>{
+			esix.loader.hide()
+		},1500)
 
 		$("div.downloadQueue-control a#startQueue").click(()=>{
 			module.exports.downloadQueue();
