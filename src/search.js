@@ -68,7 +68,8 @@ module.exports = {
 						<label>Page Preload</label>
 						<input id="preloadPageCount" type="number" placeholder="Page Count"></input>
 							<a class="waves-effect waves-light btn-small" id="preloadPageButton">Preload Pages</a>
-
+						<hr>
+						<input id="tempTagBlacklist" type="text" placeholder="Temporary Tag Blacklist"></input>
 						<i class="close material-icons">close</i>
 					</div>
 				</div>
@@ -145,42 +146,59 @@ module.exports = {
 		var filtercount = 0;
 		var returnedPosts = {posts:[]}
 		posts.posts.forEach((post)=>{
-			if (post.file.ext == "swf") {
-				post.file.old_url = post.file.url;
-				post.file.url = "https://cdn.jyles.club/flash_not_supported.png";
-				post.preview.url = "https://cdn.jyles.club/flash_not_supported.png";
-				post.sample.url = "https://cdn.jyles.club/flash_not_supported.png";
-			}
-			if (post.file.md5 != undefined && post.file.ext != undefined && post.file.ext != "swf") {
-				post.file.url = 'https://static1.e621.net/data/' + post.file.md5.slice(0, 2)  + '/' + post.file.md5.slice(2, 4) + '/' + post.file.md5 + '.' + post.file.ext;
-				if (post.sample.has) {
-					post.sample.url = 'https://static1.e621.net/data/sample/' + post.file.md5.slice(0, 2)  + '/' + post.file.md5.slice(2, 4) + '/' + post.file.md5 + '.jpg';
+			// Force the file URL
+			if (localStorage.search_bypassGlobalFilter == "true") {
+				if (post.file.ext == "swf") {
+					post.file.old_url = post.file.url;
+					post.file.url = "https://cdn.jyles.club/flash_not_supported.png";
+					post.preview.url = "https://cdn.jyles.club/flash_not_supported.png";
+					post.sample.url = "https://cdn.jyles.club/flash_not_supported.png";
 				}
-				switch (post.file.ext) {
-					case "png":
-					case "jpg":
-					case "webm":
-						post.preview.url = 'https://static1.e621.net/data/preview/' + post.file.md5.slice(0, 2)  + '/' + post.file.md5.slice(2, 4) + '/' + post.file.md5 + '.jpg';
-						break;
+				if (post.file.md5 != undefined && post.file.ext != undefined && post.file.ext != "swf") {
+					post.file.url = 'https://static1.e621.net/data/' + post.file.md5.slice(0, 2)  + '/' + post.file.md5.slice(2, 4) + '/' + post.file.md5 + '.' + post.file.ext;
+					if (post.sample.has) {
+						post.sample.url = 'https://static1.e621.net/data/sample/' + post.file.md5.slice(0, 2)  + '/' + post.file.md5.slice(2, 4) + '/' + post.file.md5 + '.jpg';
+					}
+					switch (post.file.ext) {
+						case "png":
+						case "jpg":
+						case "webm":
+							post.preview.url = 'https://static1.e621.net/data/preview/' + post.file.md5.slice(0, 2)  + '/' + post.file.md5.slice(2, 4) + '/' + post.file.md5 + '.jpg';
+							break;
+					}
 				}
-				
 			}
+
+
+			// Skip post if location is undefined
+			var skip = false;
 			if ((post.file.url == null || post.file.url.length < 1) && (post.sample.url == null || post.sample.url.length < 1) && (post.preview.url == null || post.preview.url.length < 1)) {
+				skip = true;
+			}
+
+			if (skip) {
+				filtercount++;
 				return;
 			} else {
 				var allow = true;
 				Object.entries(post.tags).forEach((tagArray)=>{
 					tagArray[1].forEach((tag)=>{
-						localStorage.blacklistedTags.split(",").forEach((btag)=>{
+						localStorage.search_temporaryBlacklist.split("`").forEach((btag)=>{
 							if (tag.toLowerCase() == btag.toLowerCase()) {
 								allow = false;
-								filtercount++;
+							}
+						})
+						localStorage.search_blacklistedTags.split(",").forEach((btag)=>{
+							if (tag.toLowerCase() == btag.toLowerCase()) {
+								allow = false;
 							}
 						})
 					})
 				})
 				if (allow) {
 					returnedPosts.posts.push(post);
+				} else {
+					filtercount++;
 				}
 			}
 		})
@@ -377,6 +395,19 @@ module.exports = {
 		$("div.searchOptionsWindow div.content i.close").click(()=>{
 			$("div.searchOptionsWindow").removeClass("show")
 			return;
+		})
+
+		$("div.searchOptionsWindow input#tempTagBlacklist").on('keyup',(me)=>{
+			if (me.keyCode != 13) return;
+			// Submit and Save Temp Blacklisted Tags
+			if ($("div.searchOptionsWindow input#tempTagBlacklist").val().length < 1){
+				localStorage.search_temporaryBlacklist = "";
+				esix.notification('warn',`Cleared Temporary Blacklist`,2500)
+			} else {
+				localStorage.search_temporaryBlacklist = $("div.searchOptionsWindow input#tempTagBlacklist").val().split(" ").join("`")
+		
+				esix.notification('info',`Changed Temporary Blacklist`,2500)
+			}
 		})
 	},
 	listen: (ourID)=>{

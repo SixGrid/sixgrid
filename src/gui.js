@@ -153,7 +153,6 @@ global.esix = {
 				return true;
 			}
 		}
-
 		return false;
 	}
 }
@@ -172,6 +171,14 @@ localStorage.nextPageLoading = false;
 localStorage.totalPages = '';
 localStorage.search_isFullscreen = false;
 localStorage.nextPostIndex = '';
+localStorage.search_temporaryBlacklist = '';
+if (localStorage.search_bypassGlobalFilter == undefined) {
+	localStorage.search_bypassGlobalFilter = 'true';
+}
+if (localStorage.blacklistedTags != undefined) {
+	localStorage.search_blacklistedTags = localStorage.blacklistedTags;
+	localStorage.blacklistedTags = undefined;
+}
 
 // Set OS Seperator
 if (esix.electron.remote.process.platform == 'win32') {
