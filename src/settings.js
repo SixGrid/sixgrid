@@ -178,7 +178,7 @@ module.exports = {
 	chip: (storagePopulated) => {
 		var t_storage = [];
 		if (storagePopulated) {
-			t_storage = localStorage.blacklistedTags.split(",");
+			t_storage = localStorage.search_blacklistedTags.split(",");
 		}
 		module.exports.blacklistedTagsListen();
 	},
@@ -227,7 +227,7 @@ module.exports = {
 				}
 			})
 		})
-		localStorage.blacklistedTags = finalChips;
+		localStorage.search_blacklistedTags = finalChips;
 	},
 	keybindOptionToggle: (g_keybind,g_enableButtons) => {
 		var $ = esix.modules.jquery
@@ -347,10 +347,10 @@ module.exports = {
 		})
 
 		// Blacklisted Tags
-		if (localStorage.blacklistedTags.split(",").length > 1 || localStorage.blacklistedTags != undefined || localStorage.blacklistedTags.length > 1) {
-			var t_blackListedTags = localStorage.blacklistedTags;
-			if (typeof localStorage.blacklistedTags == 'string') {
-				t_blackListedTags = localStorage.blacklistedTags.split(",");
+		if (localStorage.search_blacklistedTags.split(",").length > 1 || localStorage.search_blacklistedTags != undefined || localStorage.search_blacklistedTags.length > 1) {
+			var t_blackListedTags = localStorage.search_blacklistedTags;
+			if (typeof localStorage.search_blacklistedTags == 'string') {
+				t_blackListedTags = localStorage.search_blacklistedTags.split(",");
 			}
 			t_blackListedTags.forEach((tag) => {
 				if (tag.length < 1) return;
