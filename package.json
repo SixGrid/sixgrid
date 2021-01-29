@@ -1,7 +1,7 @@
 {
 	"name": "esix-gui",
 	"productName": "SixGrid",
-	"version": "0.2.2",
+	"version": "0.2.3",
 	"description": "An Electron Program for the esix-api repo ",
 	"main": "src/index.js",
 	"scripts": {
