@@ -214,5 +214,4 @@ if  (localStorage.firstTime == true || localStorage.firstTime == undefined) {
 	// When its not our first time laod sixgrid
 	esix.loadSixgrid();
 }
-
 console.debug(`[gui.js] esix global`,esix);

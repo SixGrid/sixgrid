@@ -75,6 +75,7 @@
 	"dependencies": {
 		"@electron-forge/cli": "^6.0.0-beta.54",
 		"child-process": "^1.0.2",
+		"discord-rich-presence": "github:devsnek/discord-rich-presence",
 		"electron-compile": "^6.4.4",
 		"electron-squirrel-startup": "^1.0.0",
 		"esix-api": "^0.1.14",

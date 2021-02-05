@@ -249,7 +249,7 @@ module.exports = {
 		esix.loader.content(undefined,`Request Completed`)
 		setTimeout(()=>{
 			esix.loader.hide()
-		},2500)
+		},600)
 		$("div.searchBar li.searchButtons a#saveTag").click(()=>{
 			// Save current tag, if there are none then show message saying there are no tags selected/searched`
 			var tempTags = []

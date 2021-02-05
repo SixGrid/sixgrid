@@ -39,8 +39,12 @@ module.exports = {
 		() => {
 			// 3rd
 			return `
-			<h3>Option thing like download directory and post per page limit goes here. Most of this is a simpler settings tab</h3>
-			`;
+			<h3>Now, let's set you up.</h3>
+			<p>You can alter some of the programs settings with the "Settings" tab.</p>
+			<p>Click on it, and you will be redirected to the configuration menu!</p>
+			<p>If you have any issues with our software, you can report it on our github.</p>
+			<p><a href="https://github.com/jylescoad-ward/esix-gui/issues">Issues Page</a></p>
+			`
 		},
 		
 	],
@@ -54,7 +58,12 @@ module.exports = {
 			// Set div.steppercontent contents of the 2nd content var (module.exports.content[1]);
 			$("nav.stepper#gettingStarted a.breadcrumb#1").removeClass('active');
 			$("nav.stepper#gettingStarted a.breadcrumb#2").addClass('active');
+			$("nav.stepper#gettingStarted a.breadcrumb#3").addClass('active');
 			$("div.steppercontent").html(module.exports.content[1]());
+			$('body').on('click', 'a', (event) => {
+				event.preventDefault();
+				require("electron").shell.openExternal(event.target.href);
+			  });
 			console.debug("page 2 loaded")
 			setTimeout(()=>{
 				console.debug($("div.steppercontent div.login a#loginToESIX"))
