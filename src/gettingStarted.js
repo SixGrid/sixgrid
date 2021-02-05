@@ -63,6 +63,7 @@ module.exports = {
 			$('body').on('click', 'a', (event) => {
 				event.preventDefault();
 				require("electron").shell.openExternal(event.target.href);
+				console.debug('user opened a page in their browser')
 			  });
 			console.debug("page 2 loaded")
 			setTimeout(()=>{
