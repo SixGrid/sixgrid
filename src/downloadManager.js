@@ -195,6 +195,10 @@ module.exports = {
 				else if (queueObject.postData.preview.url != undefined) {
 					imageURL = queueObject.postData.preview.url
 					imageSize = "unknown size";
+				} else {
+					skippedItems.push(queueObject)
+					console.log("URL seems to be missing, Skipping...");
+					return;
 				}
 				var dataToEncode = {
 					fullData: queueObject,
