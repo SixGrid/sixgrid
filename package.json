@@ -85,6 +85,7 @@
 		"remove-markdown": "^0.3.0",
 		"request": "^2.88.2",
 		"sweetalert": "^2.1.2",
+		"tinytoolbox": "0.0.7",
 		"yarn": "^1.22.10"
 	},
 	"devDependencies": {
