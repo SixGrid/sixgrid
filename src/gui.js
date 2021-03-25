@@ -26,20 +26,21 @@ global.esix = {
 		return;
 	},
 	notification: (g_type,g_context,g_duration) => {
-		$("div.notification").removeClass('show')
-		$("div.notification span").html(g_context)
-		$("div.notification").removeClass('info')
-		$("div.notification").removeClass('warn')
-		$("div.notification").removeClass('error')
-		$("div.notification").addClass(g_type.toLowerCase())
-		$("div.notification").addClass('show')
+		var t_GUID = require("tinytoolbox").stringGen(6);
+		$("div.notification ul").append(`
+		<li GUID=${t_GUID} action="notification">
+			<span type="${g_type}">${g_context}</span>
+		</li>
+		`)
 		setTimeout(()=>{
-			$("div.notification").removeClass('show')
-			$("div.notification").removeClass('info')
-			$("div.notification").removeClass('warn')
-			$("div.notification").removeClass('error')
-			$("div.notification span").html('')
-		},localStorage.notificationDecay || g_duration || 2500);
+			$(`div.notification li[GUID=${t_GUID}]`).addClass('active');
+			setTimeout(()=>{
+				$(`div.notification li[GUID=${t_GUID}]`).removeClass('active');
+				setTimeout(()=>{
+					$(`div.notification li[GUID=${t_GUID}]`).remove();
+				},500)
+			},localStorage.esix_notificationDecay || g_duration || 2500);
+		},50)
 		return;
 	},
 	queue: require("./queue.js"),
