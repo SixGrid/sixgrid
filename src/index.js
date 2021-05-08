@@ -14,8 +14,10 @@ function isStandalone() {
 let mainWindow;
 const createWindow = () => {
 	mainWindow = new BrowserWindow({
-		width: 1280,
-		height: 720,
+		width: 1600,
+		height: 900,
+		minWidth: 1600,
+		minHeight: 900,
 		webPreferences: {
 			nodeIntegration: true,
 			enableRemoteModule: true,
