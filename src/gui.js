@@ -180,6 +180,9 @@ if (localStorage.blacklistedTags != undefined) {
 	localStorage.search_blacklistedTags = localStorage.blacklistedTags;
 	localStorage.blacklistedTags = undefined;
 }
+if (localStorage.search_temporaryBlacklist == undefined) {
+	localStorage.search_temporaryBlacklist = "";	
+}
 
 // Set OS Seperator
 if (esix.electron.remote.process.platform == 'win32') {
