@@ -29,6 +29,7 @@ div.container{
 div.bottomSpace {
 	height: 150px;
 	position: relative;
+	z-index: -1;
 }
 div.card.small {
 	width: 200px;

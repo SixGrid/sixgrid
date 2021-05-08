@@ -178,7 +178,8 @@ module.exports = {
 		JSON.parse(localStorage.downloadQueue).queue.forEach((queueObject) => {
 			var b_dll = `${localStorage.downloadLocation || require("electron").remote.app.getPath("downloads")}${esix.osSeperator}${esix.packageJSON.productName}`;
 			var dll = `${b_dll}${esix.osSeperator}downloadQueue`;
-			if (fs.existsSync(`${dll}${esix.osSeperator}${queueObject.postData.id}.${queueObject.postData.file.ext}`)) {
+			var fileLocation = `${dll}${esix.osSeperator}${queueObject.postData.id}.${queueObject.postData.file.ext}`;
+			if (fs.existsSync(fileLocation) && fs.statSync(fileLocation).size >= 146) {
 				skippedItems.push(queueObject)
 			} else {
 				var imageURL = '';
@@ -210,7 +211,7 @@ module.exports = {
 				console.debug(`[${queueObject.postData.id}] Item Added to Visual Queue => `,dataToEncode)
 				var rowHTML = `
 					<tr postID="${queueObject.postData.id}" data="${btoa(dataToEncode)}">
-						<td class="thumbnail"><img src="${queueObject.postData.preview.url || queueObject.postData.sample.url || queueObject.file.url}"></td>
+						<td class="thumbnail"><img src="${queueObject.postData.preview.url || queueObject.postData.sample.url || queueObject.postData.file.url || ""}"></td>
 						<td class="downloadedSize">${formatSizeUnits(imageSize)}</td>
 						<td class="totalProgress">
 							<div class="progress">
@@ -241,7 +242,6 @@ module.exports = {
 			var total_bytes = 0;
 			var request = require("request");
 			var fs = require("fs");
-			var md5 = require("md5")
 
 			if (!fs.existsSync(b_dll)) {
 				fs.mkdirSync(b_dll)
@@ -265,6 +265,15 @@ module.exports = {
 				fs.mkdirSync(downloadLocation)
 			}
 			var targetPath = `${downloadLocation}${esix.osSeperator}${objectData.fullData.postData.id}.${g_url.split('.')[g_url.split('.').length - 1]}`;
+			console.log(fs.statSync(targetPath).size);
+			if (fs.existsSync(targetPath) && fs.statSync(targetPath).size > 146) {
+				return;
+			}
+			else if (fs.existsSync(targetPath) && fs.statSync(targetPath).size < 146)
+			{
+				fs.unlinkSync(targetPath);
+				console.log("[DownloadManager] Removed broken file '"+targetPath+"'")
+			}
 			var out = fs.createWriteStream(targetPath);
 			req.pipe(out);
 			$(`div.queueDownloader table.queuedItems tr[postID=${objectData.fullData.postData.id}] td.totalProgress div.progress div.determinate`).width("0%");
