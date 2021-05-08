@@ -1,6 +1,8 @@
 # SixGrid
 A Desktop Application for browsing e621 without buggy extensions or uncomfortable Web UI's. Take a peek at our [Trello Page](https://trello.com/b/2gfzCZg5/sixgrid) to see what's being done. If there are any problems with your experience feel free to put in an [Issue](https://github.com/jylescoad-ward/esix-gui/issues) or to help solve the problem by submitting a [Pull Request](https://github.com/jylescoad-ward/esix-gui/pulls).
 
+[Download Latest Release](https://github.com/jylescoad-ward/esix-gui/releases)
+
 ## Table of Contents
 - [Features](#Features)
 - [Building](#Building)
