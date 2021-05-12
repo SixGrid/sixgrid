@@ -1,4 +1,4 @@
-name: build-production
+name: CI
 on:
   push:
     paths-ignore:
