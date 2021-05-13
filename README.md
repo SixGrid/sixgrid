@@ -15,9 +15,14 @@ A Desktop Application for browsing e621 without buggy extensions or uncomfortabl
 ## Building
 Clone the repository
 ```sh
-$ git clone https://github.com/jylescoad-ward/esix-gui
+$ git clone -b stable https://github.com/jylescoad-ward/esix-gui
+```
 
-$ cd esix-gui
+(Contributing Only) Switch to Development Branch
+```sh
+$ git fetch
+$ git pull
+$ git checkout dev
 ```
 
 Install Dependencies
