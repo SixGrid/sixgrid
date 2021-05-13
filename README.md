@@ -7,7 +7,7 @@ A Desktop Application for browsing e621 without buggy extensions or uncomfortabl
 - [Features](#Features)
 - [Building](#Building)
 - [Contributors](#Contributors)
-- [Creating Releases](#Creating-Releases)
+- [Creating Releases](#Creating_Releases)
 
 ## Features
 - Download Manager (Save to download later)
@@ -16,9 +16,7 @@ A Desktop Application for browsing e621 without buggy extensions or uncomfortabl
 ## Building
 Clone the repository
 ```sh
-$ git clone https://github.com/jylescoad-ward/esix-gui
-
-$ cd esix-gui
+$ git clone -b stable https://github.com/jylescoad-ward/esix-gui
 ```
 
 Install Dependencies
@@ -40,6 +38,21 @@ $ npm run package
 Build Installer for Current Platform (Default to `./dist/`)
 ```sh
 $ npm run build-installer
+```
+
+## Contributing
+Switch over to the `dev` branch if you have not. By contributing we (The Contributers) assume that you have followed the steps in the [Building](#Building) section, this includes install node.js, npm (v6), and the modules required to run SixGrid. We also assume that you know your way around the [e621 API](https://e621.net/help/api).
+
+```shell
+$ git fetch && git pull
+$ git checkout dev
+```
+
+Once you have switched to the development branch you can now start programming, but before pushing any commits (or in some cases, even comitting) ***test your changes***. No pull requests will be merged if your code does not meet our programming standards.
+
+You can test your code by actually doing what it does and keeping an eye on the Chrome Inspector Console.
+```shell
+$ npm run
 ```
 
 ## Contributors
