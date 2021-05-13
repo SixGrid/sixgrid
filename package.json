@@ -24,11 +24,20 @@
 	],
 	"build": {
 		"appId": "club.jyles.sixgrid",
+		"copyright": "Copyright © 2020-2021 SixGrid Contributers",
+		"compression": "maximum",
 		"win": {
 			"target": [
 				"nsis"
 			],
 			"icon": "src/sixgrid.ico"
+		},
+		"mac": {
+			"target": [
+				"dmg"
+			],
+			"category": "public.app-category.utilities",
+			"icon": "src/sixgrid.icns"
 		},
 		"linux": {
 			"target": [
@@ -55,14 +64,13 @@
 		"forge": {
 			"make_targets": {
 				"win32": [
-					"squirrel"
+					"nsis"
 				],
 				"darwin": [
-					"zip"
+					"dmg"
 				],
 				"linux": [
-					"deb",
-					"rpm"
+					"appimage"
 				]
 			},
 			"electronPackagerConfig": {
@@ -82,7 +90,6 @@
 	"dependencies": {
 		"@electron-forge/cli": "^6.0.0-beta.54",
 		"child-process": "^1.0.2",
-		"discord-rich-presence": "github:devsnek/discord-rich-presence",
 		"electron-compile": "^6.4.4",
 		"electron-squirrel-startup": "^1.0.0",
 		"esix-api": "^0.1.14",
