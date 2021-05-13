@@ -7,7 +7,7 @@ A Desktop Application for browsing e621 without buggy extensions or uncomfortabl
 - [Features](#Features)
 - [Building](#Building)
 - [Contributors](#Contributors)
-- [Creating Releases](#Creating_Releases)
+- [Creating Releases](#Creating-Releases)
 
 ## Features
 - Download Manager (Save to download later)
