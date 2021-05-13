@@ -6,8 +6,9 @@ A Desktop Application for browsing e621 without buggy extensions or uncomfortabl
 ## Table of Contents
 - [Features](#Features)
 - [Building](#Building)
-- [Contributors](#Contributors)
+- [Contributing](#Contributing)
 - [Creating Releases](#Creating_Releases)
+- [Contributors](#Contributors)
 
 ## Features
 - Download Manager (Save to download later)
@@ -55,10 +56,6 @@ You can test your code by actually doing what it does and keeping an eye on the 
 $ npm run
 ```
 
-## Contributors
-- [Jyles Coad-Ward](https://github.com/jylescoad-ward) (Maintainer)
-- [zyrn](https://github.com/zyme-xd)
-
 ## Creating Releases
 Change the `version` object in `package.json` to something unique (incremented), but **if this is a patch do not increment the version** in `package.json`
 
@@ -83,3 +80,7 @@ $ git push --tags
 
 After you have pushed your **changes and tags** a release draft will be created. Just like manual releases, only users with the correct permissions can edit these.
 
+
+## Contributors
+- [Jyles Coad-Ward](https://github.com/jylescoad-ward) (Maintainer)
+- [zyrn](https://github.com/zyme-xd)
