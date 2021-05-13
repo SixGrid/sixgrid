@@ -22,7 +22,7 @@ $ git clone -b stable https://github.com/jylescoad-ward/esix-gui
 
 Install Dependencies
 ```shell-script
-$ npm install
+$ npm install --include=dev
 ```
 
 Run from the command line to see that everything works
