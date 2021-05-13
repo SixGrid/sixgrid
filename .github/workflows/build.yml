@@ -4,9 +4,11 @@ on:
   push:
     paths-ignore:
       - 'proto/**'
-      - '*.MD'
+      - '**.MD'
+      - '**.md'
+      - '.github/**'
     branches:
-      - 'latest'
+      - 'stable'
 jobs:
   publish:
     runs-on: ${{matrix.os}}
