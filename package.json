@@ -2,7 +2,7 @@
 	"name": "esix-gui",
 	"productName": "SixGrid",
 	"version": "0.2.4",
-	"description": "An Electron Program for the esix-api repo",
+	"description": "Open Source e621.net Browser",
 	"main": "src/index.js",
 	"scripts": {
 		"start": "electron-forge start",
