@@ -70,6 +70,8 @@ jobs:
       
       - name: Build Electron Application
         run: npm run build-installer
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         
       - name: Upload binaries to release
         uses: svenstaro/upload-release-action@v2
