@@ -18,6 +18,27 @@ on:
   #  branches:
   #    - 'stable'
 jobs:
+  mktag:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@master
+      
+      - name: Create Tag
+        uses: mathieudutour/github-tag-action@v5.5
+        with:
+          custom_tag: ${{ github.event.inputs.tag }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Create Release Draft
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.event.inputs.tag }}
+          release_name: ${{ github.event.inputs.name }}
+          draft: true
+      
   publish:
     runs-on: ${{matrix.os}}
     
@@ -37,21 +58,6 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 14
-          
-      - name: Create Tag
-        uses: mathieudutour/github-tag-action@v5.5
-        with:
-          custom_tag: ${{ github.event.inputs.tag }}
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          
-      - name: Create Release Draft
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.event.inputs.tag }}
-          release_name: ${{ github.event.inputs.name }}
-          draft: true
           
       - name: Build/Release Electron App
         uses: samuelmeuli/action-electron-builder@v1
