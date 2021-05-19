@@ -35,6 +35,7 @@ jobs:
           tag_name: ${{ github.event.inputs.tag }}
           release_name: ${{ github.event.inputs.name }}
           draft: true
+          prerelease: true
       
   publish:
     needs: mktag
