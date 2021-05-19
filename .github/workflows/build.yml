@@ -1,10 +1,10 @@
 name: CI
-inputs:
-  releasetag:
-    description: 'Github Release Tag'
-    required: true
 on:
   workflow_dispatch:
+    inputs:
+      releasetag:
+        description: 'Github Release Tag'
+        required: true
   #pull_request:
   #push:
   #  paths-ignore:
@@ -25,6 +25,8 @@ jobs:
         os: [macos-10.15, ubuntu-latest, windows-latest]
     
     steps:
+      - uses: actions/checkout@master
+    
       - name: Check out Git Repo
         uses: actions/checkout@v1
         
@@ -37,4 +39,4 @@ jobs:
         uses: samuelmeuli/action-electron-builder@v1
         with:
           github_token: ${{ secrets.github_token }}
-          release: ${{ startsWith(github.ref, 'refs/tags/release-') }}
+          release: ${{ github.event.inputs.releasetag }}
