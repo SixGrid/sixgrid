@@ -1,4 +1,8 @@
 name: CI
+inputs:
+  releasetag:
+    description: 'Github Release Tag'
+    required: true
 on:
   workflow_dispatch:
   #pull_request:
