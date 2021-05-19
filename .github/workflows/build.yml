@@ -2,8 +2,11 @@ name: CI
 on:
   workflow_dispatch:
     inputs:
-      releasetag:
+      tag:
         description: 'Github Release Tag'
+        required: true
+      name:
+        description: 'Github Release Name'
         required: true
   #pull_request:
   #push:
@@ -35,8 +38,16 @@ jobs:
         with:
           node-version: 14
           
+      - name: Create Release Tag
+        uses: mathieudutour/github-tag-action@v5.5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.event.inputs.tag }}
+          release_name: ${{ github.event.inputs.name }}
+          
       - name: Build/Release Electron App
         uses: samuelmeuli/action-electron-builder@v1
         with:
           github_token: ${{ secrets.github_token }}
-          release: ${{ github.event.inputs.releasetag }}
+          release: ${{ github.event.inputs.tag }}
