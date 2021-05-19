@@ -20,6 +20,13 @@ Clone the repository
 $ git clone -b stable https://github.com/jylescoad-ward/esix-gui
 ```
 
+(Contributing Only) Switch to Development Branch
+```shell-script
+$ git fetch
+$ git pull
+$ git checkout dev
+```
+
 Install Dependencies
 ```shell-script
 $ npm install --include=dev
