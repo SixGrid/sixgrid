@@ -40,8 +40,8 @@ jobs:
           
       - name: Create Tag
         uses: mathieudutour/github-tag-action@v5.5
-        id: "${{ github.event.inputs.tag }}"
         with:
+          custom_tag: ${{ github.event.inputs.tag }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
           
       - name: Create Release Draft
