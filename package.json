@@ -26,7 +26,7 @@
 		"appId": "club.jyles.sixgrid",
 		"copyright": "Copyright © 2020-2021 SixGrid Contributers",
 		"compression": "maximum",
-		"artifactName": "sixgrid-latest.{ext}",
+		"artifactName": "sixgrid.{ext}",
 		"win": {
 			"target": [
 				"nsis"
