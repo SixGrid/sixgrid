@@ -265,7 +265,6 @@ module.exports = {
 				fs.mkdirSync(downloadLocation)
 			}
 			var targetPath = `${downloadLocation}${esix.osSeperator}${objectData.fullData.postData.id}.${g_url.split('.')[g_url.split('.').length - 1]}`;
-			console.log(fs.statSync(targetPath).size);
 			if (fs.existsSync(targetPath) && fs.statSync(targetPath).size > 146) {
 				return;
 			}
