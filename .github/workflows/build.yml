@@ -90,6 +90,7 @@ jobs:
           upload_url: ${{ needs.mktag.outputs.upload_url }}
           asset_path: ./dist/${{ matrix.artifact_name }}
           asset_name: ${{ matrix.asset_name }}
+          asset_content_type: application/octet-stream
   notifydevs:
     name: Notify Developers
     
