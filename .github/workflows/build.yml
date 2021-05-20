@@ -100,7 +100,9 @@ jobs:
         uses: Ilshidur/action-discord@0.0.2
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+          DISCORD_USERNAME: "SixGrid Release Notifications"
+          DISCORD_AVATAR: "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
         with:
-          args: "<@&783624073812377601> New SixGrid Release Built\n ${{ steps.create_release.outputs.html_url }}"
+          args: "<@&783624073812377601> New SixGrid Release `${{ github.event.inputs.name }} (${{ github.event.inputs.tag }})`\n ${{ steps.create_release.outputs.html_url }}"
         
 
