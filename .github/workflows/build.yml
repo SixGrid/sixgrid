@@ -42,7 +42,7 @@ jobs:
         with:
           tag_name: ${{ github.event.inputs.tag }}
           release_name: ${{ github.event.inputs.name }}
-          draft: true
+          draft: false
           prerelease: true
       
   publish:
@@ -102,12 +102,12 @@ jobs:
     
     steps:
       - name: Send Discord Message
-        uses: Ilshidur/action-discord@0.0.2
-        env:
-          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
-          DISCORD_USERNAME: "SixGrid Release Notifications"
-          DISCORD_AVATAR: "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
+        uses: appleboy/discord-action@master
         with:
-          args: "<@&783624073812377601> New SixGrid Release `${{ github.event.inputs.name }} (${{ github.event.inputs.tag }})`\n ${{ needs.mktag.outputs.web_url }}"
+          webhook_id: ${{ secrets.DISCORD_WEBHOOK_ID }}
+          webhook_token: ${{ secrets.DISCORD_WEBHOOK_TOKEN }}
+          username: "SixGrid Release Notifications"
+          avatar_url: "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
+          message: "<@&783624073812377601> New SixGrid Release `${{ github.event.inputs.name }} (${{ github.event.inputs.tag }})`\r\n${{ needs.mktag.outputs.web_url }}"
         
 
