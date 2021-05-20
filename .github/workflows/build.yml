@@ -25,6 +25,10 @@ jobs:
   mktag:
     runs-on: ubuntu-latest
     
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+      web_url: ${{ steps.create_release.outputs.html_url }}
+    
     permissions: write-all
     
     steps:
@@ -79,13 +83,13 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         
       - name: Upload binaries to release
-        uses: svenstaro/upload-release-action@v2
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: dist/${{ matrix.artifact_name }}
+          upload_url: ${{ needs.mktag.outputs.upload_url }}
+          asset_path: ./dist/${{ matrix.artifact_name }}
           asset_name: ${{ matrix.asset_name }}
-          tag: ${{ github.event.inputs.tag }}
-          overwrite: true
   notifydevs:
     name: Notify Developers
     
@@ -103,6 +107,6 @@ jobs:
           DISCORD_USERNAME: "SixGrid Release Notifications"
           DISCORD_AVATAR: "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
         with:
-          args: "<@&783624073812377601> New SixGrid Release `${{ github.event.inputs.name }} (${{ github.event.inputs.tag }})`\n ${{ steps.create_release.outputs.html_url }}"
+          args: "<@&783624073812377601> New SixGrid Release `${{ github.event.inputs.name }} (${{ github.event.inputs.tag }})`\n ${{ needs.mktag.outputs.web_url }}"
         
 
