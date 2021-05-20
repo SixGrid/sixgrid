@@ -1,4 +1,4 @@
-name: CI
+name: Build Release
 on:
   workflow_dispatch:
     inputs:
@@ -8,6 +8,10 @@ on:
       name:
         description: 'Github Release Name'
         required: true
+      description:
+        description: 'Github Release Description'
+        required: false
+        
   #pull_request:
   #push:
   #  paths-ignore:
@@ -82,3 +86,21 @@ jobs:
           asset_name: ${{ matrix.asset_name }}
           tag: ${{ github.event.inputs.tag }}
           overwrite: true
+  notifydevs:
+    name: Notify Developers
+    
+    needs: [ mktag, publish ]
+    
+    runs-on: ubuntu-latest
+    
+    permissions: read-all
+    
+    steps:
+      - name: Send Discord Message
+        uses: Ilshidur/action-discord@0.0.2
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        with:
+          args: "<@&783624073812377601> New SixGrid Release Built\n ${{ steps.create_release.outputs.html_url }}"
+        
+
