@@ -191,7 +191,7 @@ if (esix.electron.remote.process.platform == 'win32') {
 }
 
 // Create API Instance and Fire off Key listener.
-global.esix.loadSixgrid = () => {
+global.esix.appInitalize = () => {
 	global.esix.api = new esix.modules.api({username: localStorage.auth_username,key: localStorage.auth_key,});
 	esix.keyListener();
 	new esix.pageManager().pageListen();
@@ -217,6 +217,6 @@ if  (localStorage.firstTime == true || localStorage.firstTime == undefined) {
 	new esix.pageManager().function('gettingstarted');
 }else {
 	// When its not our first time laod sixgrid
-	esix.loadSixgrid();
+	esix.appInitalize();
 }
 console.debug(`[gui.js] esix global`,esix);
