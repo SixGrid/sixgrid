@@ -177,6 +177,10 @@ localStorage.search_temporaryBlacklist = '';
 if (localStorage.search_bypassGlobalFilter == undefined) {
 	localStorage.search_bypassGlobalFilter = 'true';
 }
+if (localStorage.search_blacklistedTags == undefined)
+{
+	localStorage.search_blacklistedTags = "";
+}
 if (localStorage.blacklistedTags != undefined) {
 	localStorage.search_blacklistedTags = localStorage.blacklistedTags;
 	localStorage.blacklistedTags = undefined;
