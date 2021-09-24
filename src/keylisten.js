@@ -19,9 +19,8 @@ module.exports = () => {
 	if (localStorage.keymap == undefined) {
 		localStorage.keymap = JSON.stringify(defaultKeymap)
 		console.debug(`[keylisten] No keymap was found so one was generated.`)
-	} else {
-		keymap = JSON.parse(localStorage.keymap)
 	}
+	keymap = JSON.parse(localStorage.keymap)
 	console.debug(`[keylisten] Current Keymap`,keymap)
 	document.addEventListener('keydown',module.exports.listener) 
 }
@@ -29,6 +28,11 @@ module.exports = () => {
 module.exports.resetKeymap = () =>
 {
 	localStorage.keymap = JSON.stringify(defaultKeymap);
+}
+
+module.exports.reloadKeymap = () =>
+{
+	keymap = JSON.parse(localStorage.keymap);
 }
 
 module.exports.listener = (g_keypress) => {
