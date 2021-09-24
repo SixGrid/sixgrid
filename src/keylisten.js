@@ -6,7 +6,8 @@ var defaultKeymap = {
 	"keyd": "download",
 	"escape": "exit",
 	"keyf": "favorite",
-	"keys": "save"
+	"keys": "save",
+	"keyc": "copylink"
 };
 var listenablePages = [
 	'search',
@@ -25,7 +26,10 @@ module.exports = () => {
 	document.addEventListener('keydown',module.exports.listener) 
 }
 
-
+module.exports.resetKeymap = () =>
+{
+	localStorage.keymap = JSON.stringify(defaultKeymap);
+}
 
 module.exports.listener = (g_keypress) => {
 	if (!listenablePages.includes(localStorage.currentTab)) return;
