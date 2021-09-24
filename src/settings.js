@@ -89,7 +89,8 @@ module.exports = {
 						</table>
 					</div>
 					<ul class="selectedOptions">
-						<li><a class="waves-effect waves-light btn" id="defaults">Reset All</a></li>
+						<li><a class="waves-effect waves-light btn" id="default_all">Reset All</a></li>
+						<li><a class="waves-effect waves-light btn disabled" id="reset">Default</a></li>
 						<li><a class="waves-effect waves-light btn disabled" id="advanced">Advanced</a></li>
 						<li><a class="waves-effect waves-light btn disabled" id="edit">Edit Binding</a></li>
 						<li><a class="waves-effect waves-light btn disabled	" id="remove">Remove Binding</a></li>
@@ -287,41 +288,41 @@ module.exports = {
 		module.exports.keybindOptionListen();
 		// Login
 		$("div.authSettings a#authSettings_verify").click(() => {
-				console.log(localStorage.auth_username)
-				console.log(localStorage.auth_key)
-				if (localStorage.auth_username == undefined) {
-					// No username
-					swat("No Username", "No username was given so we can't log you in. Try again!", "error")
-					return;
-				}
-			}),
-			$("div.authSettings a#authSettings_verify").click(() => {
-				if (localStorage.auth_key == undefined) {
-					// No username
-					swat("No key", "No key was given so we can't log you in. Try again!", "error")
-					return;
-				}
-				module.exports.check({
-					username: localStorage.auth_username,
-					key: localStorage.auth_key
-				})
-			}),
-			$("div.authSettings a#authSettings_change").click(() => {
-				if ($("div.authSettings input#username[type=text]").val().length < 1) {
-					// No username
-					swat("No Username", "No username was given so we can't log you in. Try again!", "error")
-					return;
-				}
-				if ($("div.authSettings input#key[type=password]").val().length < 1) {
-					// No key
-					swat("No Key", "No key was given so we can't log you in. Try again!", "error")
-					return;
-				}
-				module.exports.validate({
-					username: $("div.authSettings input#username[type=text]").val(),
-					key: $("div.authSettings input#key[type=password]").val()
-				})
+			console.log(localStorage.auth_username)
+			console.log(localStorage.auth_key)
+			if (localStorage.auth_username == undefined) {
+				// No username
+				swat("No Username", "No username was given so we can't log you in. Try again!", "error")
+				return;
+			}
+		})
+		$("div.authSettings a#authSettings_verify").click(() => {
+			if (localStorage.auth_key == undefined) {
+				// No username
+				swat("No key", "No key was given so we can't log you in. Try again!", "error")
+				return;
+			}
+			module.exports.check({
+				username: localStorage.auth_username,
+				key: localStorage.auth_key
 			})
+		}),
+		$("div.authSettings a#authSettings_change").click(() => {
+			if ($("div.authSettings input#username[type=text]").val().length < 1) {
+				// No username
+				swat("No Username", "No username was given so we can't log you in. Try again!", "error")
+				return;
+			}
+			if ($("div.authSettings input#key[type=password]").val().length < 1) {
+				// No key
+				swat("No Key", "No key was given so we can't log you in. Try again!", "error")
+				return;
+			}
+			module.exports.validate({
+				username: $("div.authSettings input#username[type=text]").val(),
+				key: $("div.authSettings input#key[type=password]").val()
+			})
+		})
 
 		// Change Download Location
 		$("div.changeDownloadLocation a#changeDownloadLoc_btn").click(() => {
@@ -365,6 +366,13 @@ module.exports = {
 		} else {
 			module.exports.chip(false);
 		}
+
+		// Reset Keybinds
+		$("div.keyboardEditor ul.selectedOptions a#default_all").on('click',() =>
+		{
+			esix.keyListener.resetKeymap();
+			esix.notification("info","Reset All Keybinds to Default",3000);
+		})
 	},
 	keylisten: (keyAction) => {
 		// This will be populated when we start working on customization.
