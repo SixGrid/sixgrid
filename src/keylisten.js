@@ -28,6 +28,7 @@ module.exports = () => {
 module.exports.resetKeymap = () =>
 {
 	localStorage.keymap = JSON.stringify(defaultKeymap);
+	keymap = defaultKeymap;
 }
 
 module.exports.reloadKeymap = () =>
