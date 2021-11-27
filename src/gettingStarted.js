@@ -108,7 +108,7 @@ module.exports = {
 								localStorage.auth_username = $("div.steppercontent div.login input#username").val()
 								localStorage.auth_key = $("div.steppercontent div.login input#key").val()
 								localStorage.firstTime = false;
-								esix.loadSixgrid();
+								esix.appInitalize();
 								break;
 							default:
 								swal("Server Error", `Something failed on e621's server, try again later. Error Code ${response.status.toString()}`, "error")
@@ -130,7 +130,7 @@ module.exports = {
 								localStorage.auth_username = $("div.steppercontent div.login input#username").val()
 								localStorage.auth_key = $("div.steppercontent div.login input#key").val()
 								localStorage.firstTime = false;
-								esix.loadSixgrid();
+								esix.appInitalize();
 								break;
 							default:
 								swal("Server Error", `Something failed on e621's server, try again later. Error Code ${error.response.status.toString()}`, "error")

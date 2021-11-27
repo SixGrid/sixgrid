@@ -5,7 +5,8 @@ global.esix = {
 		md5: require("md5"),
 		salert: require("sweetalert"),
 		removeMarkdown: require("remove-markdown"),
-		fs: require("fs")
+		fs: require("fs"),
+		toolbox: require("tinytoolbox")
 	},
 	pages: {
 		search: require("./search.js"),
@@ -176,6 +177,10 @@ localStorage.search_temporaryBlacklist = '';
 if (localStorage.search_bypassGlobalFilter == undefined) {
 	localStorage.search_bypassGlobalFilter = 'true';
 }
+if (localStorage.search_blacklistedTags == undefined)
+{
+	localStorage.search_blacklistedTags = "";
+}
 if (localStorage.blacklistedTags != undefined) {
 	localStorage.search_blacklistedTags = localStorage.blacklistedTags;
 	localStorage.blacklistedTags = undefined;
@@ -190,7 +195,7 @@ if (esix.electron.remote.process.platform == 'win32') {
 }
 
 // Create API Instance and Fire off Key listener.
-global.esix.loadSixgrid = () => {
+global.esix.appInitalize = () => {
 	global.esix.api = new esix.modules.api({username: localStorage.auth_username,key: localStorage.auth_key,});
 	esix.keyListener();
 	new esix.pageManager().pageListen();
@@ -216,6 +221,6 @@ if  (localStorage.firstTime == true || localStorage.firstTime == undefined) {
 	new esix.pageManager().function('gettingstarted');
 }else {
 	// When its not our first time laod sixgrid
-	esix.loadSixgrid();
+	esix.appInitalize();
 }
 console.debug(`[gui.js] esix global`,esix);

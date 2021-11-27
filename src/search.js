@@ -736,6 +736,18 @@ module.exports = {
 			case "favorite":
 				module.exports.favoriteHandle();
 				break;
+			case "copylink":
+				navigator.clipboard.write([ 
+					new ClipboardItem({ 
+						"text/plain": new Blob(
+							[ "https://e621.net/posts/"+esix.searchStorage.currentPosts[localStorage.currentPostIndex].id ], 
+							{type: "text/plain"})}
+						)
+					]).then(() =>
+					{
+						esix.notification("info","Copied Post Link to Clipboard",2000);
+					})
+				break;
 			case "exit":
 				localStorage.search_isFullscreen = 'false';
 				$("div.fullscreenResult").fadeOut('fast')
