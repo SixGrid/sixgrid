@@ -1,0 +1,17 @@
+{
+  "name": "sixgridapi",
+  "version": "1.0.0",
+  "main": "Library.js",
+  "scripts": {
+    "docs": "jsdoc -c jsdoc.config.json"
+  },
+  "author": "Kate Ward <kate@dariox.club>",
+  "license": "GPL-2.0-ONLY",
+  "dependencies": {
+    "axios": "^0.24.0"
+  },
+  "devDependencies": {
+    "jsdoc": "^3.6.7",
+    "minami": "^1.2.3"
+  }
+}

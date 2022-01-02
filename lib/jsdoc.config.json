@@ -1,0 +1,23 @@
+{
+	"recurseDepth": 10,
+	"source": {
+		"include": ["Classes", "./Library.js"],
+		"includePattern": ".+\\.js(doc|x)?$",
+		"excludePattern": "(^|\\/|\\\\)_"
+	},
+	"tags": {
+		"allowUnknownTags": true,
+		"dictionaries": ["jsdoc","closure"]
+	},
+	"templates": {
+		"cleverLinks": true,
+		"monospaceLinks": false
+	},
+	"opts": {
+		"recurse": true,
+		"destination": "./docs/"
+	},
+	"plugins": [
+		"plugins/markdown"
+	]
+}
