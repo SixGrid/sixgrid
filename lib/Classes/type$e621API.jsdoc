@@ -52,6 +52,22 @@
 	 */
 
 	/**
+	 * @typedef {Object<string, string[]>} type$e621API.Tags
+	 * @property {string[]} general
+	 * @property {string[]} species
+	 * @property {string[]} character
+	 * @property {string[]} artist
+	 * @property {string[]} invalid
+	 * @property {string[]} lore
+	 * @property {string[]} meta
+	 */
+
+	/**
+	 * @type {string}
+	 * @typedef {('s'|'q'|'e')} type$e621API.Rating
+	 */
+
+	/**
 	 * @description Endpoint: `/posts.json` with method `GET`
 	 * @see https://e621.net/help/api#posts_list
 	 * @typedef {Object<string, *>} type$e621API.PostGet
@@ -62,15 +78,7 @@
 	 * @property {type$e621API.FilePreview} preview
 	 * @property {type$e621API.FileSample} preview
 	 * @property {type$e621API.Score} Score
-	 * @property {Object} tags
-	 * @property {Array.<string>} tags.general
-	 * @property {Array.<string>} tags.species
-	 * @property {Array.<string>} tags.character
-	 * @property {Array.<string>} tags.artist
-	 * @property {Array.<string>} tags.invalid
-	 * @property {Array.<string>} tags.lore
-	 * @property {Array.<string>} tags.meta
-	 * @property {Array.<string>} locked_tags
+	 * @property {type$e621API.Tags} tags
 	 * @property {int} change_seq
 	 * @property {Object<string, boolean>} flags
 	 * @property {boolean} flags.pending
