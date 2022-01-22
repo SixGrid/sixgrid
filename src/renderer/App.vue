@@ -61,11 +61,7 @@
   background: none !important;
 }
 .page-container .md-app {
-    height: 100vh;
-}
-.md-content {
-  width: calc(100vw - 70px);
-  overflow-x: hidden;
+  height: 100vh;
 }
 .router-view {
   position: absolute;
