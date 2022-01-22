@@ -1,18 +1,116 @@
 <template>
-  <div id="app">
-    <navigation-bar></navigation-bar>
-    <router-view></router-view>
-  </div>
+	<div class="page-container">
+    <router-view class="router-view" ref="router-view"/>
+		<md-app style="width: 70px;">
+			<md-app-drawer ref="app-drawer" :md-active.sync="menuVisible" md-persistent="mini">
+				<md-toolbar class="md-transparent" md-elevation="0">
+					<span>Sixgrid {{ packageJSON.version }}</span>
+					<div class="md-toolbar-section-end">
+						<md-button class="md-icon-button md-dense" @click="toggleMenu">
+							<md-icon>keyboard_arrow_left</md-icon>
+						</md-button>
+					</div>
+				</md-toolbar>
+
+				<md-list>
+
+					<md-list-item to="/search">
+						<md-icon>search</md-icon>
+						<span class="md-list-item-text">Search</span>
+					</md-list-item>
+
+					<md-list-item to="/favorite">
+						<md-icon>star</md-icon>
+						<span class="md-list-item-text">Favorites</span>
+					</md-list-item>
+
+					<md-list-item to="/downloadmanager">
+						<md-icon>cloud_download</md-icon>
+						<span class="md-list-item-text">Download Manager</span>
+					</md-list-item>
+
+					<md-list-item to="/account/about">
+						<md-icon>person</md-icon>
+						<span class="md-list-item-text">Account</span>
+					</md-list-item>
+
+					<md-list-item to="/settings">
+						<md-icon>settings</md-icon>
+						<span class="md-list-item-text">Settings</span>
+					</md-list-item>
+					<md-list-item to="/about">
+						<md-icon>support</md-icon>
+						<span class="md-list-item-text">About</span>
+					</md-list-item>
+				</md-list>
+			</md-app-drawer>
+		</md-app>
+	</div>
 </template>
+<style scoped>
+.page-container {
+	position: fixed;
+	top: 0;
+	left: 0;
+  overflow-x: hidden;
+  width: 100vw;
+}
+.md-app {
+  overflow-x: hidden;
+  z-index: 10;
+  background: none !important;
+}
+.page-container .md-app {
+    height: 100vh;
+}
+.md-content {
+  width: calc(100vw - 70px);
+  overflow-x: hidden;
+}
+.router-view {
+  position: absolute;
+  top: 0;
+  left: 70px;
+  max-width: calc(100vw - 70px);
+}
+.md-drawer {
+  height: 100vh;
+  position: fixed;
+  top: -72px;
+  left: 0;
+}
+</style>
 
 <script>
-  import NavigationBar from './components/NavigationBar.vue'
-  export default {
-    components: {
-      NavigationBar
+export default {
+  name: 'sixgrid',
+  data () {
+    return {
+      menuVisible: false,
+      packageJSON: require('./../../package.json')
+    }
+  },
+  mounted () {
+    var $ = require('jquery')
+    $(this.$refs['app-drawer']).width(parseInt(this.$refs['app-drawer'].getDrawerWidth().replace("px", "")))
+    $(document).on('click', () => {
+      setTimeout(() => {
+      }, 1000)
+    })
+  },
+  methods: {
+    toggleMenu () {
+      this.menuVisible = !this.menuVisible
     },
-    name: 'esix-gui'
+    updateContentWidth () {
+        console.log(this)
+        let drawer = $(this.$refs['app-drawer'])
+        let getDrawerWidth = parseInt(this.$refs['app-drawer'].getDrawerWidth().replace("px", ""))
+        getDrawerWidth = getDrawerWidth + 35
+        $(this.$refs['app-content'].$el).width(window.innerWidth - getDrawerWidth)
+    }
   }
+}
 </script>
 
 <style>
