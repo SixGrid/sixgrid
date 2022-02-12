@@ -1,11 +1,11 @@
 <template>
 	<div class="container">
 		<div ref="gridview-posts">
-			<md-toolbar class="searchbar md-dense">
+			<md-toolbar class="searchbar md-dense" :md-elevation="1">
 				<div class="md-toolbar-row">
 					<md-field md-inline>
 						<label>Search Query</label>
-						<md-textarea v-model="searchQuery" md-autogrow></md-textarea>
+						<md-input v-model="searchQuery" md-autogrow @keyup="ValidateSearch"></md-input>
 					</md-field>
 					<md-button class="md-icon-button" ref="buttonSearchSettings">
 						<md-icon>tune</md-icon>
@@ -26,8 +26,17 @@ export default {
 	name: 'Search',
 	data () {
 		return {
-			searchQuery: null,
+			searchQuery: '',
 			posts: []
+		}
+	},
+	methods: {
+		ValidateSearch (event) {
+			console.log(event)
+			let DoSubmit = event.code.toLowerCase() == 'enter'
+			let SufficentLength = this.$data.searchQuery.length > 1
+			let IsValid = DoSubmit && SufficentLength
+			if (!IsValid) return
 		}
 	}
 }
