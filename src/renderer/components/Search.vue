@@ -2,10 +2,15 @@
 	<div class="container">
 		<div ref="gridview-posts">
 			<md-toolbar class="searchbar md-dense">
-				<md-field>
-					<label>Search Query</label>
-					<md-textarea v-model="searchQuery" md-autogrow></md-textarea>
-				</md-field>
+				<div class="md-toolbar-row">
+					<md-field md-inline>
+						<label>Search Query</label>
+						<md-textarea v-model="searchQuery" md-autogrow></md-textarea>
+					</md-field>
+					<md-button class="md-icon-button" ref="buttonSearchSettings">
+						<md-icon>tune</md-icon>
+					</md-button>
+				</div>
 			</md-toolbar>
 		</div>
 	</div>
