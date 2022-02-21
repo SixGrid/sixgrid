@@ -38,6 +38,12 @@
 						<md-icon>settings</md-icon>
 						<span class="md-list-item-text">Settings</span>
 					</md-list-item>
+					<template v-if="localStorage.Debug != undefined && localStorage.Debug == 'true'">
+						<md-list-item to="/debug">
+							<md-icon>bug_report</md-icon>
+							<span class="md-list-item-text">Debug</span>
+						</md-list-item>
+					</template>
 					<md-list-item to="/about">
 						<md-icon>support</md-icon>
 						<span class="md-list-item-text">About</span>
@@ -76,14 +82,20 @@
   left: 0;
 }
 </style>
-
+<style>
+.container {
+	width: calc(100% - 120px);
+	margin: 25px;
+}
+</style>
 <script>
 export default {
   name: 'sixgrid',
   data () {
     return {
       menuVisible: false,
-      packageJSON: require('./../../package.json')
+      packageJSON: require('./../../package.json'),
+	  localStorage: localStorage
     }
   },
   mounted () {
