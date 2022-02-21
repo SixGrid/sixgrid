@@ -18,7 +18,7 @@
   },
   "build": {
     "productName": "esix-gui",
-    "appId": "club.jyles.sixgrid",
+    "appId": "pet.kate.sixgrid",
     "directories": {
       "output": "build"
     },
