@@ -12,6 +12,8 @@
 					</md-button>
 				</div>
 			</md-toolbar>
+
+			<search-result-grid :result="testdata" />
 		</div>
 	</div>
 </template>
@@ -22,12 +24,15 @@
 }
 </style>
 <script>
+import SearchResultGrid from './SearchResultGrid.vue'
 export default {
+  components: { SearchResultGrid },
 	name: 'Search',
 	data () {
 		return {
 			searchQuery: '',
-			posts: []
+			posts: [],
+			testdata: require('../../../posts.json')
 		}
 	},
 	methods: {
