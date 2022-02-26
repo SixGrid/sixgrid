@@ -123,4 +123,8 @@ export default {
 
 <style>
 @import url("//fonts.googleapis.com/css?family=Roboto:400,500,700,400italic|Material+Icons");
+
+.md-card-area {
+	background: rgba(0, 0, 0, 0.9) !important;
+}
 </style>
