@@ -37,7 +37,6 @@ export default {
 	},
 	methods: {
 		ValidateSearch (event) {
-			console.log(event)
 			let DoSubmit = event.code.toLowerCase() == 'enter'
 			let SufficentLength = this.$data.searchQuery.length > 1
 			let IsValid = DoSubmit && SufficentLength
