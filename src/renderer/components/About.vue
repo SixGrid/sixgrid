@@ -30,8 +30,8 @@
 <style scoped>
 .container {
     text-align: center;
-	width: calc(100% - 120px);
-	margin: 25px;
+    width: calc(100% - 120px);
+    margin: 25px;
 }
 img {
     width: 100px;

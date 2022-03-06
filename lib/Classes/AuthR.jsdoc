@@ -1,23 +1,23 @@
 /**
  * @namespace type$AuthR
  */
-	/**
-	 * @typedef {Object<string, string|boolean>} type$AuthR.JSON
-	 * @property {type$AuthR.Username} login
-	 * @property {type$AuthR.APIKey} apikey
-	 * @property {boolean} enabled
-	 */
-	/**
-	 * @typedef {string|null} type$AuthR.Username
-	 * @pattern /^[a-zA-Z0-9_\-]{1,}$/
-	 * Must match regex pattern `/^[a-zA-Z0-9_\-]{1,}$/`
-	 */
-	/**
-	 * @typedef {string|null} type$AuthR.APIKey
-	 * @pattern /^[a-zA-Z0-9_\-]{1,}$/
-	 * Must match regex pattern `^[a-zA-Z0-9_\-]{1,}$`
-	 */
-	/**
-	 * @typedef {string} type$AuthR.Email
-	 * Must match regex implementation of {@link https://datatracker.ietf.org/doc/html/rfc5322|RFC 5322} which is found on {@link https://emailregex.com/}.
-	 */
+    /**
+     * @typedef {Object<string, string|boolean>} type$AuthR.JSON
+     * @property {type$AuthR.Username} login
+     * @property {type$AuthR.APIKey} apikey
+     * @property {boolean} enabled
+     */
+    /**
+     * @typedef {string|null} type$AuthR.Username
+     * @pattern /^[a-zA-Z0-9_\-]{1,}$/
+     * Must match regex pattern `/^[a-zA-Z0-9_\-]{1,}$/`
+     */
+    /**
+     * @typedef {string|null} type$AuthR.APIKey
+     * @pattern /^[a-zA-Z0-9_\-]{1,}$/
+     * Must match regex pattern `^[a-zA-Z0-9_\-]{1,}$`
+     */
+    /**
+     * @typedef {string} type$AuthR.Email
+     * Must match regex implementation of {@link https://datatracker.ietf.org/doc/html/rfc5322|RFC 5322} which is found on {@link https://emailregex.com/}.
+     */

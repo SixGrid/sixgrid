@@ -9,7 +9,7 @@ Our standard differs from the jQuery Javascript Style Guide in the following way
 - Indentation with hard tabs with a character width of 4
 - No Whitespace at the end of a line or on blank lines.
 - Lines should have a maximum of 4 indents and a character limit of 120 (not including indents)
-	- Lines including URL's or regex is an exception to this rule.
+    - Lines including URL's or regex is an exception to this rule.
 - `if`/`else`/`for`/`while`/`try` statements must have their brackes on their own independent lines.
 - Special-Character operators (`!`, `++`, etc...) must not have space before or after it.
 - Any `,` and `;` must not have a preceding space.
@@ -32,23 +32,23 @@ var i = 0;
 
 if (condition) 
 {
-	doSomething();
+    doSomething();
 }
 
 if (condition)
 {
-	// stuff
+    // stuff
 } else if (otherCondition)
 {
-	// more stuff
+    // more stuff
 } else
 {
-	// aaaaaaaa
+    // aaaaaaaa
 }
 
 while (!condition)
 {
-	object[ array[i] ] = someFunction(i);
+    object[ array[i] ] = someFunction(i);
 }
 
 try
