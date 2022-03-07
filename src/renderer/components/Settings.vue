@@ -27,7 +27,7 @@
             </template>
         </md-list>
         <md-list class="md-elevation-1">
-            <md-subheader>Authentication</md-subheader>
+            <md-subheader>Authentication{{ clientParameters.auth.enable ? '' : ' (Disabled)' }}</md-subheader>
             <md-list-item>
                 <md-icon>{{ clientParameters.auth.enable ? 'person' : 'person_off' }}</md-icon>
                 <div class="md-list-item-text">
@@ -49,9 +49,17 @@
                 </md-field>
             </md-list-item>
         </md-list>
+        <md-button class="md-fab btn-save md-primary" @click="save()">
+            <md-icon>save</md-icon>
+        </md-button>
     </div>
 </template>
 <style>
+[page=settings] .btn-save {
+    position: fixed;
+    bottom: 16px;
+    right: 16px;
+}
 [page=settings] .md-list {
     margin: 8px;
 }
@@ -72,7 +80,7 @@ export default {
             return {
                 pflags: {
                     endpointOptions,
-                    endpointOptionsSelected: null,
+                    endpointOptionsSelected: endpointOptions[0].value,
                     customEndpointEnable: false,
                     customEndpoint: null
                 },
@@ -87,6 +95,8 @@ export default {
             }
         },
         updateClientParameters () {
+            if (this.$data.pflags.endpointOptionsSelected == null)
+                this.$data.pflags.endpointOptionsSelected = this.$data.pflags.endpointOptions[0].value
             if (this.$data.pflags.endpointOptionsSelected != null) {
                 if (this.customEndpointEnable()) {
                     this.$data.clientParameters.endpoint = this.$data.pflags.customEndpoint
@@ -94,6 +104,13 @@ export default {
                     this.$data.clientParameters.endpoint = this.$data.pflags.endpointOptionsSelected.value
                 }
             }
+        },
+        save() {
+            let ts = Date.now()
+            let data = this.toJSON()
+            AppData.Config.Data.clientParameters = JSON.parse(JSON.stringify(data))
+            AppData.Config.write()
+            vueJS.$toastr.success(`Took ${Date.now() - ts}ms`, 'Settings Saved')
         },
         toJSON () {
             this.updateClientParameters()
