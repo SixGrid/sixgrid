@@ -28,6 +28,11 @@ export default new Router({
             path: '/debug',
             name: 'Debug',
             component: require('@/components/Debug').default
+        },
+        {
+            path: '/settings',
+            name: 'Settings',
+            component: require('@/components/Settings').default
         }
     ]
 })
