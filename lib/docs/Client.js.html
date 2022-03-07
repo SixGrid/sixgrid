@@ -32,6 +32,7 @@ const AuthR = require('./AuthR');
 const Schema = require("./_Schema")
 const packageJSON = require("./../package.json");
 const WebClient = require('./WebClient');
+const PostObject = require('./Post')
 
 /** @extends {node:events} */
 class Client extends EventEmitter {
@@ -40,20 +41,27 @@ class Client extends EventEmitter {
      */
     constructor(options) {
         super();
+        if (options == undefined || typeof options != 'object') options = {};
+        options = Object.assign({}, {
+            product: {
+                name: packageJSON.name,
+                version: packageJSON.version
+            },
+            auth: null,
+            developermetrics: false,
+            endpoint: 'https://e621.net'
+        }, options)
         this.Validator = this.#SetupValidator();
 
         let options_validate = this.Validator.validate(options, Schema["type$Client.Options"], {required: true});
         if (!options_validate.valid) options_validate.errors.foreach(e => {throw new Error(e)});
 
-        this.Auth = new AuthR(options.auth);
-        this.DeveloperMetrics = options.developermetrics || false;
-        this.Product = options.product || {
-            name: packageJSON.name,
-            version: packageJSON.version
-        };
-        this.Endpoint = options.endpoint || "https://e621.net"
+        this.Auth = new AuthR(this, options.auth);
+        this.DeveloperMetrics = options.developermetrics;
+        this.Product = options.product;
+        this.Endpoint = options.endpoint;
 
-        this.WebClient = new WebClient({
+        this.WebClient = new WebClient(this, {
             Auth: this.Auth,
             BaseURL: this.Endpoint
         });
@@ -84,6 +92,94 @@ class Client extends EventEmitter {
         } else {
             await this.WebClient.delete(`/favorites/${post_id}.json`);
         }
+        if (this.PostCache[post_id] == undefined) {
+            await this.GetPost(post_id)
+        }
+        this.PostCache[post_id].emit('update')
+        return this.PostCache[post_id]
+    }
+
+    /**
+     * @async
+     * @param {int} post_id 
+     * @returns {PostObject}
+     */
+    async GetPost(post_id) {
+        if (this.PostCache[post_id] == undefined) {
+            let response = null
+            try {
+                response = await this.WebClient.get(`${this.Endpoint}/posts/${post_id}.json`)
+            } catch (error) {
+                throw error
+            }
+            if (response.error != null)
+                throw response.error;
+
+            let json = response.toJSON();
+            if (json.success.toString() == 'false') {
+                throw new Error(`Failed to get post: ${json.reason}`)
+            }
+
+            if (this.PostCache[post_id] == undefined)
+                this.PostCache[post_id] = new PostObject(this, post_id, json.post, null)
+        } else {
+            await this.PostCache[post_id].emit('update')
+        }
+        return this.PostCache[post_id]
+    }
+
+    /**
+     * @type {Object}
+     * @property {Object} Search
+     * @property {String} Search.query
+     * @property {Number} Search.page
+     * @property {Number} Search.limit
+     * @property {String} Search.extraParameters
+     */
+    DefaultOptions = {
+        Search: {
+            query: '',
+            page: 1,
+            limit: 320,
+            extraParameters: ''
+        }
+    }
+
+    /**
+     * @type {Object&lt;String, PostObject>} - Key is the Post ID
+     */
+    PostCache = {}
+
+    /**
+     * @param {Client.DefaultOptions.Search} options 
+     * @returns {Array.&lt;PostObject>
+     */
+    async Search(options) {
+        if (options == undefined || typeof options != 'object') options = {};
+        options = Object.assign({}, this.DefaultOptions.Search, options);
+        
+        let response = null
+        try {
+            response = await this.WebClient.get(`${this.Endpoint}/posts.json?query=${encodeURIComponent(options.query)}&amp;page=${options.page}&amp;limit=${options.limit}${options.extraParameters}`)
+        } catch (error) {
+            throw error;
+        }
+        if (response.error != null)
+            throw response.error;
+
+        let json = response.toJSON();
+        if (json.posts.length &lt; 0) return [];
+
+        let returnData = [];
+
+        for (let i = 0; i &lt; json.posts.length; i++) {
+            if (this.PostCache[json.posts[i].id] == undefined) {
+                this.PostCache[json.posts[i].id] = new PostObject(this, json.posts[i].id, json.posts[i], null)
+            }
+            returnData.push(this.PostCache[json.posts[i].id])
+        }
+
+        return returnData;
     }
 
     /**
@@ -120,13 +216,13 @@ module.exports = Client;</code></pre>
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="type$AuthR.html">type$AuthR</a></li><li><a href="type$Client.html">type$Client</a></li><li><a href="type$e621API.html">type$e621API</a></li></ul><h3>Classes</h3><ul><li><a href="AuthR.html">AuthR</a></li><li><a href="Client.html">Client</a></li><li><a href="Post.html">Post</a></li><li><a href="WebClient.html">WebClient</a></li></ul><h3>Events</h3><ul><li><a href="AuthR.html#event:changed">changed</a></li></ul><h3>Global</h3><ul><li><a href="global.html#File">File</a></li><li><a href="global.html#Preview">Preview</a></li><li><a href="global.html#Sample">Sample</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="type$AuthR.html">type$AuthR</a></li><li><a href="type$Client.html">type$Client</a></li><li><a href="type$e621API.html">type$e621API</a></li><li><a href="type$WebClient.html">type$WebClient</a></li></ul><h3>Classes</h3><ul><li><a href="AuthR.html">AuthR</a></li><li><a href="Client.html">Client</a></li><li><a href="Post.html">Post</a></li><li><a href="WebClient.html">WebClient</a></li></ul><h3>Events</h3><ul><li><a href="AuthR.html#event:changed">changed</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Mon Jan 03 2022 20:42:43 GMT+0800 (Australian Western Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.10</a> on Mon Mar 07 2022 19:52:28 GMT+0800 (Australian Western Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>

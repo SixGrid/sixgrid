@@ -29,6 +29,8 @@
             <pre class="prettyprint source linenums"><code>const EventEmitter = require('events');
 const https = require("https")
 const packageJSON = require("./../package.json")
+const URL = require('./URL')
+const zlib = require('zlib')
 
 /** 
  * @extends node:events
@@ -37,7 +39,7 @@ const packageJSON = require("./../package.json")
 class WebClient extends EventEmitter {
     /** 
      * @param {Client} client
-     * @param {WebClient.Options} options
+     * @param {type$WebClient.Options} options
      */
     constructor(client, options) {
         super();
@@ -45,29 +47,25 @@ class WebClient extends EventEmitter {
         if (options == undefined || typeof options != "object") throw new Error("WebClient Options undefined or wrong type");
         if (options.Auth == undefined || typeof options.Auth != "object") throw new Error("WebClient Authentication undefined or wrong type");
         if (options.Auth._type == undefined || typeof options.Auth._type != "string" || options.Auth._type != "AuthR") throw new Error("WebClient Authentication invalid");
-        
+
         // Merge `this.Headers` into `options.Headers`
         this.Headers = Object.fromEntries(
             Object.entries(options.Headers || []).concat(Object.entries(this.Headers))
         )
+        // Force User-Agent header to be in our format :p
+        this.Headers['User-Agent'] = `esix-api/${this.Client.Product.version} (by bjorkin on e621)`
         this.Auth = options.Auth;
         this.BaseURL = options.BaseURL || this.BaseURL;
     }
 
     /**
-     * @typedef {Object&lt;string, bool>} WebClient.Options
-     * @property {AuthR} Auth
-     * @property {string} [BaseURL=https://e621.net]
-     * @property {Object&lt;string, string>} [Header] Headers sent with requests
-     */
-
-    /**
      * @type {Object&lt;string, object>}
-     * @property {string} User-Agent Default Value `esix-api/0.x.x (kate@dariox.club)`
+     * @property {string} User-Agent Default Value `esix-api/0.x.x (by bjorkin on e621)`
      * @description Headers that get merged with the default node:https request headers.
      */
     Headers = {
-        "User-Agent": `${this.Client.Product.name}/${this.Client.Product.version} (kate@dariox.club)`
+        "User-Agent": `esix-api/0.x.x (by bjorkin on e621)`,
+        "Accept-Encoding": `gzip, deflate`
     }
 
     /**
@@ -91,10 +89,11 @@ class WebClient extends EventEmitter {
      */
     request(options, resolve, reject) {
         if (options.path.toString().includes("?")) {
-            options.path += "&amp;" + this.Auth.toString();
+            options.path = `${options.path}&amp;${this.Auth.toString()}`;
         } else {
-            options.path += "?" + this.Auth.toString();
+            options.path = `${options.path}?${this.Auth.toString()}`;
         }
+        options = Object.assign({}, options)
         return https.request(options, (response) => {
             const { statusCode } = response;
             const contentType = response.headers["content-type"];
@@ -110,13 +109,25 @@ class WebClient extends EventEmitter {
                 response.error = null;
             }
 
-            response.setEncoding('utf8');
+            let lstn = response
+
+            if (response.headers['content-encoding'] == 'br') {
+                lstn = zlib.createBrotliDecompress()
+                response.pipe(lstn)
+            } else if (response.headers['content-encoding'] == 'gzip') {
+                lstn = zlib.createGunzip()
+                response.pipe(lstn)
+            }
             let rawData = '';
-            response.on('data', (chunk) => {rawData+=chunk});
-            response.end('end', () => {
+            lstn.on('data', (chunk) => {rawData+=chunk});
+            /* lstn.on('end', () => {
+                console.log(rawData)
+            }) */
+            lstn.on('end', () => {
+                // console.log(response.headers)
                 response.toJSON = () => {
                     try {
-                        const parsedData = JSON.parse(rawData)
+                        return JSON.parse(rawData)
                     } catch(e) {
                         return {};
                     }
@@ -129,7 +140,7 @@ class WebClient extends EventEmitter {
                 } catch(e) {
                     failParse = true;
                 }
-                if (failParse) {
+                if (!failParse) {
                     response.data = JSON.parse(rawData);
                 }
                 response.isJSON = !failParse;
@@ -256,13 +267,13 @@ module.exports = WebClient;</code></pre>
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="type$AuthR.html">type$AuthR</a></li><li><a href="type$Client.html">type$Client</a></li><li><a href="type$e621API.html">type$e621API</a></li></ul><h3>Classes</h3><ul><li><a href="AuthR.html">AuthR</a></li><li><a href="Client.html">Client</a></li><li><a href="Post.html">Post</a></li><li><a href="WebClient.html">WebClient</a></li></ul><h3>Events</h3><ul><li><a href="AuthR.html#event:changed">changed</a></li></ul><h3>Global</h3><ul><li><a href="global.html#File">File</a></li><li><a href="global.html#Preview">Preview</a></li><li><a href="global.html#Sample">Sample</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="type$AuthR.html">type$AuthR</a></li><li><a href="type$Client.html">type$Client</a></li><li><a href="type$e621API.html">type$e621API</a></li><li><a href="type$WebClient.html">type$WebClient</a></li></ul><h3>Classes</h3><ul><li><a href="AuthR.html">AuthR</a></li><li><a href="Client.html">Client</a></li><li><a href="Post.html">Post</a></li><li><a href="WebClient.html">WebClient</a></li></ul><h3>Events</h3><ul><li><a href="AuthR.html#event:changed">changed</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Mon Jan 03 2022 20:42:43 GMT+0800 (Australian Western Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.10</a> on Mon Mar 07 2022 19:52:28 GMT+0800 (Australian Western Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>

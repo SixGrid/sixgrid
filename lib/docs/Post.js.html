@@ -36,13 +36,16 @@ class Post extends EventEmitter {
     /**
      * @param {Client} client 
      * @param {int} post_id 
+     * @param {Object} data
      * @param {SearchInstance|Pool|PostGroup} parent 
      */
-    constructor(client, post_id, parent) {
+    constructor(client, post_id, data, parent) {
         super();
         this.#data.id = post_id;
         this.Client = client;
         this.Parent = parent;
+
+        this.#data = Object.assign({}, data);
 
         let self = this;
         this.on('updateasync', () => {self._Update()})
@@ -108,39 +111,38 @@ class Post extends EventEmitter {
     set updatedAt(v) {}
 
     /**
-     * @typedef {Object}
+     * @readonly
+     * @type {Object}
+     * @property {type$e621API.FileFull} File
+     * @property {type$e621API.FilePreview} Preview
+     * @property {type$e621API.FileSample} Sample
      */
-    Image = {
-        /**
-         * @type {type$e621API.FileFull}
-         * @readonly
-         */
-        get File() {return this.#data.file},
-        set File(v) {},
-        /**
-         * @type {type$e621API.FilePreview}
-         * @readonly
-         */
-        get Preview() {return this.#data.preview},
-        set Preview(v) {},
-        /**
-         * @type {type$e621API.FileSample}
-         * @readonly
-         */
-        get Sample() {return this.#data.sample},
-        set Sample(v) {},
+    get Image() {
+        return Object.assign({}, {
+            File: this.#data.file,
+            Preview: this.#data.preview,
+            Sample: this.#data.sample
+        })
     }
+    set Image (value) {}
 
     /**
      * @type {type$e621API.Score}
      * @readonly
      */
-    Score = {
-        up: 0,
-        down: 0,
-        get total() { return this.Score.up + this.Score.down; },
-        set total(v) {}
-    };
+    get Score () {
+        let total = () => {
+            return parseFloat(this.#data.score.up) + parseFloat(this.#data.score.down)
+        }
+        return Object.assign({}, {
+            up: this.#data.score.down,
+            down: this.#data.score.up,
+            get total () {
+                return total()
+            },
+            set total (value) {}
+        })
+    }
     Score_Self = null;
 
     /**
@@ -170,35 +172,32 @@ class Post extends EventEmitter {
      * @type {type$e621API.Tags}
      * @readonly
      */
-    Tags = {
-        get general() {return this.#data.tags.general || []},
-        set general(v) {},
-        get species() {return this.#data.tags.species || []},
-        set species(v) {},
-        get character() {return this.#data.tags.character || []},
-        set character(v) {},
-        get artist() {return this.#data.tags.artist || []},
-        set artist(v) {},
-        get invalid() {return this.#data.tags.invalid || []},
-        set invalid(v) {},
-        get lore() {return this.#data.tags.lore || []},
-        set lore(v) {},
-        get meta() {return this.#data.tags.meta || []},
-        set meta(v) {},
+    get Tags () {
+        return Object.assign({}, {
+            general: this.#data.tags.general || [],
+            species: this.#data.tags.species || [],
+            character: this.#data.tags.character || [],
+            artist: this.#data.tags.artist || [],
+            invalid: this.#data.tags.invalid || [],
+            lore: this.#data.tags.lore || [],
+            meta: this.#data.tags.meta || [],
+        })
     }
 
     /**
      * @type {type$e621API.Flags}
      * @readonly
      */
-    Flags = {
-        get pending() {return this.#data.flags.pending},                 set pending(v) {},
-        get flagged() {return this.#data.flags.flagged},                 set flagged(v) {},
-        get note_locked() {return this.#data.flags.note_locked},         set note_locked(v) {},
-        get status_locked() {return this.#data.flags.status_locked},     set status_locked(v) {},
-        get rating_locked() {return this.#data.flags.rating_locked},     set rating_locked(v) {},
-        get deleted() {return this.#data.flags.deleted},                 set deleted(v) {},
-    };
+    get Flags () {
+        return Object.assign({}, {
+            pending: this.#data.flags.pending,
+            flagged: this.#data.flags.flagged,
+            note_locked: this.#data.flags.note_locked,
+            status_locked: this.#data.flags.status_locked,
+            rating_locked: this.#data.flags.rating_locked,
+            deleted: this.#data.flags.deleted,
+        })
+    }
 
     /**
      * @type {type$e621API.Rating}
@@ -278,13 +277,13 @@ module.exports = Post;</code></pre>
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="type$AuthR.html">type$AuthR</a></li><li><a href="type$Client.html">type$Client</a></li><li><a href="type$e621API.html">type$e621API</a></li></ul><h3>Classes</h3><ul><li><a href="AuthR.html">AuthR</a></li><li><a href="Client.html">Client</a></li><li><a href="Post.html">Post</a></li><li><a href="WebClient.html">WebClient</a></li></ul><h3>Events</h3><ul><li><a href="AuthR.html#event:changed">changed</a></li></ul><h3>Global</h3><ul><li><a href="global.html#File">File</a></li><li><a href="global.html#Preview">Preview</a></li><li><a href="global.html#Sample">Sample</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="type$AuthR.html">type$AuthR</a></li><li><a href="type$Client.html">type$Client</a></li><li><a href="type$e621API.html">type$e621API</a></li><li><a href="type$WebClient.html">type$WebClient</a></li></ul><h3>Classes</h3><ul><li><a href="AuthR.html">AuthR</a></li><li><a href="Client.html">Client</a></li><li><a href="Post.html">Post</a></li><li><a href="WebClient.html">WebClient</a></li></ul><h3>Events</h3><ul><li><a href="AuthR.html#event:changed">changed</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Mon Jan 03 2022 20:42:43 GMT+0800 (Australian Western Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.10</a> on Mon Mar 07 2022 19:52:28 GMT+0800 (Australian Western Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>
