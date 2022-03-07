@@ -19,7 +19,7 @@
                         <span class="md-list-item-text">Search</span>
                     </md-list-item>
 
-                    <md-list-item to="/favorite">
+                    <md-list-item to="/favorites">
                         <md-icon>star</md-icon>
                         <span class="md-list-item-text">Favorites</span>
                     </md-list-item>
