@@ -1,5 +1,6 @@
 <template>
     <div class="container">
+        <fullscreen-result ref="Fullscreen" />
         <div ref="gridview-posts">
             <md-toolbar class="searchbar md-dense" :md-elevation="1">
                 <div class="md-toolbar-row">
@@ -13,7 +14,7 @@
                 </div>
             </md-toolbar>
 
-            <search-result-grid v-bind:result="posts" />
+            <search-result-grid v-bind:result="posts" @postSelect="postClick" />
         </div>
     </div>
 </template>
@@ -25,8 +26,9 @@
 </style>
 <script>
 import SearchResultGrid from './SearchResultGrid.vue'
+import FullscreenResult from './FullscreenResult.vue'
 export default {
-  components: { SearchResultGrid },
+  components: { SearchResultGrid, FullscreenResult },
     name: 'Search',
     data () {
         return {
@@ -58,6 +60,17 @@ export default {
             let posts = await AppData.Client.Search(options)
             this.$data.posts = {posts}
             console.log(`[Search->ExecuteSearchQuery] Took ${Date.now() - ts}ms.`, posts)
+        },
+        findPostIndex(post) {
+            for (let i = 0; i < this.$data.posts.length; i++) {
+                if (this.$data.posts[i].ID == post.ID) return i
+            }
+            return null
+        },
+        postClick (post) {
+            this.$refs.Fullscreen.setVis(true)
+            this.$refs.Fullscreen.setPosts(this.$data.posts)
+            this.$refs.Fullscreen.setPostIndex(this.findPostIndex(post))
         }
     }
 }
