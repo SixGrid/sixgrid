@@ -9,6 +9,7 @@ const electron = require('electron')
 class ConfigManager extends EventEmitter {
     constructor() {
         super()
+        this.read()
     }
 
     get Directory () {
@@ -22,14 +23,22 @@ class ConfigManager extends EventEmitter {
     }
 
     Data = {
-
+        clientParameters: {
+            auth: {
+                user: '',
+                apikey: '',
+                enable: false
+            },
+            endpoint: 'https://e926.net',
+            developermetrics: false
+        }
     }
 
     validateLocation() {
         if (!fs.existsSync(this.Directory))
             fs.mkdirSync(this.Directory, {recursive: true})
         if (!fs.existsSync(this.Location))
-            fs.writeFileSync(this.Location, '{}')
+            fs.writeFileSync(this.Location, JSON.stringify(this.Data))
     }
 
     read() {
