@@ -87,6 +87,10 @@
         width: calc(100% - 120px);
         margin: 25px;
 }
+:root {
+    --md-theme-default-primary: #ec407a !important;
+    --md-theme-default-accent: #9575cd !important;
+}
 </style>
 <script>
 export default {
@@ -120,7 +124,6 @@ export default {
     }
 }
 </script>
-
 <style>
 @import url("//fonts.googleapis.com/css?family=Roboto:400,500,700,400italic|Material+Icons");
 
