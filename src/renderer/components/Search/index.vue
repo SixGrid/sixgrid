@@ -6,7 +6,7 @@
                 <div class="md-toolbar-row">
                     <md-field md-inline>
                         <label>Search Query</label>
-                        <md-input v-model="searchQuery" md-autogrow @keyup="ValidateSearch"></md-input>
+                        <md-input spellcheck="false" v-model="searchQuery" md-autogrow @keyup="ValidateSearch"></md-input>
                     </md-field>
                     <md-button class="md-icon-button" ref="buttonSearchSettings">
                         <md-icon>tune</md-icon>
