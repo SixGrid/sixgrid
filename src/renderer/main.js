@@ -1,3 +1,5 @@
+import './AppData'
+
 import Vue from 'vue'
 import axios from 'axios'
 
