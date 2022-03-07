@@ -110,6 +110,9 @@ export default {
             }, 1000)
         })
     },
+    created () {
+        document.styleSheets[0].insertRule(`:root{ --screen-width: ${window.innerWidth}px; --screen-height: ${window.innerHeight}px;`)
+    },
     methods: {
         toggleMenu () {
             this.menuVisible = !this.menuVisible
