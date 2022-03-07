@@ -11,6 +11,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const { VueLoaderPlugin } = require('vue-loader')
+const devMode = process.env.NODE_ENV !== "production";
 
 /**
  * List of node_modules to include in webpack bundle
@@ -102,7 +103,6 @@ let rendererConfig = {
   },
   plugins: [
     new VueLoaderPlugin(),
-    new MiniCssExtractPlugin({filename: 'styles.css'}),
     new HtmlWebpackPlugin({
       filename: 'index.html',
       template: path.resolve(__dirname, '../src/index.ejs'),
@@ -128,7 +128,7 @@ let rendererConfig = {
         : false
     }),
     new webpack.NoEmitOnErrorsPlugin()
-  ],
+  ].concat(devMode ? [] : [new MiniCssExtractPlugin()]),
   output: {
     filename: '[name].js',
     libraryTarget: 'commonjs2',
