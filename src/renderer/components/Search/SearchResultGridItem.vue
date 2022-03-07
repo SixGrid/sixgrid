@@ -1,25 +1,27 @@
 <template>
     <div class="md-layout-item md-size-15" style="margin: 12px 0;">
-        <md-card>
-            <md-card-media-cover md-solid>
-                <md-card-media>
-                    <template v-if="thumbnailImage() == undefined">
-                        <img src='@/assets/missing-image.png' />
-                    </template>
-                    <template v-else>
-                        <img :width="thumbnailImage().width" :height="thumbnailImage().height" :src="thumbnailImage().url" />
-                    </template>
-                </md-card-media>
+        <div @click="postClick()" type="clickableCrap">
+            <md-card>
+                <md-card-media-cover md-solid>
+                    <md-card-media>
+                        <template v-if="thumbnailImage() == undefined || thumbnailImage().url == undefined">
+                            <img src='@/assets/missing-image.png' />
+                        </template>
+                        <template v-else>
+                            <img :width="thumbnailImage().width || 256" :height="thumbnailImage().height || 256" :src="thumbnailImage().url" :onerror="this.src = getAssetImage('missing-image.png')" />
+                        </template>
+                    </md-card-media>
 
-                <md-card-area style="padding: 0 8px;">
-                    <span class="md-subhead">
-                        <span :rating="post.Rating.substring(0, 1)">
-                            {{ ratingmap[post.Rating.substring(0, 1).toLowerCase()] }}
+                    <md-card-area style="padding: 0 8px;">
+                        <span class="md-subhead">
+                            <span :rating="post.Rating.substring(0, 1)">
+                                {{ ratingmap[post.Rating.substring(0, 1).toLowerCase()] }}
+                            </span>
                         </span>
-                    </span>
-                </md-card-area>
-            </md-card-media-cover>
-        </md-card>
+                    </md-card-area>
+                </md-card-media-cover>
+            </md-card>
+        </div>
     </div>
 </template>
 <style>
@@ -38,6 +40,11 @@ span[rating=s] {
     color: #0a0;
 }
 </style>
+<style>
+div[type=clickableCrap] :hover {
+    cursor: pointer;
+}
+</style>
 <script>
 export default {
     name: 'SearchResultGridItem',
@@ -54,11 +61,22 @@ export default {
     methods: {
         thumbnailImage() {
             let entries = Object.entries(this.post.Image)
-            for (let i = 0; i < entries.length; i++) {
-                if (entries[i][1].url != undefined)
-                    return entries[i][1]
-            }
-            return undefined
+            if (this.post.Image.Preview.url != undefined)
+                return this.post.Image.Preview
+            else if (this.post.Image.Sample.url != undefined)
+                return this.post.Image.Sample
+            else
+                return undefined
+        },
+        getAssetImage (loc) {
+            let image = require.context('../../assets/', false, /\.png$/)(`./missing-image.png`)
+            try {
+                image = require.context('../../assets/', false, /\.png$/)(filename)
+            } catch (error) {}
+            return image
+        },
+        postClick () {
+            this.$emit('postClick', this.post)
         }
     }
 }
