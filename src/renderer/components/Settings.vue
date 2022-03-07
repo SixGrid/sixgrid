@@ -6,9 +6,25 @@
                 <md-icon>rss_feed</md-icon>
                 <md-field>
                     <label>Endpoint</label>
-                    <md-input v-model="clientParameters.endpoint" />
+                    <md-select v-model="pflags.endpointOptionsSelected">
+                        <template v-for="(endpoint, index) in pflags.endpointOptions">
+                            <div v-bind:key="`endpoint-select-${index}`">
+                                <md-option v-bind:value="endpoint.value">
+                                    {{ endpoint.text }}
+                                </md-option>
+                            </div>
+                        </template>
+                    </md-select>
                 </md-field>
             </md-list-item>
+            <template v-if="customEndpointEnable()">
+                <md-list-item>
+                    <md-field>
+                        <label>Custom Endpoint</label>
+                        <md-input v-model="pflags.customEndpoint" />
+                    </md-field>
+                </md-list-item>
+            </template>
         </md-list>
         <md-list class="md-elevation-1">
             <md-subheader>Authentication</md-subheader>
@@ -48,7 +64,18 @@ export default {
     },
     methods: {
         initialData () {
+            let endpointOptions = [
+                        { value: 'https://e926.net', text: 'e926' },
+                        { value: 'https://e621.net', text: 'e621' },
+                        { value: 'custom', text: 'Custom' }
+                    ]
             return {
+                pflags: {
+                    endpointOptions,
+                    endpointOptionsSelected: null,
+                    customEndpointEnable: false,
+                    customEndpoint: null
+                },
                 clientParameters: {
                     auth: {
                         user: '',
@@ -64,6 +91,15 @@ export default {
                 clientParameters: Object.assign({}, this.$data.clientParameters)
             }
             return JSON.parse(JSON.stringify(data))
+        },
+        customEndpointEnable () {
+            let val = false
+            if (this.$data.pflags.endpointOptionsSelected == null)
+                val = false
+            else if (this.$data.pflags.endpointOptionsSelected.value == 'custom')
+                val = true
+            this.$data.pflags.customEndpointEnable = val
+            return val
         }
     }
 }
