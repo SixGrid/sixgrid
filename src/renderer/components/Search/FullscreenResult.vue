@@ -1,27 +1,47 @@
 <template>
-    <div v-bind:show="visibility ? 'yes' : 'no'">
-        <div class="fullscreenContainer">
-            <span>tee hee</span>
-
-            <div class="md-alignment-center-space-between md-layout md-gutter sg-toolbar-bottom">
-                <div class="md-layout-item"></div>
-                <div class="md-layout-item">
-                    <div action="close"><md-icon>close</md-icon></div>
+    <div action="FullscreenResult">
+        <div v-bind:show="visibility ? 'yes' : 'no'">
+            <template v-if="true">
+                <div class="fullscreenContainer">
+                    <table action="postResult">
+                        <tr action="img">
+                            <td action="post_prev">
+                                <md-icon>arrow_back</md-icon>
+                            </td>
+                            <td action="postImage" v-bind:style="`max-height: ${getScreenHeight() - 120}px; max-width: ${getScreenWidth() - 200}px; --img-width: ${postArr[postIndex].Image.File.width > getScreenWidth() - 200 ? getScreenWidth() - 200 : postArr[postIndex].Image.File.width}px; --img-height: ${postArr[postIndex].Image.File.height > getScreenHeight() - 120 ? getScreenHeight() - 120 : postArr[postIndex].Image.File.height}px;`">
+                                <template v-if="postArr[postIndex] != undefined">
+                                    <img :src="postArr[postIndex].Image.File.url" />
+                                </template>
+                            </td>
+                            <td action="post_next">
+                                <md-icon>arrow_forward</md-icon>
+                            </td>
+                        </tr>
+                        <tr action="toolbar">
+                            <td></td>
+                            <td>
+                                <div action="close" class="hasclick" @click="setVis(false)">
+                                    <md-icon>close</md-icon>
+                                </div>
+                            </td>
+                            <td></td>
+                        </tr>
+                    </table>
                 </div>
-                <div class="md-layout-item"></div>
-            </div>
+            </template>
         </div>
     </div>
 </template>
-<style scoped>
-div[show=yes] {
+<style>
+[action=FullscreenResult] [show=yes] {
     display: block;
 }
-div[show=no] {
+[action=FullscreenResult] [show=no] {
     display: none;
 }
-</style>
-<style>
+.hasclick:hover {
+    cursor: pointer;
+}
 .fullscreenContainer {
     position: fixed;
     top: 0%;
@@ -34,27 +54,48 @@ div[show=no] {
 
     z-index: 100;
 }
-.sg-toolbar-bottom > .md-layout-item > div[action=close]  {
-    width: calc((100vw - 2rem) / 3);
-    padding-left: calc((((100vw - 2rem) / 3) / 2) - 1.5rem);
-    padding-right: calc((((100vw - 2rem) / 3) / 2));
+.fullscreenContainer table[action=postResult] tr[action=img] {
+    height: calc(var(--screen-height) - 100px);
 }
-.sg-toolbar-bottom > .md-layout-item > div[action=close] > i {
+.fullscreenContainer table[action=postResult] tr {
+    width: 100vw;
+    display: table-row;
+}
+.fullscreenContainer table[action=postResult] tr[action=toolbar],
+.fullscreenContainer table[action=postResult] tr[action=toolbar] td,
+.fullscreenContainer table[action=postResult] tr[action=toolbar] th {
+    height: 100px;
+}
+
+.fullscreenContainer table[action=postResult] tr[action=toolbar] td [action=close] {
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+}
+.fullscreenContainer table[action=postResult] tr[action=toolbar] td [action=close],
+.fullscreenContainer table[action=postResult] tr[action=toolbar] td [action=close] i {
+    width: 3rem;
+    height: 3rem;
     font-size: 3rem !important;
 }
-.sg-toolbar-bottom > .md-layout-item {
-    height: 3rem;
+.fullscreenContainer table[action=postResult] tr td {
+    width: 100px;
+    display: table-cell;
 }
-.sg-toolbar-bottom {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-
-    width: calc(100vw - 2rem);
-    height: 3rem;
-
-    margin-left: 1rem;
-    margin-right: 1rem;
+.fullscreenContainer table[action=postResult] tr [action=post_prev],
+.fullscreenContainer table[action=postResult] tr [action=post_next] {
+    width: 100px !important;
+}
+.fullscreenContainer table[action=postResult] tr [action=postImage] {
+    width: 100%;
+}
+.fullscreenContainer table[action=postResult] tr [action=postImage] img {
+    align-content: center;
+    max-height: inherit;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    /* margin-left: calc(((var(--screen-width) - 200px) / 2) - (var(--img-width) / 4)); */
 }
 </style>
 <script>
@@ -76,9 +117,16 @@ export default {
         },
         setPostIndex(index) {
             this.$set(this.$data, 'postIndex', index)
+            console.log(this.$data.postIndex)
         },
         setPosts(arr) {
             this.$set(this.$data, 'postArr', arr)
+        },
+        getScreenHeight () {
+            return window.innerHeight
+        },
+        getScreenWidth () {
+            return window.innerWidth
         }
     }
 }
