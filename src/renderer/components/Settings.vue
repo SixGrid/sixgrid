@@ -73,11 +73,11 @@ export default {
     methods: {
         initialData () {
             let endpointOptions = [
-                        { value: 'https://e926.net', text: 'e926' },
-                        { value: 'https://e621.net', text: 'e621' },
-                        { value: 'custom', text: 'Custom' }
-                    ]
-            return {
+                { value: 'https://e926.net', text: 'e926' },
+                { value: 'https://e621.net', text: 'e621' },
+                { value: 'custom', text: 'Custom' }
+            ]
+            let returnValue = {
                 pflags: {
                     endpointOptions,
                     endpointOptionsSelected: endpointOptions[0].value,
@@ -86,13 +86,16 @@ export default {
                 },
                 clientParameters: {
                     auth: {
-                        user: '',
+                        login: '',
                         apikey: '',
                         enable: false
                     },
                     endpoint: 'https://e926.net'
                 }
             }
+            if (AppData.Config != null && AppData.Config.Data.clientParameters != undefined)
+                returnValue.clientParameters = Object.assign({}, AppData.Config.Data.clientParameters)
+            return returnValue
         },
         updateClientParameters () {
             if (this.$data.pflags.endpointOptionsSelected == null)
@@ -101,14 +104,14 @@ export default {
                 if (this.customEndpointEnable()) {
                     this.$data.clientParameters.endpoint = this.$data.pflags.customEndpoint
                 } else {
-                    this.$data.clientParameters.endpoint = this.$data.pflags.endpointOptionsSelected.value
+                    this.$data.clientParameters.endpoint = this.$data.pflags.endpointOptionsSelected
                 }
             }
         },
         save() {
             let ts = Date.now()
             let data = this.toJSON()
-            AppData.Config.Data.clientParameters = JSON.parse(JSON.stringify(data))
+            AppData.Config.Data.clientParameters = JSON.parse(JSON.stringify(data.clientParameters))
             AppData.Config.write()
             vueJS.$toastr.success(`Took ${Date.now() - ts}ms`, 'Settings Saved')
         },
