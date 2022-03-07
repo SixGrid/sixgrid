@@ -62,15 +62,19 @@ export default {
             console.log(`[Search->ExecuteSearchQuery] Took ${Date.now() - ts}ms.`, posts)
         },
         findPostIndex(post) {
-            for (let i = 0; i < this.$data.posts.length; i++) {
-                if (this.$data.posts[i].ID == post.ID) return i
+            console.log(post)
+            for (let i = 0; i < this.$data.posts.posts.length; i++) {
+                console.log(this.$data.posts.posts[i].ID, post.ID)
+                if (this.$data.posts.posts[i].ID == post.ID) {
+                    return i
+                }
             }
             return null
         },
         postClick (post) {
-            this.$refs.Fullscreen.setVis(true)
-            this.$refs.Fullscreen.setPosts(this.$data.posts)
+            this.$refs.Fullscreen.setPosts(this.$data.posts.posts)
             this.$refs.Fullscreen.setPostIndex(this.findPostIndex(post))
+            this.$refs.Fullscreen.setVis(true)
         }
     }
 }
