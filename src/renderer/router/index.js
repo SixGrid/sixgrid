@@ -13,7 +13,7 @@ export default new Router({
         {
             path: '/search',
             name: 'Search Tool',
-            component: require('@/components/Search').default
+            component: require('@/components/Search/index').default
         },
         {
             path: '/about',
