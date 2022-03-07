@@ -35,7 +35,7 @@ export default {
             searchQuery: '',
             options: {
                 page: 1,
-                limit: 8
+                limit: 320
             },
             posts: []
         }
