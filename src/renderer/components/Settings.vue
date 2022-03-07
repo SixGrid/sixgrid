@@ -6,30 +6,30 @@
                 <md-icon>rss_feed</md-icon>
                 <md-field>
                     <label>Endpoint</label>
-                    <md-input v-model="parameters.endpoint" />
+                    <md-input v-model="clientParameters.endpoint" />
                 </md-field>
             </md-list-item>
         </md-list>
         <md-list class="md-elevation-1">
             <md-subheader>Authentication</md-subheader>
             <md-list-item>
-                <md-icon>{{ parameters.auth.enable ? 'person' : 'person_off' }}</md-icon>
+                <md-icon>{{ clientParameters.auth.enable ? 'person' : 'person_off' }}</md-icon>
                 <div class="md-list-item-text">
-                    <md-checkbox v-model="parameters.auth.enable">Enable</md-checkbox>
+                    <md-checkbox v-model="clientParameters.auth.enable">Enable</md-checkbox>
                 </div>
             </md-list-item>
             <md-list-item>
                 <md-icon>person</md-icon>
                 <md-field>
                     <label>Username</label>
-                    <md-input v-model="parameters.auth.user" :disabled="!parameters.auth.enable" spellcheck="false" />
+                    <md-input v-model="clientParameters.auth.user" :disabled="!clientParameters.auth.enable" spellcheck="false" />
                 </md-field>
             </md-list-item>
             <md-list-item>
                 <md-icon>key</md-icon>
                 <md-field>
                     <label>API Key</label>
-                    <md-input type="password" v-model="parameters.auth.apikey" :disabled="!parameters.auth.enable" />
+                    <md-input type="password" v-model="clientParameters.auth.apikey" :disabled="!clientParameters.auth.enable" />
                 </md-field>
             </md-list-item>
         </md-list>
@@ -49,7 +49,7 @@ export default {
     methods: {
         initialData () {
             return {
-                parameters: {
+                clientParameters: {
                     auth: {
                         user: '',
                         apikey: '',
@@ -58,6 +58,12 @@ export default {
                     endpoint: 'https://e926.net'
                 }
             }
+        },
+        toJSON () {
+            let data = {
+                clientParameters: Object.assign({}, this.$data.clientParameters)
+            }
+            return JSON.parse(JSON.stringify(data))
         }
     }
 }
