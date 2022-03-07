@@ -32,7 +32,7 @@ export default {
         return {
             searchQuery: '',
             posts: [],
-            testdata: require('../../../posts.json')
+            testdata: require('../../../../posts.json')
         }
     },
     methods: {
