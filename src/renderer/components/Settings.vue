@@ -95,6 +95,15 @@ export default {
             }
             if (AppData.Config != null && AppData.Config.Data.clientParameters != undefined)
                 returnValue.clientParameters = Object.assign({}, AppData.Config.Data.clientParameters)
+            
+            if (endpointOptions.filter(v => v.value == returnValue.clientParameters.endpoint).length < 0) {
+                returnValue.pflags.endpointOptionsSelected = 'custom'
+                returnValue.pflags.customEndpoint = returnValue.clientParameters.endpoint
+                returnValue.pflags.customEndpointEnable = true
+            } else {
+                returnValue.pflags.endpointOptionsSelected = returnValue.clientParameters.endpoint
+            }
+
             return returnValue
         },
         updateClientParameters () {
