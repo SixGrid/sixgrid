@@ -4,12 +4,12 @@
         <md-app style="width: 70px;">
             <md-app-drawer ref="app-drawer" :md-active.sync="menuVisible" md-persistent="mini">
                 <md-toolbar class="md-transparent" md-elevation="0">
-                    <span>Sixgrid {{ packageJSON.version }}</span>
-                    <div class="md-toolbar-section-end">
-                        <md-button class="md-icon-button md-dense" @click="toggleMenu">
-                            <md-icon>keyboard_arrow_left</md-icon>
-                        </md-button>
-                    </div>
+                        <span>Sixgrid {{ packageJSON.version }}</span>
+                        <div class="md-toolbar-section-end">
+                            <md-button class="md-icon-button md-dense" @click="toggleMenu">
+                                <md-icon>keyboard_arrow_left</md-icon>
+                            </md-button>
+                        </div>
                 </md-toolbar>
 
                 <md-list>
@@ -58,66 +58,66 @@
     position: fixed;
     top: 0;
     left: 0;
-  overflow-x: hidden;
-  width: 100vw;
+    overflow-x: hidden;
+    width: 100vw;
 }
 .md-app {
-  overflow-x: hidden;
-  z-index: 10;
-  background: none !important;
+    overflow-x: hidden;
+    z-index: 10;
+    background: none !important;
 }
 .page-container .md-app {
-  height: 100vh;
+    height: 100vh;
 }
 .router-view {
-  position: absolute;
-  top: 0;
-  left: 70px;
-  max-width: calc(100vw - 70px);
+    position: absolute;
+    top: 0;
+    left: 70px;
+    max-width: calc(100vw - 70px);
 }
 .md-drawer {
-  height: 100vh;
-  position: fixed;
-  top: -72px;
-  left: 0;
+    height: 100vh;
+    position: fixed;
+    top: -72px;
+    left: 0;
 }
 </style>
 <style>
 .container {
-    width: calc(100% - 120px);
-    margin: 25px;
+        width: calc(100% - 120px);
+        margin: 25px;
 }
 </style>
 <script>
 export default {
-  name: 'sixgrid',
-  data () {
-    return {
-      menuVisible: false,
-      packageJSON: require('./../../package.json'),
-      localStorage: localStorage
-    }
-  },
-  mounted () {
-    var $ = require('jquery')
-    $(this.$refs['app-drawer']).width(parseInt(this.$refs['app-drawer'].getDrawerWidth().replace("px", "")))
-    $(document).on('click', () => {
-      setTimeout(() => {
-      }, 1000)
-    })
-  },
-  methods: {
-    toggleMenu () {
-      this.menuVisible = !this.menuVisible
+    name: 'sixgrid',
+    data () {
+        return {
+            menuVisible: false,
+            packageJSON: require('./../../package.json'),
+            localStorage: localStorage
+        }
     },
-    updateContentWidth () {
-        console.log(this)
-        let drawer = $(this.$refs['app-drawer'])
-        let getDrawerWidth = parseInt(this.$refs['app-drawer'].getDrawerWidth().replace("px", ""))
-        getDrawerWidth = getDrawerWidth + 35
-        $(this.$refs['app-content'].$el).width(window.innerWidth - getDrawerWidth)
+    mounted () {
+        var $ = require('jquery')
+        $(this.$refs['app-drawer']).width(parseInt(this.$refs['app-drawer'].getDrawerWidth().replace("px", "")))
+        $(document).on('click', () => {
+            setTimeout(() => {
+            }, 1000)
+        })
+    },
+    methods: {
+        toggleMenu () {
+            this.menuVisible = !this.menuVisible
+        },
+        updateContentWidth () {
+                console.log(this)
+                let drawer = $(this.$refs['app-drawer'])
+                let getDrawerWidth = parseInt(this.$refs['app-drawer'].getDrawerWidth().replace("px", ""))
+                getDrawerWidth = getDrawerWidth + 35
+                $(this.$refs['app-content'].$el).width(window.innerWidth - getDrawerWidth)
+        }
     }
-  }
 }
 </script>
 
@@ -125,6 +125,6 @@ export default {
 @import url("//fonts.googleapis.com/css?family=Roboto:400,500,700,400italic|Material+Icons");
 
 .md-card-area {
-    background: rgba(0, 0, 0, 0.9) !important;
+        background: rgba(0, 0, 0, 0.9) !important;
 }
 </style>
