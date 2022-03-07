@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "Library.js",
   "scripts": {
-    "docs": "jsdoc -c jsdoc.config.json"
+    "docs": "jsdoc --verbose -c jsdoc.config.json"
   },
   "author": "Kate Ward <kate@dariox.club>",
   "license": "GPL-2.0-ONLY",
