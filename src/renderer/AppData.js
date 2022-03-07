@@ -2,6 +2,7 @@ const electron = require('electron')
 const fs = require('fs')
 const path = require('path')
 const ConfigManager = require('./ConfigManager').default
+const esixapi = require('esix-api')
 
 var AppData = {
     ApplicationIdentifier: 'sixgrid',
@@ -13,7 +14,11 @@ var AppData = {
             fs.mkdirSync(val, {recursive: true})
         return val
     },
-    Config: null
+    Config: null,
+    Client: null,
+    reloadClient () {
+        global.AppData.Client = new esixapi.Client(Object.assign({}, AppData.Config.Data.clientParameters))
+    }
 }
 global.AppData = AppData
 global.AppData.Config = new ConfigManager()
