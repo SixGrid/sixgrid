@@ -86,7 +86,17 @@ export default {
                 }
             }
         },
+        updateClientParameters () {
+            if (this.$data.pflags.endpointOptionsSelected != null) {
+                if (this.customEndpointEnable()) {
+                    this.$data.clientParameters.endpoint = this.$data.pflags.customEndpoint
+                } else {
+                    this.$data.clientParameters.endpoint = this.$data.pflags.endpointOptionsSelected.value
+                }
+            }
+        },
         toJSON () {
+            this.updateClientParameters()
             let data = {
                 clientParameters: Object.assign({}, this.$data.clientParameters)
             }
