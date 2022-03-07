@@ -33,6 +33,11 @@ export default new Router({
             path: '/settings',
             name: 'Settings',
             component: require('@/components/Settings').default
+        },
+        {
+            path: '/favorites',
+            name: 'Favorites',
+            component: require('@/components/Favorites').default
         }
     ]
 })
