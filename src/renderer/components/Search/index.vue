@@ -13,7 +13,7 @@
                 </div>
             </md-toolbar>
 
-            <search-result-grid :result="testdata" />
+            <search-result-grid v-bind:result="posts" />
         </div>
     </div>
 </template>
@@ -31,8 +31,11 @@ export default {
     data () {
         return {
             searchQuery: '',
-            posts: [],
-            testdata: require('../../../../posts.json')
+            options: {
+                page: 1,
+                limit: 8
+            },
+            posts: []
         }
     },
     methods: {
@@ -41,6 +44,20 @@ export default {
             let SufficentLength = this.$data.searchQuery.length > 1
             let IsValid = DoSubmit && SufficentLength
             if (!IsValid) return
+            console.log(`[Search->ValidateSearch] Executing Query; '${this.$data.searchQuery}'`)
+            this.ExecuteSearchQuery()
+        },
+        async ExecuteSearchQuery () {
+            let ts = Date.now()
+            if (AppData.Client == null)
+                AppData.reloadClient()
+            let options = Object.assign({}, this.$data.options,
+                {
+                    query: this.$data.searchQuery
+                })
+            let posts = await AppData.Client.Search(options)
+            this.$data.posts = {posts}
+            console.log(`[Search->ExecuteSearchQuery] Took ${Date.now() - ts}ms.`, posts)
         }
     }
 }
