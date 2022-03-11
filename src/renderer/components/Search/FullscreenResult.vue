@@ -6,9 +6,11 @@
                     <table action="postResult">
                         <tr action="img">
                             <td action="post_prev">
-                                <div action="previous" class="hasclick" @click="prevPost()">
-                                    <md-icon>arrow_back</md-icon>
-                                </div>
+                                <template v-if="postIndex > 0">
+                                    <div action="previous" class="hasclick" @click="prevPost()">
+                                        <md-icon>arrow_back</md-icon>
+                                    </div>
+                                </template>
                             </td>
                             <template v-if="postArr[postIndex] != undefined">
                                 <td action="postImage" v-bind:style="`max-height: ${getScreenHeight() - 120}px; max-width: ${getScreenWidth() - 200}px; --img-width: ${postArr[postIndex].Image.File.width > getScreenWidth() - 200 ? getScreenWidth() - 200 : postArr[postIndex].Image.File.width}px; --img-height: ${postArr[postIndex].Image.File.height > getScreenHeight() - 120 ? getScreenHeight() - 120 : postArr[postIndex].Image.File.height}px;`">
@@ -16,9 +18,11 @@
                                 </td>
                             </template>
                             <td action="post_next">
-                                <div action="next" class="hasclick" @click="nextPost()">
-                                    <md-icon>arrow_forward</md-icon>
-                                </div>
+                                <template v-if="postIndex < postArr.length">
+                                    <div action="next" class="hasclick" @click="nextPost()">
+                                        <md-icon>arrow_forward</md-icon>
+                                    </div>
+                                </template>
                             </td>
                         </tr>
                         <tr action="toolbar">
@@ -87,11 +91,15 @@
     display: table-cell;
 }
 .fullscreenContainer table[action=postResult] tr [action=post_prev],
-.fullscreenContainer table[action=postResult] tr [action=post_next] {
+.fullscreenContainer table[action=postResult] tr [action=post_prev] div,
+.fullscreenContainer table[action=postResult] tr [action=post_next],
+.fullscreenContainer table[action=postResult] tr [action=post_next] div {
     width: 100px !important;
+    max-width: 100px;
+    min-width: 100px;
 }
 .fullscreenContainer table[action=postResult] tr [action=postImage] {
-    width: 100%;
+    width: calc(var(--img-width));
 }
 .fullscreenContainer table[action=postResult] tr [action=postImage] img {
     align-content: center;
