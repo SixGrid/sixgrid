@@ -2,7 +2,7 @@
     <div class="page-container">
     <router-view class="router-view" ref="router-view"/>
         <md-app style="width: 70px;">
-            <md-app-drawer ref="app-drawer" :md-active.sync="menuVisible" md-persistent="mini">
+            <md-app-drawer class="main-app-draw-vue" ref="app-drawer" :md-active.sync="menuVisible" md-persistent="mini">
                 <md-toolbar class="md-transparent" md-elevation="0">
                         <span>Sixgrid {{ packageJSON.version }}</span>
                         <div class="md-toolbar-section-end">
@@ -13,6 +13,10 @@
                 </md-toolbar>
 
                 <md-list>
+                    <md-list-item class="selected" to="/">
+                        <md-icon>apps</md-icon>
+                        <span class="md-list-item-text">SixGrid</span>
+                    </md-list-item>
 
                     <md-list-item to="/search">
                         <md-icon>search</md-icon>
@@ -54,6 +58,9 @@
     </div>
 </template>
 <style scoped>
+.selected {
+    background-color: var(--md-theme-default-primary);
+}
 .page-container {
     position: fixed;
     top: 0;
@@ -83,6 +90,10 @@
 }
 </style>
 <style>
+.main-app-draw-vue {
+    height: 100vh;
+    margin-top: 0.5rem;
+}
 .container {
         width: calc(100% - 120px);
         margin: 25px;
