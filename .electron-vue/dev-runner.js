@@ -74,7 +74,7 @@ function startRenderer () {
       }
     )
 
-    server.listen(9080, 'sixgrid.kate.pet')
+    server.listen(9080, 'dev.sixgrid.kate.pet')
   })
 }
 

@@ -9,8 +9,29 @@ if (process.env.NODE_ENV !== 'development') {
     global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\')
 }
 
+global.debugMode = app.commandLine.hasSwitch('developer')
+
+let customURL_enable = app.commandLine.hasSwitch('url')
+let customURL = app.commandLine.getSwitchValue('url')
+
+const winURL_dev = 'http://dev.sixgrid.kate.pet:9080'
 let mainWindow
-const winURL = process.env.NODE_ENV === 'development' ? `http://sixgrid.kate.pet:9080` : `file://${__dirname}/index.html`
+let winURL
+if (global.debugMode && customURL_enable)
+{
+    if (customURL_enable)
+    {
+        winURL = customURL
+    }
+    else
+    {
+        winURL = winURL_dev
+    }   
+}
+else
+{
+    winURL = process.env.NODE_ENV === 'development' ? winURL_dev : `file://${__dirname}/index.html`
+}
 
 function createWindow () {
     mainWindow = new BrowserWindow({
