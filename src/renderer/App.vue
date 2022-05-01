@@ -13,45 +13,14 @@
                 </md-toolbar>
 
                 <md-list>
-                    <md-list-item class="selected" to="/">
-                        <md-icon>apps</md-icon>
-                        <span class="md-list-item-text">SixGrid</span>
-                    </md-list-item>
-
-                    <md-list-item to="/search">
-                        <md-icon>search</md-icon>
-                        <span class="md-list-item-text">Search</span>
-                    </md-list-item>
-
-                    <md-list-item to="/favorites">
-                        <md-icon>star</md-icon>
-                        <span class="md-list-item-text">Favorites</span>
-                    </md-list-item>
-
-                    <md-list-item to="/downloadmanager">
-                        <md-icon>cloud_download</md-icon>
-                        <span class="md-list-item-text">Download Manager</span>
-                    </md-list-item>
-
-                    <md-list-item to="/account/about">
-                        <md-icon>person</md-icon>
-                        <span class="md-list-item-text">Account</span>
-                    </md-list-item>
-
-                    <md-list-item to="/settings">
-                        <md-icon>settings</md-icon>
-                        <span class="md-list-item-text">Settings</span>
-                    </md-list-item>
-                    <template v-if="localStorage.Debug != undefined && localStorage.Debug == 'true'">
-                        <md-list-item to="/debug">
-                            <md-icon>bug_report</md-icon>
-                            <span class="md-list-item-text">Debug</span>
-                        </md-list-item>
+                    <template v-for="(item, index) in menuItems">
+                        <template v-if="item.enable != undefined && typeof item.enable == 'function' ? item.enable() : true">
+                            <md-list-item v-bind:key="`sidebar-list-location-${index}`" :to="item.location" :class="item.class != undefined ? item.class : ''">
+                                <md-icon>{{ item.icon }}</md-icon>
+                                <span class="md-list-item-text">{{ item.label }}</span>
+                            </md-list-item>
+                        </template>
                     </template>
-                    <md-list-item to="/about">
-                        <md-icon>support</md-icon>
-                        <span class="md-list-item-text">About</span>
-                    </md-list-item>
                 </md-list>
             </md-app-drawer>
         </md-app>
@@ -110,7 +79,53 @@ export default {
         return {
             menuVisible: false,
             packageJSON: require('./../../package.json'),
-            localStorage: localStorage
+            localStorage: localStorage,
+            menuItems: [
+                {
+                    icon: 'apps',
+                    label: 'SixGrid',
+                    location: '/',
+                    class: 'selected'
+                },
+                {
+                    icon: 'search',
+                    label: 'Search',
+                    location: '/search'
+                },
+                {
+                    icon: 'star',
+                    label: 'Favorites',
+                    location: '/favorites'
+                },
+                {
+                    icon: 'cloud_download',
+                    label: 'Download Manager',
+                    location: '/downloadmanager'
+                },
+                {
+                    icon: 'person',
+                    label: 'Account',
+                    location: '/account/about'
+                },
+                {
+                    icon: 'settings',
+                    label: 'Settings',
+                    location: '/settings'
+                },
+                {
+                    icon: 'bug_report',
+                    label: 'Debug',
+                    location: '/debug',
+                    enable () {
+                        return (localStorage.Debug != undefined && localStorage.Debug) || require('electron').remote.app.commandLine.hasSwitch('developer')
+                    }
+                },
+                {
+                    icon: 'support',
+                    label: 'About',
+                    location: '/about'
+                }
+            ]
         }
     },
     mounted () {
