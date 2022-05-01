@@ -135,6 +135,11 @@ export default {
                 getDrawerWidth = getDrawerWidth + 35
                 $(this.$refs['app-content'].$el).width(window.innerWidth - getDrawerWidth)
         }
+    },
+    watch: {
+        $route (to, from) {
+            console.log(`[$route -> from]${from.path}\n[$route -> to  ]${to.path}`)
+        }
     }
 }
 </script>
