@@ -1,5 +1,5 @@
 <template>
-    <div class="md-layout-item md-size-15" style="margin: 12px 0;">
+    <div class="md-layout-item md-size-15">
         <div @click="postClick()" type="clickableCrap">
             <md-card>
                 <md-card-media-cover md-solid>
