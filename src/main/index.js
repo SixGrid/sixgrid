@@ -60,6 +60,11 @@ function createWindow () {
                 break
         }
     })
+
+    // Send uncaught exceptions to renderer
+    process.on('uncaughtException', (error) => {
+        mainWindow.webContents.send('uncaughtException', JSON.stringify(error))
+    })
 }
 
 app.on('ready', createWindow)
