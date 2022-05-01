@@ -9,6 +9,12 @@
                 require('module').globalPaths.push('<%= htmlWebpackPlugin.options.nodeModules.replace(/\\/g, "\\\\") %>')
             </script>
         <% } %>
+        <style>
+            html,
+            html * {
+                /* outline: 0px solid red !important; */
+            }
+        </style>
     </head>
     <body style="background-color: #303030;">
         <div id="app"></div>
