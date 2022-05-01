@@ -10,7 +10,7 @@ if (process.env.NODE_ENV !== 'development') {
 }
 
 let mainWindow
-const winURL = process.env.NODE_ENV === 'development' ? `http://localhost:9080` : `file://${__dirname}/index.html`
+const winURL = process.env.NODE_ENV === 'development' ? `http://sixgrid.kate.pet:9080` : `file://${__dirname}/index.html`
 
 function createWindow () {
     mainWindow = new BrowserWindow({
@@ -29,6 +29,15 @@ function createWindow () {
 
     mainWindow.on('closed', () => {
         mainWindow = null
+    })
+
+    mainWindow.webContents.on('before-input-event', (event, input) => {
+        switch (input.key.toLowerCase()) {
+            case 'f8':
+                event.preventDefault()
+                mainWindow.loadURL(winURL)
+                break
+        }
     })
 }
 
