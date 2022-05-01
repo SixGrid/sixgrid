@@ -22,7 +22,13 @@ class ConfigManager extends EventEmitter {
         return path.join(this.Directory, 'config-current.json')
     }
 
-    Data = {
+    _unsavedChanges = false
+    get unsavedChanges () { return this._unsavedChanges }
+    set unsavedChanges (value) { console.log(`[configManager->unsavedChanges] ${this._unsavedChanges} -> ${value}`); this._unsavedChanges = value}
+
+    unsavedChanges = false
+
+    _data = {
         clientParameters: {
             auth: {
                 user: '',
@@ -33,6 +39,8 @@ class ConfigManager extends EventEmitter {
             developermetrics: false
         }
     }
+    get Data() { return this._data }
+    set Data(value) { this._data = value; this.unsavedChanges = true }
 
     validateLocation() {
         if (!fs.existsSync(this.Directory))
@@ -67,6 +75,7 @@ class ConfigManager extends EventEmitter {
             this.emit('error', { error, label: `Failed to write config at; '${this.Location}'`})
             throw error
         }
+        this.unsavedChanges = false
         this.emit('writeAfter', this)
         return this.Data
     }
