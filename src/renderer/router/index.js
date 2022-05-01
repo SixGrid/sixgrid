@@ -38,6 +38,11 @@ export default new Router({
             path: '/favorites',
             name: 'Favorites',
             component: require('@/components/Favorites').default
+        },
+        {
+            path: '/script/manager',
+            name: 'Script Manager',
+            component: require('@/components/ScriptManager').default
         }
     ]
 })
