@@ -43,6 +43,11 @@ export default new Router({
             path: '/script/manager',
             name: 'Script Manager',
             component: require('@/components/ScriptManager').default
+        },
+        {
+            path: '/:pathMatch(.*)*',
+            name: '404',
+            component: require('@/components/NotImplemented').default
         }
     ]
 })
