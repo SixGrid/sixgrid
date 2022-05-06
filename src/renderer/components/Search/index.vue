@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <fullscreen-result ref="Fullscreen" />
+        <fullscreen-result-as-page ref="Fullscreen" />
         <div ref="gridview-posts">
             <md-toolbar class="searchbar md-dense" :md-elevation="1">
                 <div class="md-toolbar-row">
@@ -27,8 +27,9 @@
 <script>
 import SearchResultGrid from './SearchResultGrid.vue'
 import FullscreenResult from './FullscreenResult.vue'
+import FullscreenResultAsPage from './FullscreenResultAsPage.vue'
 export default {
-  components: { SearchResultGrid, FullscreenResult },
+  components: { SearchResultGrid, FullscreenResult, FullscreenResultAsPage },
     name: 'Search',
     data () {
         return {
@@ -43,8 +44,7 @@ export default {
     methods: {
         ValidateSearch (event) {
             let DoSubmit = event.code.toLowerCase() == 'enter'
-            let SufficentLength = this.$data.searchQuery.length > 1
-            let IsValid = DoSubmit && SufficentLength
+            let IsValid = DoSubmit
             if (!IsValid) return
             console.log(`[Search->ValidateSearch] Executing Query; '${this.$data.searchQuery}'`)
             this.ExecuteSearchQuery()
@@ -62,9 +62,9 @@ export default {
             console.log(`[Search->ExecuteSearchQuery] Took ${Date.now() - ts}ms.`, posts)
         },
         findPostIndex(post) {
-            console.log(post)
+            // console.log(post)
             for (let i = 0; i < this.$data.posts.posts.length; i++) {
-                console.log(this.$data.posts.posts[i].ID, post.ID)
+                // console.log(this.$data.posts.posts[i].ID, post.ID)
                 if (this.$data.posts.posts[i].ID == post.ID) {
                     return i
                 }
