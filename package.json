@@ -54,6 +54,7 @@
         "axios": "^0.18.0",
         "esix-api": "file:lib",
         "jquery": "^3.6.0",
+        "multispinner": "^0.2.1",
         "remove-markdown": "^0.3.0",
         "sweetalert": "^2.1.2",
         "tinytoolbox": "^0.0.9",
