@@ -5,8 +5,7 @@
 
 <template>
     <div class="fullscreen-result-page" ref="main" visible="no">
-        <button @click="setVis(false)">Exit</button>
-        <table>
+        <table class="img-preview">
             <tr action="img">
                 <td action="post_prev">
                     <template v-if="postIndex > 0">
@@ -25,11 +24,30 @@
                     </td>
                 </template>
                 <td action="post_next">
-                    <template v-if="postIndex < postArr.length">
+                    <template v-if="postIndex < postArr.length - 1">
                         <div action="next" class="hasclick" @click="nextPost()">
                             <md-icon>arrow_forward</md-icon>
                         </div>
                     </template>
+                </td>
+            </tr>
+        </table>
+        <table class="img-toolbar">
+            <tr action="toolbar">
+                <td align="left">
+                    <ul class="fullscreen-button-list">
+                    </ul>
+                </td>
+                <td align="center">
+                    <ul class="fullscreen-button-list">
+                        <li @click="setVis(false)">
+                            <md-icon>close</md-icon>
+                        </li>
+                    </ul>
+                </td>
+                <td align="right">
+                    <ul class="fullscreen-button-list">
+                    </ul>
                 </td>
             </tr>
         </table>
@@ -47,7 +65,7 @@
     background-color: #303030;
 
     transition: 300ms;
-    z-index: 1000000000000000000;
+    z-index: 100;
 }
 .fullscreen-result-page[visible=yes] {
     position: fixed;
@@ -57,6 +75,44 @@
     height: 100vh;
 
     transition: 300ms;
+}
+
+.fullscreen-button-list {
+    --button-size: 60px;
+}
+.fullscreen-button-list,
+.fullscreen-button-list li {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.fullscreen-button-list .md-icon {
+    font-size: var(--button-size) !important;
+    width: var(--button-size);
+    height: var(--button-size);
+    transition: 70ms;
+
+    position: relative;
+    text-shadow: 0 0 8px #888888;
+}
+.fullscreen-button-list .md-icon:hover {
+    cursor:pointer;
+    transform: scale(1.1);
+    transition: 70ms;
+}
+
+.img-preview {
+    --height: calc(100vh - 90px);
+
+    height: var(--height) !important;
+    max-height: var(--height) !important;
+}
+.img-toolbar {
+    --height: 90px;
+
+    height: var(--height) !important;
+    max-height: var(--height) !important;
 }
 
 [action=img] {
@@ -100,6 +156,28 @@
     height: var(--sidebar-width);
     font-size: var(--sidebar-width) !important;
 }
+
+[action=toolbar] {
+    --toolbar-height: 90px;
+    --toolbar-section-padding: 12px;
+    --toolbar-seciton-width: calc((100vw / 3));
+    height: var(--toolbar-height);
+    width: 100vw;
+
+    position: relative;
+    /* top: calc(100vh - 90px);
+    left: 0; */
+}
+[action=toolbar] td {
+    width: var(--toolbar-seciton-width) !important;
+    height: var(--toolbar-height) !important;
+}
+[action=toolbar] [align=left] {
+    text-align: left;
+}
+[action=toolbar] [align=right] {
+    text-align: right;
+}
 </style>
 <script>
 const $ = require('jquery')
@@ -107,9 +185,6 @@ export default {
     name: 'FullscreenResultAsPage',
     data () {
         return this.initialData()
-    },
-    created () {
-        console.log(this.$refs.postImage)
     },
     methods: {
         initialData() {
@@ -126,8 +201,6 @@ export default {
                 this.$refs.main.setAttribute('visible', 'yes')
             else
                 this.$refs.main.setAttribute('visible', 'no')
-            
-            console.log(this.$refs.postImage)
         },
         setPostIndex(index) {
             this.$set(this.$data, 'postIndex', index)
