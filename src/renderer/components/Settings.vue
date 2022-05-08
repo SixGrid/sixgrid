@@ -38,7 +38,7 @@
                 <md-icon>person</md-icon>
                 <md-field>
                     <label>Username</label>
-                    <md-input v-model="clientParameters.auth.user" :disabled="!clientParameters.auth.enable" spellcheck="false" />
+                    <md-input v-model="clientParameters.auth.login" :disabled="!clientParameters.auth.enable" spellcheck="false" />
                 </md-field>
             </md-list-item>
             <md-list-item>
