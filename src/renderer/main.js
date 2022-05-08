@@ -1,4 +1,5 @@
 import './AppData'
+import './LocalStorageParameter'
 
 import Vue from 'vue'
 import axios from 'axios'
@@ -34,6 +35,16 @@ Vue.component('MdSelect', Vue.options.components.MdSelect.extend({
         }
     }
 }))
+
+AppData.tempStoreEventEmitter.on('debugElementOutline', (value) => {
+    localStorage.debugElementOutline = value
+    if (value) {        
+        document.querySelector('html').setAttribute('outline', 'yes')
+    } else {
+        document.querySelector('html').setAttribute('outline', 'no')
+    }
+})
+AppData.Set('debugElementOutline', localStorage.debugElementOutline == 'true' ? true : false)
 
 global.vueJS = new Vue({
     components: { App },
