@@ -53,7 +53,7 @@ export default {
 
             for (let i = 0; i < targetPageCount; i++) {
                 let opts = {
-                    query: `fav:${this.$data.targetUser}`,
+                    query: `fav:${this.$data.targetUser} rating:safe`,
                     limit: perpage,
                     page: i + 1
                 }
