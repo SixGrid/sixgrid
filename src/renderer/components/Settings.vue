@@ -49,6 +49,14 @@
                 </md-field>
             </md-list-item>
         </md-list>
+        <md-list class="md-elevation-1">
+            <md-subheader>Debug Settings</md-subheader>
+            <md-list-item>
+                <div class="md-list-item-text">
+                    <md-checkbox v-model="debugElementOutline">HTML Element Outline</md-checkbox>
+                </div>
+            </md-list-item>
+        </md-list>
         <md-button class="md-fab btn-save md-primary" @click="save()">
             <md-icon>save</md-icon>
         </md-button>
@@ -91,7 +99,11 @@ export default {
                         enable: false
                     },
                     endpoint: 'https://e926.net'
-                }
+                },
+                debugElementOutline: localStorage.debugElementOutline == 'true' ? true : false
+            }
+            if (returnValue.debugElementOutline == undefined) {
+                returnValue.debugElementOutline = false
             }
             if (AppData.Config != null && AppData.Config.Data.clientParameters != undefined)
                 returnValue.clientParameters = Object.assign({}, AppData.Config.Data.clientParameters)
@@ -139,6 +151,11 @@ export default {
                 val = true
             this.$data.pflags.customEndpointEnable = val
             return val
+        }
+    },
+    watch: {
+        'debugElementOutline' () {
+            AppData.Set('debugElementOutline', this.$data.debugElementOutline)
         }
     }
 }
