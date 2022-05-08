@@ -3,6 +3,7 @@ const fs = require('fs')
 const path = require('path')
 const ConfigManager = require('./ConfigManager').default
 const esixapi = require('esix-api')
+const EventEmitter = require('events')
 
 var AppData = {
     ApplicationIdentifier: 'sixgrid',
@@ -18,6 +19,21 @@ var AppData = {
     Client: null,
     reloadClient () {
         global.AppData.Client = new esixapi.Client(Object.assign({}, AppData.Config.Data.clientParameters))
+    },
+
+    tempStore: {},
+    tempStoreEventEmitter: new EventEmitter(),
+
+    Set(key, value) {
+        this.tempStore[key] = value
+        this.tempStoreEventEmitter.emit(key, value)
+    },
+    Get(key, defaultValue) {
+        let result = this.tempStore[key]
+        if (result == undefined)
+            return defaultValue
+        else
+            return result
     }
 }
 global.AppData = AppData
