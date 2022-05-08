@@ -3,7 +3,7 @@
     "version": "0.3.0",
     "author": "Kate Ward <kate@dariox.club>",
     "description": "Open-Source e621 Desktop App",
-    "license": null,
+    "license": "apache-2.0",
     "main": "./dist/electron/main.js",
     "scripts": {
         "build": "node .electron-vue/build.js && electron-builder",
