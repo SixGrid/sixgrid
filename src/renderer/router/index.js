@@ -45,6 +45,11 @@ export default new Router({
             component: require('@/components/ScriptManager').default
         },
         {
+            path: '/debug/SteamStorePage',
+            name: 'SteamStorePage',
+            component: require('@/components/SteamStorePage').default
+        },
+        {
             path: '/:pathMatch(.*)*',
             name: '404',
             component: require('@/components/NotImplemented').default
