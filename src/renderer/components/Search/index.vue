@@ -8,9 +8,9 @@
                         <label>Search Query</label>
                         <md-input spellcheck="false" v-model="searchQuery" md-autogrow @keyup="ValidateSearch"></md-input>
                     </md-field>
-                    <md-button class="md-icon-button" ref="buttonSearchSettings">
+                    <!-- <md-button class="md-icon-button" ref="buttonSearchSettings">
                         <md-icon>tune</md-icon>
-                    </md-button>
+                    </md-button> -->
                 </div>
             </md-toolbar>
 
