@@ -2,6 +2,7 @@
 cd ..
 npm i
 npm i --prefix lib
+npm run build:wintux
 cd steampipe
 source secret.sh
 cwd__=$(pwd)
