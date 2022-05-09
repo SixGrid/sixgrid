@@ -1,7 +1,7 @@
 "appbuild"
 {
 	"appid" "1993420"
-	"desc" "Production Windows Build"
+	"desc" ""
 	"buildoutput" ""
 	"contentroot" ""
 	"setlive" ""
@@ -10,5 +10,6 @@
 	"depots"
 	{
 		"1993421"	".\depot_1993421.vdf"
+		"1993422"   ".\depot_1993422.vdf"
 	}
 }
