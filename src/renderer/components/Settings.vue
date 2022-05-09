@@ -124,8 +124,6 @@ export default {
         save() {
             let ts = Date.now()
             let data = this.toJSON()
-            console.log(data)
-            let target = data.clientParameters.endpoint
             global.AppData.CloudConfig.Authentication._data.items[this.$data.pflags.endpointOptionsSelected] = JSON.parse(JSON.stringify(data.clientParameters))
             global.AppData.CloudConfig.Authentication.set('_current', this.$data.pflags.endpointOptionsSelected)
             global.AppData.CloudConfig.Authentication.write()
