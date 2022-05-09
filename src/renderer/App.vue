@@ -103,16 +103,16 @@ export default {
                     label: 'Favorites',
                     location: '/favorites'
                 },
-                {
-                    icon: 'cloud_download',
-                    label: 'Download Manager',
-                    location: '/downloadmanager'
-                },
-                {
-                    icon: 'person',
-                    label: 'Account',
-                    location: '/account/about'
-                },
+                // {
+                //     icon: 'cloud_download',
+                //     label: 'Download Manager',
+                //     location: '/downloadmanager'
+                // },
+                // {
+                //     icon: 'person',
+                //     label: 'Account',
+                //     location: '/account/about'
+                // },
                 {
                     icon: 'settings',
                     label: 'Settings',
