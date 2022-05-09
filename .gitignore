@@ -11,3 +11,7 @@ thumbs.db
 out
 *.bak
 **secrets.json
+steampipe/secret.sh
+steampipe/*.log
+steampipe/*build*.vdf
+log.txt
