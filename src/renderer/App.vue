@@ -12,6 +12,7 @@
                         </div>
                 </md-toolbar>
 
+                    <div class="current-route">{{ currentRoute.name }}</div>
                 <md-list>
                     <template v-for="(item, index) in menuItems">
                         <template v-if="item.enable != undefined && typeof item.enable == 'function' ? item.enable() : true">
@@ -27,6 +28,10 @@
     </div>
 </template>
 <style scoped>
+.current-route {
+    text-align: center;
+    margin-top: 8px;
+}
 .selected {
     background-color: var(--md-theme-default-primary);
 }
@@ -80,6 +85,7 @@ export default {
             menuVisible: false,
             packageJSON: require('./../../package.json'),
             localStorage: localStorage,
+            currentRoute: vueJS.$route,
             menuItems: [
                 {
                     icon: 'apps',
@@ -154,6 +160,9 @@ export default {
     watch: {
         $route (to, from) {
             console.log(`[$route -> from]${from.path}\n[$route -> to  ]${to.path}`)
+            this.$data.currentRoute = from
+            console.log(from)
+            this.$set(this.$data, 'currentRoute', to)
         }
     }
 }
