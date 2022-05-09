@@ -34,7 +34,7 @@
     margin: 25px;
 }
 img {
-    width: 100px;
+    width: 150px;
 }
 </style>
 <script>
