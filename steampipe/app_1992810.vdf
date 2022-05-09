@@ -1,0 +1,15 @@
+"appbuild"
+{
+	"appid" "1992810"
+	"desc" ""
+	"buildoutput" ""
+	"contentroot" ""
+	"setlive" ""
+	"preview" "0"
+	"local"	""
+	"depots"
+	{
+		"1992812"	".\depot_1992812.vdf"
+		"1992813"   ".\depot_1992813.vdf"
+	}
+}
