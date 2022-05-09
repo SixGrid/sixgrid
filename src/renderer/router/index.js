@@ -7,17 +7,17 @@ export default new Router({
     routes: [
         {
             path: '/',
-            name: 'Homepage',
+            name: 'SixGrid',
             component: require('@/components/Home').default
         },
         {
             path: '/search',
-            name: 'Search Tool',
+            name: 'Search',
             component: require('@/components/Search/index').default
         },
         {
             path: '/about',
-            name: 'About Program',
+            name: 'About',
             component: require('@/components/About').default
         },
         {
@@ -41,7 +41,7 @@ export default new Router({
         },
         {
             path: '/script/manager',
-            name: 'Script Manager',
+            name: 'Scripts',
             component: require('@/components/ScriptManager').default
         },
         {
