@@ -5,5 +5,6 @@
 echo "======================== NOTICE ========================"
 echo "This build script is meant for kate's build tools. So"
 echo "be warned, some things will break ;w;"
-./steampipe/publish.sh
-./steampipe/publish.beta.sh
+cd steampipe
+./publish.sh
+./publish.beta.sh
