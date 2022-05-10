@@ -8,3 +8,7 @@ echo "be warned, some things will break ;w;"
 cd steampipe
 ./publish.sh
 ./publish.beta.sh
+
+node build-scripts/get-artifacts.js
+cp build/artifacts/* $build_outfolder
+cp LICENSE.txt $build_outfolder
