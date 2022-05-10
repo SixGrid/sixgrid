@@ -12,6 +12,7 @@ git pull
 cd steampipe
 ./publish.sh
 ./publish.beta.sh
+cd ..
 
 node build-scripts/get-artifacts.js
 cp build/artifacts/* $build_outfolder
