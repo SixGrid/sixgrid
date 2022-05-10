@@ -7,4 +7,4 @@ cd steampipe
 source secret.sh
 cwd__=$(pwd)
 VDF="$cwd__/app_1993420.vdf"
-steamcmd +login $USERNAME $PASSWORD +run_app_build "$VDF" +quit
+/usr/games/steamcmd +login $USERNAME $PASSWORD +run_app_build "$VDF" +quit
