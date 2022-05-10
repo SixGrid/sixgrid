@@ -1,11 +1,11 @@
 <template>
     <div>
-        <md-content class="bigboxbtn">
+        <!-- <md-content class="bigboxbtn">
             <div action="contentBackground">
                 <span>Search</span>
             </div>
             <md-icon>search</md-icon>
-        </md-content>
+        </md-content> -->
     </div>
 </template>
 <style>

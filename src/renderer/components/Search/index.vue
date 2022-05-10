@@ -8,13 +8,22 @@
                         <label>Search Query</label>
                         <md-input spellcheck="false" v-model="searchQuery" md-autogrow @keyup="ValidateSearch"></md-input>
                     </md-field>
-                    <md-button class="md-icon-button" ref="buttonSearchSettings">
+                    <!-- <md-button class="md-icon-button" ref="buttonSearchSettings">
                         <md-icon>tune</md-icon>
-                    </md-button>
+                    </md-button> -->
                 </div>
             </md-toolbar>
 
-            <search-result-grid v-bind:result="posts" @postSelect="postClick" />
+            <template v-if="postsLoading">
+                <div style="text-align: center; margin-top: 15rem;">
+                    <h1>Fetching Query</h1>
+                    <md-progress-spinner md-mode="indeterminate"></md-progress-spinner>
+                </div>
+            </template>
+
+            <template v-if="!postsLoading">
+                <search-result-grid v-bind:result="posts" @postSelect="postClick" />
+            </template>
         </div>
     </div>
 </template>
@@ -38,7 +47,8 @@ export default {
                 page: 1,
                 limit: 320
             },
-            posts: []
+            posts: [],
+            postsLoading: false
         }
     },
     methods: {
@@ -57,9 +67,11 @@ export default {
                 {
                     query: this.$data.searchQuery
                 })
+            this.$data.postsLoading = true
             let posts = await AppData.Client.Search(options)
             this.$data.posts = {posts}
             console.log(`[Search->ExecuteSearchQuery] Took ${Date.now() - ts}ms.`, posts)
+            this.$data.postsLoading = false
         },
         findPostIndex(post) {
             // console.log(post)

@@ -17,14 +17,6 @@
                     </md-select>
                 </md-field>
             </md-list-item>
-            <template v-if="customEndpointEnable()">
-                <md-list-item>
-                    <md-field>
-                        <label>Custom Endpoint</label>
-                        <md-input v-model="pflags.customEndpoint" />
-                    </md-field>
-                </md-list-item>
-            </template>
         </md-list>
         <md-list class="md-elevation-1">
             <md-subheader>Authentication{{ clientParameters.auth.enable ? '' : ' (Disabled)' }}</md-subheader>
@@ -33,6 +25,13 @@
                 <div class="md-list-item-text">
                     <md-checkbox v-model="clientParameters.auth.enable">Enable</md-checkbox>
                 </div>
+            </md-list-item>
+            <md-list-item>
+                <md-icon>api</md-icon>
+                <md-field>
+                    <label>Endpoint URL</label>
+                    <md-input v-model="clientParameters.endpoint" spellcheck="false" />
+                </md-field>
             </md-list-item>
             <md-list-item>
                 <md-icon>person</md-icon>
@@ -85,56 +84,53 @@ export default {
                 { value: 'https://e621.net', text: 'e621' },
                 { value: 'custom', text: 'Custom' }
             ]
+            let data = global.AppData.CloudConfig.Authentication.get()
+            let endpointOptionsNew = data.items.map((r, i) => {
+                console.log(r)
+                return {
+                    value: i,
+                    text: `${i}: ${r.endpoint}`
+                }
+            })
             let returnValue = {
                 pflags: {
-                    endpointOptions,
-                    endpointOptionsSelected: endpointOptions[0].value,
+                    endpointOptions: endpointOptionsNew,
+                    endpointOptionsSelected: data._current,
                     customEndpointEnable: false,
                     customEndpoint: null
                 },
-                clientParameters: {
-                    auth: {
-                        login: '',
-                        apikey: '',
-                        enable: false
-                    },
-                    endpoint: 'https://e926.net'
-                },
+                clientParameters: AppData.FetchClientParameters(),
                 debugElementOutline: localStorage.debugElementOutline == 'true' ? true : false
             }
             if (returnValue.debugElementOutline == undefined) {
                 returnValue.debugElementOutline = false
             }
-            if (AppData.Config != null && AppData.Config.Data.clientParameters != undefined)
-                returnValue.clientParameters = Object.assign({}, AppData.Config.Data.clientParameters)
-            
-            if (endpointOptions.filter(v => v.value == returnValue.clientParameters.endpoint).length < 0) {
-                returnValue.pflags.endpointOptionsSelected = 'custom'
-                returnValue.pflags.customEndpoint = returnValue.clientParameters.endpoint
-                returnValue.pflags.customEndpointEnable = true
-            } else {
-                returnValue.pflags.endpointOptionsSelected = returnValue.clientParameters.endpoint
-            }
 
             return returnValue
+        },
+        reloadEndpointOptions () {
+            let data = global.AppData.CloudConfig.Authentication.get()
+            this.$set(this.$data.pflags, 'endpointOptions', data.items.map((r, i) => {
+                return {
+                    value: i,
+                    text: `${i}: ${r.endpoint}`
+                }
+            }))
         },
         updateClientParameters () {
             if (this.$data.pflags.endpointOptionsSelected == null)
                 this.$data.pflags.endpointOptionsSelected = this.$data.pflags.endpointOptions[0].value
-            if (this.$data.pflags.endpointOptionsSelected != null) {
-                if (this.customEndpointEnable()) {
-                    this.$data.clientParameters.endpoint = this.$data.pflags.customEndpoint
-                } else {
-                    this.$data.clientParameters.endpoint = this.$data.pflags.endpointOptionsSelected
-                }
-            }
         },
         save() {
             let ts = Date.now()
             let data = this.toJSON()
-            AppData.Config.Data.clientParameters = JSON.parse(JSON.stringify(data.clientParameters))
-            AppData.Config.write()
+            global.AppData.CloudConfig.Authentication._data.items[this.$data.pflags.endpointOptionsSelected] = JSON.parse(JSON.stringify(data.clientParameters))
+            global.AppData.CloudConfig.Authentication.set('_current', this.$data.pflags.endpointOptionsSelected)
+            global.AppData.CloudConfig.Authentication.write()
             vueJS.$toastr.success(`Took ${Date.now() - ts}ms`, 'Settings Saved')
+            global.AppData.reloadClient()
+            this.reloadEndpointOptions()
+            this.$set(this, '$data', this.initialData())
         },
         toJSON () {
             this.updateClientParameters()
@@ -156,6 +152,10 @@ export default {
     watch: {
         'debugElementOutline' () {
             AppData.Set('debugElementOutline', this.$data.debugElementOutline)
+        },
+        'pflags.endpointOptionsSelected' () {
+            // ScnYZhxV2HNNmekYq8C5oPP5
+            this.$set(this.$data, 'clientParameters', global.AppData.CloudConfig.Authentication._data.items[this.$data.pflags.endpointOptionsSelected])
         }
     }
 }
