@@ -44,10 +44,32 @@
             "icon": "build/icons/icon.icns"
         },
         "win": {
-            "icon": "build/icons/icon.ico"
+            "icon": "build/icons/icon.ico",
+            "target": [
+                {
+                    "target": "dir",
+                    "arch": [
+                        "x64"
+                    ]
+                }
+            ]
         },
         "linux": {
-            "icon": "build/icons"
+            "icon": "build/icons",
+            "target": [
+                {
+                    "target": "deb",
+                    "arch": [
+                        "x64"
+                    ]
+                },
+                {
+                    "target": "dir",
+                    "arch": [
+                        "x64"
+                    ]
+                }
+            ]
         }
     },
     "dependencies": {
