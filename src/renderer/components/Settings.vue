@@ -154,7 +154,6 @@ export default {
             AppData.Set('debugElementOutline', this.$data.debugElementOutline)
         },
         'pflags.endpointOptionsSelected' () {
-            // ScnYZhxV2HNNmekYq8C5oPP5
             this.$set(this.$data, 'clientParameters', global.AppData.CloudConfig.Authentication._data.items[this.$data.pflags.endpointOptionsSelected])
         }
     }
