@@ -11,7 +11,36 @@
                 </td>
                 <template v-if="postArr[postIndex] != undefined">
                     <td action="postImage" :style="`--post-width: ${postArr[postIndex].Image.File.width}px; --post-height: ${postArr[postIndex].Image.File.height}px;`">
-                        <img ref="postImage" @load="onImageLoad" :src="postArr[postIndex].Image.File.url" visible="no"/>
+                        <template v-if="postArr[postIndex].Image.File.ext == 'jpg' || postArr[postIndex].Image.File.ext == 'jpeg' || postArr[postIndex].Image.File.ext == 'png' || postArr[postIndex].Image.File.ext == 'gif'">
+                            <img
+                            ref="postImage"
+                            @load="onPostLoad"
+                            @loadeddata="onPostLoad"
+                            @loadedmetadata="onPostLoad"
+                            :src="postArr[postIndex].Image.File.url"
+                            visible="no" />
+                        </template>
+                        <template v-else-if="postArr[postIndex].Image.File.ext == 'mp4' || postArr[postIndex].Image.File.ext == 'webm'">
+                            <video 
+                            ref="postImage"
+                            @load="onPostLoad"
+                            @loadeddata="onPostLoad" 
+                            @loadedmetadata="onPostLoad"
+                            controls="controls"
+                            :poster="postArr[postIndex].Image.Preview.url || postArr[postIndex].Image.Sample.url"
+                            autoplay
+                            loop
+                            visible="no">
+                                <source
+                                :src="postArr[postIndex].Image.File.url"
+                                :type="`video/${postArr[postIndex].Image.File.ext}`" />
+                            </video>
+                        </template>
+                        <template v-else>
+                            <h1>Unsupported file extension (<code>{{ postArr[postIndex].Image.File.ext }}</code>)</h1>
+                            <h3>Post: {{ postArr[postIndex].ID }}</h3>
+                        </template>
+                        
                         <template v-if="!fileLoaded">
                             <h1>Loading Media</h1>
                             <h3>{{ postArr[postIndex].ID }}</h3>
@@ -126,6 +155,7 @@
 [action=img] td[action=postImage] h3 {
     text-align: center;
 }
+[action=img] [action=postImage] video,
 [action=img] [action=postImage] img {
     max-width: var(--image-container-width);
     max-height: calc(var(--max-height) - 1px) !important;
@@ -133,9 +163,11 @@
     display: block;
     margin: auto;
 }
+[action=img] [action=postImage] video[visible=yes],
 [action=img] [action=postImage] img[visible=yes] {
     display: block;
 }
+[action=img] [action=postImage] video[visible=no],
 [action=img] [action=postImage] img[visible=no] {
     display: none;
 }
@@ -223,9 +255,11 @@ export default {
             this.$set(this.$data, 'postIndex', this.$data.postIndex + 1)
         },
 
-        onImageLoad () {
-            this.$refs.postImage.setAttribute('visible', 'yes')
-            this.$set(this.$data, 'fileLoaded', true)
+        onPostLoad () {
+            setTimeout(() => {
+                this.$refs.postImage.setAttribute('visible', 'yes')
+                this.$set(this.$data, 'fileLoaded', true)
+            }, 30)
         }
     },
     watch: {
