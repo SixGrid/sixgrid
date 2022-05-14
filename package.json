@@ -17,7 +17,7 @@
         "pack:renderer": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.renderer.config.js"
     },
     "build": {
-        "productName": "esix-gui",
+        "productName": "sixgrid",
         "appId": "pet.kate.sixgrid",
         "directories": {
             "output": "build"
