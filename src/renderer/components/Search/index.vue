@@ -61,22 +61,21 @@ export default {
         },
         async ExecuteSearchQuery () {
             let ts = Date.now()
-            if (AppData.Client == null)
-                AppData.reloadClient()
+            if (AppData.Client == null) AppData.reloadClient()
             let options = Object.assign({}, this.$data.options,
                 {
                     query: this.$data.searchQuery
                 })
             this.$data.postsLoading = true
             let posts = await AppData.Client.Search(options)
-            this.$data.posts = {posts}
+            this.$set(this.$data, 'posts', {
+                posts
+            })
             console.log(`[Search->ExecuteSearchQuery] Took ${Date.now() - ts}ms.`, posts)
             this.$data.postsLoading = false
         },
         findPostIndex(post) {
-            // console.log(post)
             for (let i = 0; i < this.$data.posts.posts.length; i++) {
-                // console.log(this.$data.posts.posts[i].ID, post.ID)
                 if (this.$data.posts.posts[i].ID == post.ID) {
                     return i
                 }
