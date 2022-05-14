@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: type$e621API.jsdoc</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: type$e621API.jsdoc</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @namespace type$e621API
+ * @description
+ * - Post
+ *     - {@link type$e621API.PostGet|Get}
+ *     - {@link type$e621API.PostUpdate|Update}
+ *     - {@link type$e621API.PostCreate|Create}
+ */
+    /**
+     * @typedef {string} type$e621API.TimestampFormatting
+     * Formatting matching `YYYY-MM-DDTHH:MM:SS.MS+00:00`
+     */
+
+    /**
+     * @typedef {Object} type$e621API.FileFull
+     * @property {int} width
+     * @property {int} height
+     * @property {string} ext
+     * @property {int} size Measured in `bytes`
+     * @property {string} md5
+     * @property {string} url Image Location.
+     */
+    /**
+     * @typedef {Object} type$e621API.FilePreview
+     * @property {int} width
+     * @property {int} height
+     * @property {string} url
+     */
+    /**
+     * @typedef {Object} type$e621API.FileSample
+     * @property {boolean} has If it has sample thumbnail.
+     * @property {int} width
+     * @property {int} height
+     * @property {string} url
+     */
+    /**
+     * @typedef {Object} type$e621API.Score
+     * @property {int} up
+     * @property {int} down
+     * @property {int} total `up - down`
+     */
+
+    /**
+     * @description Endpoint: `/posts/${Post_ID}.json` with method `PATCH`
+     * @typedef type$e621API.PostUpdate
+     * @see https://e621.net/help/api#posts_update
+     */
+    /**
+     * @description Endpoint: `/uploads.json` with method `POST`
+     * @typedef type$e621API.PostCreate
+     * @see https://e621.net/help/api#posts_create
+     */
+
+    /**
+     * @typedef {Object&lt;string, string[]>} type$e621API.Tags
+     * @property {string[]} general
+     * @property {string[]} species
+     * @property {string[]} character
+     * @property {string[]} artist
+     * @property {string[]} invalid
+     * @property {string[]} lore
+     * @property {string[]} meta
+     */
+
+    /**
+     * @type {string}
+     * @typedef {('s'|'q'|'e')} type$e621API.Rating
+     */
+
+    /**
+     * @description Endpoint: `/posts.json` with method `GET`
+     * @see https://e621.net/help/api#posts_list
+     * @typedef {Object&lt;string, *>} type$e621API.PostGet
+     * @property {int} id
+     * @property {type$e621API.TimestampFormatting} created_at
+     * @property {type$e621API.TimestampFormatting} updated_at
+     * @property {type$e621API.FileFull} file
+     * @property {type$e621API.FilePreview} preview
+     * @property {type$e621API.FileSample} preview
+     * @property {type$e621API.Score} Score
+     * @property {type$e621API.Tags} tags
+     * @property {int} change_seq
+     * @property {Object&lt;string, boolean>} flags
+     * @property {boolean} flags.pending
+     * @property {boolean} flags.flagged
+     * @property {boolean} flags.node_locked
+     * @property {boolean} flags.status_locked
+     * @property {boolean} flags.rating_locked
+     * @property {boolean} flags.deleted
+     * @property {type$e621API.Rating} rating
+     * @property {int} fav_count
+     * @property {string} sources
+     * @property {Array.&lt;int>} pools
+     * @property {Object&lt;string, string|int|boolean|string[]>} relationships
+     * @property {int} relationships.id
+     * @property {boolean} relationships.has_children
+     * @property {boolean} relationships.has_active_children
+     * @property {string[]} relationships.children
+     * @property {int} approver_id
+     * @property {int} uploader_id
+     * @property {string} description
+     * @property {int} comment_count
+     * @property {boolean} is_favorited
+     */</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="type$AuthR.html">type$AuthR</a></li><li><a href="type$Client.html">type$Client</a></li><li><a href="type$e621API.html">type$e621API</a></li><li><a href="type$WebClient.html">type$WebClient</a></li></ul><h3>Classes</h3><ul><li><a href="AuthR.html">AuthR</a></li><li><a href="Client.html">Client</a></li><li><a href="Post.html">Post</a></li><li><a href="WebClient.html">WebClient</a></li></ul><h3>Events</h3><ul><li><a href="AuthR.html#event:changed">changed</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.10</a> on Mon Mar 07 2022 19:52:28 GMT+0800 (Australian Western Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

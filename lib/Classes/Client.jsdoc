@@ -1,0 +1,13 @@
+/**
+ * @namespace type$Client
+ */
+
+/**
+ * @typedef {Object<string, *>} type$Client.Options
+ * @property {type$AuthR.JSON} auth
+ * @property {boolean} developermetrics=false
+ * @property {Object} product
+ * @property {string} product.name=esix-api
+ * @property {string} product.version=0.x.x
+ * @property {string} endpoint=https://e621.net
+ */

@@ -1,0 +1,104 @@
+/**
+ * @namespace type$e621API
+ * @description
+ * - Post
+ *     - {@link type$e621API.PostGet|Get}
+ *     - {@link type$e621API.PostUpdate|Update}
+ *     - {@link type$e621API.PostCreate|Create}
+ */
+    /**
+     * @typedef {string} type$e621API.TimestampFormatting
+     * Formatting matching `YYYY-MM-DDTHH:MM:SS.MS+00:00`
+     */
+
+    /**
+     * @typedef {Object} type$e621API.FileFull
+     * @property {int} width
+     * @property {int} height
+     * @property {string} ext
+     * @property {int} size Measured in `bytes`
+     * @property {string} md5
+     * @property {string} url Image Location.
+     */
+    /**
+     * @typedef {Object} type$e621API.FilePreview
+     * @property {int} width
+     * @property {int} height
+     * @property {string} url
+     */
+    /**
+     * @typedef {Object} type$e621API.FileSample
+     * @property {boolean} has If it has sample thumbnail.
+     * @property {int} width
+     * @property {int} height
+     * @property {string} url
+     */
+    /**
+     * @typedef {Object} type$e621API.Score
+     * @property {int} up
+     * @property {int} down
+     * @property {int} total `up - down`
+     */
+
+    /**
+     * @description Endpoint: `/posts/${Post_ID}.json` with method `PATCH`
+     * @typedef type$e621API.PostUpdate
+     * @see https://e621.net/help/api#posts_update
+     */
+    /**
+     * @description Endpoint: `/uploads.json` with method `POST`
+     * @typedef type$e621API.PostCreate
+     * @see https://e621.net/help/api#posts_create
+     */
+
+    /**
+     * @typedef {Object<string, string[]>} type$e621API.Tags
+     * @property {string[]} general
+     * @property {string[]} species
+     * @property {string[]} character
+     * @property {string[]} artist
+     * @property {string[]} invalid
+     * @property {string[]} lore
+     * @property {string[]} meta
+     */
+
+    /**
+     * @type {string}
+     * @typedef {('s'|'q'|'e')} type$e621API.Rating
+     */
+
+    /**
+     * @description Endpoint: `/posts.json` with method `GET`
+     * @see https://e621.net/help/api#posts_list
+     * @typedef {Object<string, *>} type$e621API.PostGet
+     * @property {int} id
+     * @property {type$e621API.TimestampFormatting} created_at
+     * @property {type$e621API.TimestampFormatting} updated_at
+     * @property {type$e621API.FileFull} file
+     * @property {type$e621API.FilePreview} preview
+     * @property {type$e621API.FileSample} preview
+     * @property {type$e621API.Score} Score
+     * @property {type$e621API.Tags} tags
+     * @property {int} change_seq
+     * @property {Object<string, boolean>} flags
+     * @property {boolean} flags.pending
+     * @property {boolean} flags.flagged
+     * @property {boolean} flags.node_locked
+     * @property {boolean} flags.status_locked
+     * @property {boolean} flags.rating_locked
+     * @property {boolean} flags.deleted
+     * @property {type$e621API.Rating} rating
+     * @property {int} fav_count
+     * @property {string} sources
+     * @property {Array.<int>} pools
+     * @property {Object<string, string|int|boolean|string[]>} relationships
+     * @property {int} relationships.id
+     * @property {boolean} relationships.has_children
+     * @property {boolean} relationships.has_active_children
+     * @property {string[]} relationships.children
+     * @property {int} approver_id
+     * @property {int} uploader_id
+     * @property {string} description
+     * @property {int} comment_count
+     * @property {boolean} is_favorited
+     */

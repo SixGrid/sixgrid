@@ -102,3 +102,23 @@ dist
 
 # TernJS port file
 .tern-port
+
+.DS_Store
+dist/electron/*
+dist/web/*
+build/*
+!build/icons
+node_modules/
+npm-debug.log
+npm-debug.log.*
+thumbs.db
+!.gitkeep
+out
+*.bak
+**secrets.json
+steampipe/secret.sh
+steampipe/*.log
+steampipe/*build*.vdf
+log.txt
+AppConfig
+

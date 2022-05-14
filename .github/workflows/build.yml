@@ -1,0 +1,113 @@
+name: Build Release
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Github Release Tag'
+        required: true
+      name:
+        description: 'Github Release Name'
+        required: true
+      description:
+        description: 'Github Release Description'
+        required: false
+        
+  #pull_request:
+  #push:
+  #  paths-ignore:
+  #    - 'proto/**'
+  #    - '**.MD'
+  #    - '**.md'
+  #    - '.github/**'
+  #  branches:
+  #    - 'stable'
+jobs:
+  mktag:
+    runs-on: ubuntu-latest
+    
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+      web_url: ${{ steps.create_release.outputs.html_url }}
+    
+    permissions: write-all
+    
+    steps:
+      - uses: actions/checkout@master
+          
+      - name: Create Release Draft
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.event.inputs.tag }}
+          release_name: ${{ github.event.inputs.name }}
+          draft: false
+          prerelease: true
+      
+  publish:
+    needs: mktag
+  
+    runs-on: ${{matrix.os}}
+    
+    permissions: write-all
+    
+    strategy:
+      matrix:
+        include:
+          - os: macos-10.15
+            artifact_name: sixgrid.dmg
+            asset_name: "sixgrid.${{ github.event.inputs.tag }}.dmg"
+          - os: ubuntu-latest
+            artifact_name: sixgrid.AppImage
+            asset_name: "sixgrid.${{ github.event.inputs.tag }}.AppImage"
+          - os: windows-latest
+            artifact_name: sixgrid.exe
+            asset_name: "sixgrid.${{ github.event.inputs.tag }}.x64_86.exe"
+    
+    steps:
+      - name: Check out Git Repo
+        uses: actions/checkout@master
+        
+      - name: Install Node.js, and NPM
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14
+          
+      - run: npm i -g npm@latest-6
+      - run: npm install --include=dev
+      
+      - name: Build Electron Application
+        run: npm run build-installer
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
+      - name: Upload binaries to release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.mktag.outputs.upload_url }}
+          asset_path: ./dist/${{ matrix.artifact_name }}
+          asset_name: ${{ matrix.asset_name }}
+          asset_content_type: application/octet-stream
+  notifydevs:
+    name: Notify Developers
+    
+    needs: [ mktag, publish ]
+    
+    runs-on: ubuntu-latest
+    
+    permissions: read-all
+    
+    steps:
+      - name: Send Discord Message
+        uses: appleboy/discord-action@master
+        with:
+          webhook_id: ${{ secrets.DISCORD_WEBHOOK_ID }}
+          webhook_token: ${{ secrets.DISCORD_WEBHOOK_TOKEN }}
+          username: "SixGrid Release Notifications"
+          avatar_url: "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
+          message: "<@&783624073812377601> New SixGrid Release `${{ github.event.inputs.name }} (${{ github.event.inputs.tag }})`\r\n${{ needs.mktag.outputs.web_url }}"
+        
+

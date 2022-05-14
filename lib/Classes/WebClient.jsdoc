@@ -1,0 +1,9 @@
+/**
+ * @namespace type$WebClient
+ */
+/**
+ * @typedef {Object<string, bool>} type$WebClient.Options
+ * @property {AuthR} Auth
+ * @property {string} [BaseURL=https://e621.net]
+ * @property {Object<string, string>} [Header] Headers sent with requests
+ */
