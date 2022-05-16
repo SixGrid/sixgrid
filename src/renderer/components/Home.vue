@@ -1,14 +1,34 @@
 <template>
     <div>
-        <!-- <md-content class="bigboxbtn">
-            <div action="contentBackground">
-                <span>Search</span>
+        <md-content style="margin: 3rem; padding: 3rem;" class="md-elevation-1">
+            <div class="md-layout md-gutter md-alignment-top-center md-elevation-2 clickable-bigbutton" style="width: 40vw;">
+                <div class="md-layout-item md-alignment-top-center" @click="OpenExternal('https://sixgrid.kate.pet/discord')">
+                    <img src="@/assets/Discord-Logo-White.svg" style="width: 3rem;"/>
+                    <span class="billboard-link-text">Join the SixGrid Discord</span>
+                </div>
             </div>
-            <md-icon>search</md-icon>
-        </md-content> -->
+            <div class="md-layout md-gutter md-alignment-top-center md-elevation-2 clickable-bigbutton" style="width: 40vw; margin-top: 3rem;">
+                <div class="md-layout-item md-alignment-top-center" @click="OpenExternal('https://github.com/sixgrid')">
+                    <img src="@/assets/GitHub-Mark-Light-120px-plus.png" style="width: 3rem;"/>
+                    <span class="billboard-link-text">View on Github</span>
+                </div>
+            </div>
+        </md-content>
     </div>
 </template>
 <style>
+.clickable-bigbutton:hover {
+    cursor: pointer;
+}
+
+.billboard-link-text {
+    font-size: 2rem;
+    color: rgb(255, 255, 255);
+    vertical-align: middle;
+    text-align: right;
+    margin-left: 3rem;
+}
+
 .md-layout-item {
     margin: 6px !important;
 }
@@ -39,6 +59,11 @@
 </style>
 <script>
 export default {
-    name: 'home'
+    name: 'home',
+    methods: {
+        OpenExternal (url) {
+            global.AppData.OpenExternal(url)
+        }
+    }
 }
 </script>
