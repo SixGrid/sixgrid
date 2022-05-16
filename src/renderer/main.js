@@ -46,6 +46,14 @@ AppData.tempStoreEventEmitter.on('debugElementOutline', (value) => {
 })
 AppData.Set('debugElementOutline', localStorage.debugElementOutline == 'true' ? true : false)
 
+document.body.addEventListener('click', event => {
+    if (event.target.tagName.toLowerCase() == 'a' &&
+        event.target.attributes.openExternal != undefined) {
+            event.preventDefault()
+            require('electron').shell.openExternal(event.target.href)
+        }
+})
+
 global.vueJS = new Vue({
     components: { App },
     router,

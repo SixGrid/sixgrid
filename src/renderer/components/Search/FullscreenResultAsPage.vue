@@ -60,6 +60,9 @@
             <tr action="toolbar">
                 <td align="left">
                     <ul class="fullscreen-button-list">
+                        <li>
+                            <a :href="`${postArr[postIndex].Client.Endpoint}/posts/${postArr[postIndex].ID}`" openExternal>Open in Browser</a>
+                        </li>
                     </ul>
                 </td>
                 <td align="center">
