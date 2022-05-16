@@ -71,6 +71,14 @@
                 </td>
                 <td align="right">
                     <ul class="fullscreen-button-list">
+                        <template v-if="postArr[postIndex].Client.Auth.Enable">
+                            <li action="votedown" @click="postArr[postIndex].Client.Vote(postArr[postIndex].ID, -1)">
+                                <md-icon>arrow_downward</md-icon>
+                            </li>
+                            <li action="voteup" @click="postArr[postIndex].Client.Vote(postArr[postIndex].ID, 1)">
+                                <md-icon>arrow_upward</md-icon>
+                            </li>
+                        </template>
                     </ul>
                 </td>
             </tr>
@@ -100,13 +108,20 @@
 
     transition: 300ms;
 }
+[action=votedown][enablestyle=yes] i{
+    color: var(--md-theme-default-accent);
+}
+[action=voteup][enablestyle=yes] i{
+    color: var(--md-theme-default-primary);
+}
 
 .fullscreen-button-list {
-    --button-size: 60px;
+    --button-size: 40px;
 }
 .fullscreen-button-list,
 .fullscreen-button-list li {
     list-style: none;
+    display: inline;
     margin: 0;
     padding: 0;
 }
