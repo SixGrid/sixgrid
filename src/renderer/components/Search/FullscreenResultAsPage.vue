@@ -1,91 +1,93 @@
 <template>
     <div class="fullscreen-result-page" ref="main" visible="no">
-        <table class="img-preview">
-            <tr action="img">
-                <td action="post_prev">
-                    <template v-if="postIndex > 0">
-                        <div action="previous" class="hasclick" @click="prevPost()">
-                            <md-icon>arrow_back</md-icon>
-                        </div>
-                    </template>
-                </td>
-                <template v-if="postArr[postIndex] != undefined">
-                    <td action="postImage" :style="`--post-width: ${postArr[postIndex].Image.File.width}px; --post-height: ${postArr[postIndex].Image.File.height}px;`">
-                        <template v-if="postArr[postIndex].Image.File.ext == 'jpg' || postArr[postIndex].Image.File.ext == 'jpeg' || postArr[postIndex].Image.File.ext == 'png' || postArr[postIndex].Image.File.ext == 'gif'">
-                            <img
-                            ref="postImage"
-                            @load="onPostLoad"
-                            @loadeddata="onPostLoad"
-                            @loadedmetadata="onPostLoad"
-                            :src="postArr[postIndex].Image.File.url"
-                            visible="no" />
-                        </template>
-                        <template v-else-if="postArr[postIndex].Image.File.ext == 'mp4' || postArr[postIndex].Image.File.ext == 'webm'">
-                            <video 
-                            ref="postImage"
-                            @load="onPostLoad"
-                            @loadeddata="onPostLoad" 
-                            @loadedmetadata="onPostLoad"
-                            controls="controls"
-                            :poster="postArr[postIndex].Image.Preview.url || postArr[postIndex].Image.Sample.url"
-                            autoplay
-                            loop
-                            visible="no">
-                                <source
-                                :src="postArr[postIndex].Image.File.url"
-                                :type="`video/${postArr[postIndex].Image.File.ext}`" />
-                            </video>
-                        </template>
-                        <template v-else>
-                            <h1>Unsupported file extension (<code>{{ postArr[postIndex].Image.File.ext }}</code>)</h1>
-                            <h3>Post: {{ postArr[postIndex].ID }}</h3>
-                        </template>
-                        
-                        <template v-if="!fileLoaded">
-                            <h1>Loading Media</h1>
-                            <h3>{{ postArr[postIndex].ID }}</h3>
+        <template v-if="postArr[postIndex] != undefined">
+            <table class="img-preview">
+                <tr action="img">
+                    <td action="post_prev">
+                        <template v-if="postIndex > 0">
+                            <div action="previous" class="hasclick" @click="prevPost()">
+                                <md-icon>arrow_back</md-icon>
+                            </div>
                         </template>
                     </td>
-                </template>
-                <td action="post_next">
-                    <template v-if="postIndex < postArr.length - 1">
-                        <div action="next" class="hasclick" @click="nextPost()">
-                            <md-icon>arrow_forward</md-icon>
-                        </div>
+                    <template v-if="postArr[postIndex] != undefined">
+                        <td action="postImage" :style="`--post-width: ${postArr[postIndex].Image.File.width}px; --post-height: ${postArr[postIndex].Image.File.height}px;`">
+                            <template v-if="postArr[postIndex].Image.File.ext == 'jpg' || postArr[postIndex].Image.File.ext == 'jpeg' || postArr[postIndex].Image.File.ext == 'png' || postArr[postIndex].Image.File.ext == 'gif'">
+                                <img
+                                ref="postImage"
+                                @load="onPostLoad"
+                                @loadeddata="onPostLoad"
+                                @loadedmetadata="onPostLoad"
+                                :src="postArr[postIndex].Image.File.url"
+                                visible="no" />
+                            </template>
+                            <template v-else-if="postArr[postIndex].Image.File.ext == 'mp4' || postArr[postIndex].Image.File.ext == 'webm'">
+                                <video 
+                                ref="postImage"
+                                @load="onPostLoad"
+                                @loadeddata="onPostLoad" 
+                                @loadedmetadata="onPostLoad"
+                                controls="controls"
+                                :poster="postArr[postIndex].Image.Preview.url || postArr[postIndex].Image.Sample.url"
+                                autoplay
+                                loop
+                                visible="no">
+                                    <source
+                                    :src="postArr[postIndex].Image.File.url"
+                                    :type="`video/${postArr[postIndex].Image.File.ext}`" />
+                                </video>
+                            </template>
+                            <template v-else>
+                                <h1>Unsupported file extension (<code>{{ postArr[postIndex].Image.File.ext }}</code>)</h1>
+                                <h3>Post: {{ postArr[postIndex].ID }}</h3>
+                            </template>
+                            
+                            <template v-if="!fileLoaded">
+                                <h1>Loading Media</h1>
+                                <h3>{{ postArr[postIndex].ID }}</h3>
+                            </template>
+                        </td>
                     </template>
-                </td>
-            </tr>
-        </table>
-        <table class="img-toolbar">
-            <tr action="toolbar">
-                <td align="left">
-                    <ul class="fullscreen-button-list">
-                        <li>
-                            <a :href="`${postArr[postIndex].Client.Endpoint}/posts/${postArr[postIndex].ID}`" openExternal>Open in Browser</a>
-                        </li>
-                    </ul>
-                </td>
-                <td align="center">
-                    <ul class="fullscreen-button-list">
-                        <li @click="setVis(false)">
-                            <md-icon>close</md-icon>
-                        </li>
-                    </ul>
-                </td>
-                <td align="right">
-                    <ul class="fullscreen-button-list">
-                        <template v-if="postArr[postIndex].Client.Auth.Enable">
-                            <li action="votedown" @click="postArr[postIndex].Client.Vote(postArr[postIndex].ID, -1)">
-                                <md-icon>arrow_downward</md-icon>
-                            </li>
-                            <li action="voteup" @click="postArr[postIndex].Client.Vote(postArr[postIndex].ID, 1)">
-                                <md-icon>arrow_upward</md-icon>
-                            </li>
+                    <td action="post_next">
+                        <template v-if="postIndex < postArr.length - 1">
+                            <div action="next" class="hasclick" @click="nextPost()">
+                                <md-icon>arrow_forward</md-icon>
+                            </div>
                         </template>
-                    </ul>
-                </td>
-            </tr>
-        </table>
+                    </td>
+                </tr>
+            </table>
+            <table class="img-toolbar">
+                <tr action="toolbar">
+                    <td align="left">
+                        <ul class="fullscreen-button-list">
+                            <li>
+                                <a :href="`${postArr[postIndex].Client.Endpoint}/posts/${postArr[postIndex].ID}`" openExternal>Open in Browser</a>
+                            </li>
+                        </ul>
+                    </td>
+                    <td align="center">
+                        <ul class="fullscreen-button-list">
+                            <li @click="setVis(false)">
+                                <md-icon>close</md-icon>
+                            </li>
+                        </ul>
+                    </td>
+                    <td align="right">
+                        <ul class="fullscreen-button-list">
+                            <template v-if="postArr[postIndex].Client.Auth.Enable">
+                                <li action="votedown" @click="postArr[postIndex].Client.Vote(postArr[postIndex].ID, -1)">
+                                    <md-icon>arrow_downward</md-icon>
+                                </li>
+                                <li action="voteup" @click="postArr[postIndex].Client.Vote(postArr[postIndex].ID, 1)">
+                                    <md-icon>arrow_upward</md-icon>
+                                </li>
+                            </template>
+                        </ul>
+                    </td>
+                </tr>
+            </table>
+        </template>
     </div>
 </template>
 <style scoped>
