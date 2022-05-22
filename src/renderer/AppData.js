@@ -2,7 +2,7 @@ const electron = require('electron')
 const fs = require('fs')
 const path = require('path')
 const ConfigManager = require('./ConfigManager').default
-const esixapi = require('esix-api')
+const esixapi = require('libsixgrid')
 const EventEmitter = require('events')
 const {default: Configuration} = require('./Configuration')
 function isObject(item) {
