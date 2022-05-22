@@ -74,7 +74,6 @@
     },
     "dependencies": {
         "axios": "^0.18.0",
-        "esix-api": "file:lib",
         "jquery": "^3.6.0",
         "remove-markdown": "^0.3.0",
         "sweetalert": "^2.1.2",
