@@ -19,11 +19,11 @@
             </md-list-item>
         </md-list>
         <md-list class="md-elevation-1">
-            <md-subheader>Authentication{{ clientParameters.auth.enable ? '' : ' (Disabled)' }}</md-subheader>
+            <md-subheader>Authentication{{ clientParameters.auth.enabled ? '' : ' (Disabled)' }}</md-subheader>
             <md-list-item>
-                <md-icon>{{ clientParameters.auth.enable ? 'person' : 'person_off' }}</md-icon>
+                <md-icon>{{ clientParameters.auth.enabled ? 'person' : 'person_off' }}</md-icon>
                 <div class="md-list-item-text">
-                    <md-checkbox v-model="clientParameters.auth.enable">Enable</md-checkbox>
+                    <md-checkbox v-model="clientParameters.auth.enabled">Enable</md-checkbox>
                 </div>
             </md-list-item>
             <md-list-item>
@@ -37,14 +37,14 @@
                 <md-icon>person</md-icon>
                 <md-field>
                     <label>Username</label>
-                    <md-input v-model="clientParameters.auth.login" :disabled="!clientParameters.auth.enable" spellcheck="false" />
+                    <md-input v-model="clientParameters.auth.login" :disabled="!clientParameters.auth.enabled" spellcheck="false" />
                 </md-field>
             </md-list-item>
             <md-list-item>
                 <md-icon>key</md-icon>
                 <md-field>
                     <label>API Key</label>
-                    <md-input type="password" v-model="clientParameters.auth.apikey" :disabled="!clientParameters.auth.enable" />
+                    <md-input type="password" v-model="clientParameters.auth.apikey" :disabled="!clientParameters.auth.enabled" />
                 </md-field>
             </md-list-item>
         </md-list>
@@ -86,7 +86,6 @@ export default {
             ]
             let data = global.AppData.CloudConfig.Authentication.get()
             let endpointOptionsNew = data.items.map((r, i) => {
-                console.log(r)
                 return {
                     value: i,
                     text: `${i}: ${r.endpoint}`
@@ -130,7 +129,10 @@ export default {
             vueJS.$toastr.success(`Took ${Date.now() - ts}ms`, 'Settings Saved')
             global.AppData.reloadClient()
             this.reloadEndpointOptions()
-            this.$set(this, '$data', this.initialData())
+            let initialDataEntries = Object.entries(this.initialData())
+            for (let i = 0; i < initialDataEntries.length; i++) {
+                this.$set(this.$data, initialDataEntries[i][0], initialDataEntries[i][1])
+            }
         },
         toJSON () {
             this.updateClientParameters()
