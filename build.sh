@@ -7,7 +7,10 @@ git restore .
 git pull
 
 cd steampipe
-./publish.sh
+if [ "$git_branch" == "main" ]
+then
+    ./publish.sh
+fi
 ./publish.beta.sh
 cd ..
 
