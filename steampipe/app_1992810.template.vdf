@@ -1,7 +1,7 @@
 "appbuild"
 {
 	"appid" "1992810"
-	"desc" ""
+	"desc" "$GIT_BRANCH $GIT_COMMIT_HASH"
 	"buildoutput" ""
 	"contentroot" ""
 	"setlive" ""

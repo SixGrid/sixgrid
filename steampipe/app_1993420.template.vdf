@@ -1,0 +1,15 @@
+"appbuild"
+{
+	"appid" "1993420"
+	"desc" "$GIT_BRANCH $GIT_COMMIT_HASH"
+	"buildoutput" ""
+	"contentroot" ""
+	"setlive" ""
+	"preview" "0"
+	"local" ""
+	"depots"
+	{
+		"1993421" ".\depot_1993421.vdf"
+		"1993422" ".\depot_1993422.vdf"
+	}
+}
