@@ -1,8 +1,8 @@
 #!/bin/bash
 cd ..
-# npm i
-# npm i --prefix lib
-# npm run build:wintux
+npm i
+npm i --prefix lib
+npm run build:wintux
 cd steampipe
 source secret.sh
 
