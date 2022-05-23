@@ -11,6 +11,12 @@ rm -rf lib/node_modules/
 
 npm i
 npm i --prefix lib
+
+rm -rf build/linux-unpacked
+rm -rf build/win-unpacked
+rm -rf build/artifacts/*.zip
+rm -rf build/artifacts/*.gz
+
 npm run build:wintux
 
 cd steampipe
