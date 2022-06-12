@@ -24,6 +24,10 @@
             <template v-if="!postsLoading">
                 <search-result-grid v-bind:result="posts" @postSelect="postClick" />
             </template>
+
+            <template v-if="posts.length > 0">
+                
+            </template>
         </div>
     </div>
 </template>
