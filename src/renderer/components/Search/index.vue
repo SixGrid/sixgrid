@@ -11,6 +11,9 @@
                     <!-- <md-button class="md-icon-button" ref="buttonSearchSettings">
                         <md-icon>tune</md-icon>
                     </md-button> -->
+                    <!-- <md-button class="md-button" @click="fetchNextPage">
+                        Fetch next page
+                    </md-button> -->
                 </div>
             </md-toolbar>
 
@@ -48,7 +51,8 @@ export default {
                 limit: 320
             },
             posts: [],
-            postsLoading: false
+            postsLoading: false,
+            reachedEnd: false
         }
     },
     methods: {
@@ -71,8 +75,9 @@ export default {
             this.$set(this.$data, 'posts', {
                 posts
             })
-            console.log(`[Search->ExecuteSearchQuery] Took ${Date.now() - ts}ms.`, posts)
+            console.log(`[Search->ExecuteSearchQuery] Took ${Date.now() - ts}ms (${options.query})`, posts)
             this.$data.postsLoading = false
+            this.$set(this.$data, 'reachedEnd', false)
         },
         findPostIndex(post) {
             for (let i = 0; i < this.$data.posts.posts.length; i++) {
@@ -87,6 +92,27 @@ export default {
             this.$refs.Fullscreen.setPostIndex(this.findPostIndex(post))
             this.$refs.Fullscreen.setVis(true)
             console.log(post)
+        },
+
+        async fetchNextPage() {
+            if (this.$data.reachedEnd) return
+            let targetQuery = `${this.$data.searchQuery} id:<${this.$data.posts.posts[this.$data.posts.posts.length - 1].ID}`
+            let ts = Date.now()
+            if (AppData.Client == null) AppData.reloadClient()
+            let options = Object.assign({}, this.$data.options,
+                {
+                    query: targetQuery
+                })
+            // this.$set(this.$data, 'postsLoading', true)
+            let posts = await AppData.Client.Search(options)
+            if (posts.length < 1) {
+                console.log(`[Search->fetchNextPage] 0 posts left, looks like we've reached the end!`)
+                this.$set(this.$data, 'reachedEnd', true)
+            }
+            this.$set(this.$data.posts, 'posts', this.$data.posts.posts.concat(posts))
+            this.$refs.Fullscreen.setPosts(this.$data.posts.posts)
+            // this.$set(this.$data, 'postsLoading', false)
+            console.log(`[Search->fetchNextPage] Took ${Date.now() - ts}ms (${targetQuery})`)
         }
     }
 }
