@@ -37,7 +37,6 @@ Install Dependencies
 
 ```shell-script
 $ npm install --include=dev
-$ npm install --include=dev --prefix lib
 ```
 
 Run from the command line to see that everything works

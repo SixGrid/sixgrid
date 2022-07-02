@@ -75,6 +75,9 @@
                     </td>
                     <td align="right">
                         <ul class="fullscreen-button-list">
+                            <li>
+                                {{postIndex}}/{{postArr.length}}{{$parent.reachedEnd ? '' : '...'}}
+                            </li>
                             <template v-if="postArr[postIndex].Client.Auth.Enable">
                                 <li action="votedown" @click="postArr[postIndex].Client.Vote(postArr[postIndex].ID, -1)">
                                     <md-icon>arrow_downward</md-icon>
@@ -268,11 +271,20 @@ export default {
 
             this.$set(this.$data, 'postIndex', this.$data.postIndex - 1)
         },
-        nextPost () {
-            if (this.$data.postIndex + 1 == this.$data.postArr.length)
-                return
+        async nextPost () {
+            console.log(this.$data.postIndex, this.$data.postArr.length, this.$parent.$data.reachedEnd)
+            if (this.$data.postIndex + 1 >= this.$data.postArr.length)
+            {
+                if (this.$parent.$data.reachedEnd)
+                    return
+            }
 
             this.$set(this.$data, 'postIndex', this.$data.postIndex + 1)
+            if (this.$data.postIndex + 2 >= this.$data.postArr.length)
+            {
+                if (!this.$parent.$data.reachedEnd)
+                    await this.$parent.fetchNextPage()
+            }
         },
 
         onPostLoad () {
