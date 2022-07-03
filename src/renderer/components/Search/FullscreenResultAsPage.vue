@@ -79,6 +79,9 @@
                     <td align="right">
                         <ul class="fullscreen-button-list">
                             <li>
+                                <md-icon>download</md-icon>
+                            </li>
+                            <li>
                                 {{postIndex}}/{{postArr.length}}{{$parent.reachedEnd ? '' : '...'}}
                             </li>
                             <template v-if="postArr[postIndex].Client.Auth.Enable">
@@ -97,6 +100,9 @@
     </div>
 </template>
 <style>
+[visible=no] .fileLoadingOverlay {
+    display: none;
+}
 .fileLoadingOverlay {
     position: fixed;
     top: calc(50vh - 100px);
