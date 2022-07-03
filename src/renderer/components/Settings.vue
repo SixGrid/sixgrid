@@ -49,6 +49,15 @@
             </md-list-item>
         </md-list>
         <md-list class="md-elevation-1">
+            <md-subheader>Content Settings</md-subheader>
+            <md-list-item>
+                <md-checkbox v-model="configFlags.media.autoplay">Media Autoplay</md-checkbox>
+            </md-list-item>
+            <md-list-item>
+                <md-checkbox v-model="configFlags.media.loop">Loop Media</md-checkbox>
+            </md-list-item>
+        </md-list>
+        <md-list class="md-elevation-1">
             <md-subheader>Debug Settings</md-subheader>
             <md-list-item>
                 <div class="md-list-item-text">
@@ -59,6 +68,7 @@
         <md-button class="md-fab btn-save md-primary" @click="save()">
             <md-icon>save</md-icon>
         </md-button>
+        <br><br><br><br><br>
     </div>
 </template>
 <style>
@@ -98,6 +108,7 @@ export default {
                     customEndpointEnable: false,
                     customEndpoint: null
                 },
+                configFlags: AppData.CloudConfig.UserConfiguration.get(),
                 clientParameters: AppData.FetchClientParameters(),
                 debugElementOutline: localStorage.debugElementOutline == 'true' ? true : false
             }
@@ -126,6 +137,8 @@ export default {
             global.AppData.CloudConfig.Authentication._data.items[this.$data.pflags.endpointOptionsSelected] = JSON.parse(JSON.stringify(data.clientParameters))
             global.AppData.CloudConfig.Authentication.set('_current', this.$data.pflags.endpointOptionsSelected)
             global.AppData.CloudConfig.Authentication.write()
+            global.AppData.CloudConfig['UserConfiguration'].set(JSON.parse(JSON.stringify(this.$data.configFlags)))
+            global.AppData.CloudConfig['UserConfiguration'].write()
             vueJS.$toastr.success(`Took ${Date.now() - ts}ms`, 'Settings Saved')
             global.AppData.reloadClient()
             this.reloadEndpointOptions()
