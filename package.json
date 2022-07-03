@@ -73,6 +73,7 @@
         }
     },
     "dependencies": {
+        "@theace0296/steamworks": "^1.0.4",
         "axios": "^0.18.0",
         "jquery": "^3.6.0",
         "libsixgrid": "^1.0.0",
