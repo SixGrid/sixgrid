@@ -24,7 +24,12 @@ export default class Configuration {
         return this._data[key]
     }
     set(key, value) {
-        this._data[key] = value
+        if (arguments.length == 1)
+        {
+            this._data = arguments[0]
+        } else {
+            this._data[key] = value
+        }
         this.write()
     }
 
