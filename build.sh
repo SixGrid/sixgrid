@@ -7,10 +7,10 @@ git restore .
 git pull
 
 rm -rf node_modules/
-rm -rf lib/node_modules/
+# rm -rf lib/node_modules/
 
 npm i
-npm i --prefix lib
+# npm i --prefix lib
 
 rm -rf build/linux-unpacked
 rm -rf build/win-unpacked
