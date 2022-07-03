@@ -61,6 +61,10 @@ var AppData = {
         require('electron').shell.openExternal(url)
     },
 
+    PostDownload (postObject) {
+
+    },
+
     FetchClientParameters () {
         let currentAuthentication = global.AppData.CloudConfig.Authentication.get('_current')
         return global.AppData.CloudConfig.Authentication.get().items[currentAuthentication]
