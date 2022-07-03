@@ -118,7 +118,7 @@ for (let i = 0; i < configStoreFiles.length; i++) {
     if (!fs.existsSync(location)) {
         fs.writeFileSync(location, JSON.stringify(configStoreFiles[i][2]))
     }
-
     global.AppData.CloudConfig[configStoreFiles[i][1]] = new Configuration(location)
     global.AppData.CloudConfig[configStoreFiles[i][1]].default(configStoreFiles[i][2])
+    global.AppData.CloudConfig[configStoreFiles[i][1]].write()
 }
