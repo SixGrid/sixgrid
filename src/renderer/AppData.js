@@ -62,6 +62,7 @@ var AppData = {
     },
 
     PostDownload (postObject) {
+        let targetURL = postObject.Image.File.url
 
         let req = request({
             method: 'GET',
