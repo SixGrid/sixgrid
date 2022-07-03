@@ -29,6 +29,9 @@ export default class Configuration {
     }
 
     default(target) {
-        this._data = AppData.DeepAssign({}, JSON.parse(JSON.stringify(this._data)), target)
+        if (this._data == null)
+            this._data = {}
+        this._data = AppData.DeepAssign({}, target, JSON.parse(JSON.stringify(this._data)))
+        this.write()
     }
 }
