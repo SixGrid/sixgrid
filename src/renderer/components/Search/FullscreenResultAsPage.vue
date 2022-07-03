@@ -43,8 +43,10 @@
                             </template>
                             
                             <template v-if="!fileLoaded">
-                                <h1>Loading Media</h1>
-                                <h3>{{ postArr[postIndex].ID }}</h3>
+                                <div class="fileLoadingOverlay">
+                                    <h1>Loading Media</h1>
+                                    <h3>{{ postArr[postIndex].ID }}</h3>
+                                </div>
                             </template>
                         </td>
                     </template>
@@ -93,7 +95,17 @@
         </template>
     </div>
 </template>
-<style scoped>
+<style>
+.fileLoadingOverlay {
+    position: fixed;
+    top: calc(50vh - 100px);
+    background-color: rgba(0,0,0, 0.5);
+    height: 100px;
+    width: 200px;
+    text-align: center;
+    vertical-align: middle;
+    left: calc(50vw - 100px);
+}
 .fullscreen-result-page[visible=no],
 .fullscreen-result-page {
     position: fixed;
