@@ -34,12 +34,14 @@ else
 }
 
 function createWindow () {
+    app.allowRendererProcessReuse = false
     mainWindow = new BrowserWindow({
         height: 720,
         useContentSize: true,
         width: 1280,
         allowRendererProcessReuse: false,
         webPreferences: {
+            allowRendererProcessReuse: false,
             nodeIntegration: true,
             enableRemoteModule: true,
             webSecurity: false
