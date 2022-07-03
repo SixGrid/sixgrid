@@ -12,7 +12,8 @@
                     </td>
                     <template v-if="postArr[postIndex] != undefined">
                         <td action="postImage" :style="`--post-width: ${postArr[postIndex].Image.File.width}px; --post-height: ${postArr[postIndex].Image.File.height}px;`">
-                            <template v-if="postArr[postIndex].Image.File.ext == 'jpg' || postArr[postIndex].Image.File.ext == 'jpeg' || postArr[postIndex].Image.File.ext == 'png' || postArr[postIndex].Image.File.ext == 'gif'">
+                            <post-file-preview ref="postfile" v-bind:postArray="postArr" v-bind:postIndex="postIndex" />
+                            <!-- <template v-if="postArr[postIndex].Image.File.ext == 'jpg' || postArr[postIndex].Image.File.ext == 'jpeg' || postArr[postIndex].Image.File.ext == 'png' || postArr[postIndex].Image.File.ext == 'gif'">
                                 <img
                                 ref="postImage"
                                 @load="onPostLoad"
@@ -40,7 +41,7 @@
                             <template v-else>
                                 <h1>Unsupported file extension (<code>{{ postArr[postIndex].Image.File.ext }}</code>)</h1>
                                 <h3>Post: {{ postArr[postIndex].ID }}</h3>
-                            </template>
+                            </template> -->
                             
                             <template v-if="!fileLoaded">
                                 <div class="fileLoadingOverlay">
@@ -242,9 +243,11 @@
 }
 </style>
 <script>
+import PostFilePreview from './PostFilePreview.vue'
 const $ = require('jquery')
 export default {
     name: 'FullscreenResultAsPage',
+    components: {PostFilePreview},
     data () {
         return this.initialData()
     },
@@ -301,7 +304,7 @@ export default {
 
         onPostLoad () {
             setTimeout(() => {
-                this.$refs.postImage.setAttribute('visible', 'yes')
+                this.$refs.postfile.vis(true)
                 this.$set(this.$data, 'fileLoaded', true)
             }, 30)
         }
@@ -317,7 +320,7 @@ export default {
                 }
                 while(this.$refs.postImage == undefined)
             }
-            this.$refs.postImage.setAttribute('visible', 'no')
+            this.$refs.postfile.vis(false)
         }
     }
 }
