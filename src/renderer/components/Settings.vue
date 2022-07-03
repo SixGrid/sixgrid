@@ -49,6 +49,17 @@
             </md-list-item>
         </md-list>
         <md-list class="md-elevation-1">
+            <md-subheader>Downloader</md-subheader>
+            <md-list-item>
+                <md-icon>folder</md-icon>
+                <md-field>
+                    <label>Download Folder</label>
+                    <md-input type="text" v-model="configFlags.downloadFolder" />
+                </md-field>
+                <md-button class="md-elevation-1 md-raised" @click="browseDownloadFolder()">Browse</md-button>
+            </md-list-item>
+        </md-list>
+        <md-list class="md-elevation-1">
             <md-subheader>Content Settings</md-subheader>
             <md-list-item>
                 <md-checkbox v-model="configFlags.media.autoplay">Media Autoplay</md-checkbox>
@@ -82,6 +93,7 @@
 }
 </style>
 <script>
+const fs = require('fs')
 export default {
     name: 'Settings',
     data () {
@@ -137,6 +149,8 @@ export default {
             global.AppData.CloudConfig.Authentication._data.items[this.$data.pflags.endpointOptionsSelected] = JSON.parse(JSON.stringify(data.clientParameters))
             global.AppData.CloudConfig.Authentication.set('_current', this.$data.pflags.endpointOptionsSelected)
             global.AppData.CloudConfig.Authentication.write()
+            if (!fs.existsSync(this.$data.configFlags.downloadFolder))
+                fs.mkdirSync(this.$data.configFlags.downloadFolder, {recursive: true})
             global.AppData.CloudConfig['UserConfiguration'].set(JSON.parse(JSON.stringify(this.$data.configFlags)))
             global.AppData.CloudConfig['UserConfiguration'].write()
             vueJS.$toastr.success(`Took ${Date.now() - ts}ms`, 'Settings Saved')
@@ -162,6 +176,14 @@ export default {
                 val = true
             this.$data.pflags.customEndpointEnable = val
             return val
+        },
+        async browseDownloadFolder () {
+            let dialog = await require('electron').remote.dialog.showOpenDialog({
+                defaultPath: this.$data.configFlags.downloadFolder,
+                properties: ['openDirectory']
+            })
+            if (dialog.filePaths.length < 1) return
+            this.$set(this.$data.configFlags, 'downloadFolder', dialog.filePaths[0])
         }
     },
     watch: {
