@@ -63,6 +63,40 @@ var AppData = {
 
     PostDownload (postObject) {
 
+        let req = request({
+            method: 'GET',
+            url: targetURL
+        })
+        let out = fs.createWriteStream(path.join(AppData.CloudConfig.UserConfiguration.get().downloadFolder, `${postObject.ID}.${postObject.Image.File.md5}.${postObject.Image.File.ext}`))
+
+        let totalBytes = 0
+        let recievedBytes = 0
+        let chunkCountSize = []
+
+        req.pipe(out)
+        req.on('response', (data) => {
+            totalBytes = parseInt(data.headers['content-length'])
+        })
+        req.on('data', (chunk) => {
+            recievedBytes += chunk.length
+            chunkCountSize.push(chunk.length)
+        })
+        out.on('finish', () => {
+            AppData.CloudConfig.Statistics._data.downloadCount++
+            AppData.CloudConfig.Statistics.write()
+            if (AppData.CloudConfig.UserConfiguration.saveMetadata) {
+                let loc = path.join(AppData.CloudConfig.UserConfiguration.get().downloadFolder, `${postObject.ID}.${postObject.Image.File.md5}.json`)
+                if (!fs.existsSync(loc)) {
+                    fs.writeFileSync(loc, JSON.stringify(postObject.toJSON(), null, '    '))
+                    console.log(`[AppData->PostDownload] Saved metadata for post ${postObject.ID}`)
+                }
+            }
+            console.log(`[AppData->PostDownload] Completed ${postObject.ID}.${postObject.Image.File.ext} (${parseFloat(totalBytes/1000).toFixed(3)}kb)`)
+        })
+    },
+
+    TempFlags: {
+        download_completeCount: 0
     },
 
     FetchClientParameters () {
