@@ -78,7 +78,7 @@
                     </td>
                     <td align="right">
                         <ul class="fullscreen-button-list">
-                            <li>
+                            <li @click="AppData.PostDownload(postArr[postIndex])">
                                 <md-icon>download</md-icon>
                             </li>
                             <li>
@@ -327,6 +327,11 @@ export default {
                 while(this.$refs.postImage == undefined)
             }
             this.$refs.postfile.vis(false)
+        }
+    },
+    computed: {
+        AppData () {
+            return global.AppData
         }
     }
 }
