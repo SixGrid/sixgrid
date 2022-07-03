@@ -103,6 +103,12 @@ let configStoreFiles = [
             }
         ],
         _current: 0
+    }],
+    ['config.json', 'UserConfiguration', {
+        media: {
+            autoplay: true,
+            loop: true
+        }
     }]
 ]
 
