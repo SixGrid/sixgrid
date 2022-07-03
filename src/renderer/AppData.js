@@ -113,20 +113,26 @@ var AppData = {
 }
 global.AppData = AppData
 global.AppData.Config = new ConfigManager()
-global.AppData.Steamworks = new (require('@theace0296/steamworks'))(1992810)
+// global.AppData.Steamworks = new (require('@theace0296/steamworks'))(1992810)
 
-global.AppData.TempFlags.download_completeCount_IntervalTime = 60
-global.AppData.TempFlags.download_completeCount_Interval = setInterval(() => {
-    if (global.AppData.TempFlags.download_completeCount < 1) return
-    if (global.AppData.Steamworks.SteamAPI.IsSteamRunning() == false) return
-    let hourDuration = 60/(global.AppData.TempFlags.download_completeCount_IntervalTime/60)
-    hourDuration = parseFloat(parseFloat(hourDuration).toFixed(3))
-    let success = AppData.Steamworks.SteamUserStats.UpdateAvgRateStat('stat_count_downloadpost', global.AppData.TempFlags.download_completeCount, hourDuration)
-    if (!success)
-        console.error(`[AppData->Steamworks] Failed to update stat '${stat_count_downloadpost}' by ${global.AppData.TempFlags.download_completeCount}`)
-    else
-        global.AppData.TempFlags.download_completeCount = 0
-}, global.AppData.TempFlags.download_completeCount_IntervalTime * 1000)
+let steamworksInitalize = () => {
+    global.AppData.Greenworks = require('greenworks')
+    let res = AppData.Greenworks.init(1992810)
+    if (!res) {
+        console.error(`Failed to initalize Greenworks`)
+        alert(`Failed to initalize Steamworks API`)
+    } else {
+        global.AppData.TempFlags.steam_metricTimer = setInterval(() => {
+            if (AppData.TempFlags.download_completeCount > 0) {
+                let currentDLCount = AppData.Greenworks.getStatInt('stat_count_downloadpost')
+                AppData.Greenworks.setStat('stat_count_downloadpost', currentDLCount + AppData.TempFlags.download_completeCount)
+                console.log(`[Greenworkd] Set stat 'stat_count_downloadpost' to ${currentDLCount + AppData.TempFlags.download_completeCount} (was ${currentDLCount})`)
+                global.AppData.TempFlags.download_completeCount = 0
+            }
+        }, 1000)
+    }
+}
+setTimeout(steamworksInitalize, 1500)
 
 for (let i = 0; i < Object.entries(AppData.SteamCloudLocations).length; i++) {
     let loc = Object.entries(AppData.SteamCloudLocations)[i]
