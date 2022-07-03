@@ -108,7 +108,8 @@ let configStoreFiles = [
         media: {
             autoplay: true,
             loop: true
-        }
+        },
+        downloadFolder: path.join(require('electron').remote.app.getPath('downloads'), 'sixgrid')
     }]
 ]
 
