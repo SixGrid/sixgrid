@@ -12,6 +12,8 @@ rm -rf node_modules/
 npm i
 # npm i --prefix lib
 
+node ./build-scripts/prebuild.js
+
 rm -rf build/linux-unpacked
 rm -rf build/win-unpacked
 rm -rf build/artifacts/*.zip
