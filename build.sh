@@ -22,11 +22,11 @@ rm -rf build/artifacts/*.gz
 npm run build:wintux
 
 cd steampipe
-if [ "$git_branch" == "main" ]
+./publish.sh
+if [ "$git_branch" == "playtest" ]
 then
-    ./publish.sh
+    ./publish.beta.sh
 fi
-./publish.beta.sh
 cd ..
 
 node build-scripts/get-artifacts.js
