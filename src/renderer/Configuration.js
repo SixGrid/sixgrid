@@ -24,11 +24,22 @@ export default class Configuration {
         return this._data[key]
     }
     set(key, value) {
-        this._data[key] = value
+        if (arguments.length == 1)
+        {
+            this._data = arguments[0]
+        } else {
+            this._data[key] = value
+        }
         this.write()
     }
 
     default(target) {
-        this._data = AppData.DeepAssign({}, JSON.parse(JSON.stringify(this._data)), target)
+        if (this._data == null)
+            this._data = {}
+        this._data = {
+            ...target,
+            ...this._data,
+        }
+        this.write()
     }
 }

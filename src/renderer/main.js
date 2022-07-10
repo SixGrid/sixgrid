@@ -54,10 +54,19 @@ document.body.addEventListener('click', event => {
         }
 })
 
+function incrementUncaughtException() {
+    if (AppData.Steamworks != undefined) {
+        AppData.Steamworks.Metrics.uncaughtException.value++
+    }
+}
+process
+.on('unhandledRejection', () => {incrementUncaughtException()})
+.on('uncaughtException', () => {incrementUncaughtException()})
+
 global.vueJS = new Vue({
     components: { App },
     router,
     store,
     template: '<App/>'
 })
-vueJS.$mount('#app')
+vueJS['$mount']('#app')
