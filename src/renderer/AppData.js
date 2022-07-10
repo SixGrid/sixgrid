@@ -5,6 +5,7 @@ const ConfigManager = require('./ConfigManager').default
 const esixapi = require('libsixgrid')
 const EventEmitter = require('events')
 const {default: Configuration} = require('./Configuration')
+const { default: Steamworks } = require('./SteamworksIntergration')
 const request = require('request')
 function isObject(item) {
     return (item && typeof item === 'object' && !Array.isArray(item));
@@ -94,11 +95,8 @@ var AppData = {
                 }
             }
             console.log(`[AppData->PostDownload] Completed ${postObject.ID}.${postObject.Image.File.ext} (${parseFloat(totalBytes/1000).toFixed(3)}kb)`)
+            AppData.Steamworks.Metrics.download_completeCount.value++
         })
-    },
-
-    TempFlags: {
-        download_completeCount: 0
     },
 
     FetchClientParameters () {
@@ -115,25 +113,8 @@ var AppData = {
 global.AppData = AppData
 global.AppData.Config = new ConfigManager()
 // global.AppData.Steamworks = new (require('@theace0296/steamworks'))(1992810)
-
-let steamworksInitalize = () => {
-    global.AppData.Greenworks = require('greenworks')
-    let res = AppData.Greenworks.init(1992810)
-    if (!res) {
-        console.error(`Failed to initalize Greenworks`)
-        alert(`Failed to initalize Steamworks API`)
-    } else {
-        global.AppData.TempFlags.steam_metricTimer = setInterval(() => {
-            if (AppData.TempFlags.download_completeCount > 0) {
-                let currentDLCount = AppData.Greenworks.getStatInt('stat_count_downloadpost')
-                AppData.Greenworks.setStat('stat_count_downloadpost', currentDLCount + AppData.TempFlags.download_completeCount)
-                console.log(`[Greenworkd] Set stat 'stat_count_downloadpost' to ${currentDLCount + AppData.TempFlags.download_completeCount} (was ${currentDLCount})`)
-                global.AppData.TempFlags.download_completeCount = 0
-            }
-        }, 1000)
-    }
-}
-setTimeout(steamworksInitalize, 1500)
+global.AppData.Steamworks = new Steamworks()
+setTimeout(() =>{global.AppData.Steamworks.Initalize()}, 1500)
 
 for (let i = 0; i < Object.entries(AppData.SteamCloudLocations).length; i++) {
     let loc = Object.entries(AppData.SteamCloudLocations)[i]
