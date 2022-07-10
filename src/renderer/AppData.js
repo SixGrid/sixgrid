@@ -5,6 +5,7 @@ const ConfigManager = require('./ConfigManager').default
 const esixapi = require('libsixgrid')
 const EventEmitter = require('events')
 const {default: Configuration} = require('./Configuration')
+const request = require('request')
 function isObject(item) {
     return (item && typeof item === 'object' && !Array.isArray(item));
 }
