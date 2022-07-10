@@ -73,8 +73,8 @@
         }
     },
     "dependencies": {
-        "@theace0296/steamworks": "^1.0.4",
         "axios": "^0.18.0",
+        "greenworks": "file:greenworks",
         "jquery": "^3.6.0",
         "libsixgrid": "^1.0.0",
         "remove-markdown": "^0.3.0",
@@ -110,6 +110,7 @@
         "electron-builder": "^20.19.2",
         "electron-debug": "^1.5.0",
         "electron-devtools-installer": "^2.2.4",
+        "electron-rebuild": "^3.2.7",
         "file-loader": "^1.1.11",
         "html-webpack-plugin": "^3.2.0",
         "listr": "^0.14.3",

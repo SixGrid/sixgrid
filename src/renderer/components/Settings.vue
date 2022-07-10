@@ -69,6 +69,14 @@
             </md-list-item>
         </md-list>
         <md-list class="md-elevation-1">
+            <md-subheader>General</md-subheader>
+            <md-list-item>
+                <div class="md-list-item">
+                    <md-button class="md-elevation-1 md-raised" @click="steamworks.ResetMetrics()">Reset Steam Achievement Progress</md-button>
+                </div>
+            </md-list-item>
+        </md-list>
+        <md-list class="md-elevation-1">
             <md-subheader>Debug Settings</md-subheader>
             <md-list-item>
                 <div class="md-list-item-text">
@@ -192,6 +200,11 @@ export default {
         },
         'pflags.endpointOptionsSelected' () {
             this.$set(this.$data, 'clientParameters', global.AppData.CloudConfig.Authentication._data.items[this.$data.pflags.endpointOptionsSelected])
+        }
+    },
+    computed: {
+        steamworks () {
+            return AppData.Steamworks
         }
     }
 }
