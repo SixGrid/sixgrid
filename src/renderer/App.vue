@@ -29,8 +29,16 @@
 </template>
 <style scoped>
 .current-route {
-    text-align: center;
     margin-top: 8px;
+    width: 70px;
+    height: 12px;
+    line-height: 10px;
+    font-size: 12px;
+    line-gap-override: 0px;
+    vertical-align: middle;
+    text-align: center;
+    overflow-wrap:normal;
+    white-space: initial !important;
 }
 .selected {
     background-color: var(--md-theme-default-primary);
