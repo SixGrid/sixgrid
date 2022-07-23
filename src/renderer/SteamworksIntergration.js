@@ -29,7 +29,8 @@ export default class Steamworks extends EventEmitter{
         if (this.hasInitalized) return
         let targets = [
             'download_completeCount',
-            'uncaughtException'
+            'uncaughtException',
+            'favorite_count'
         ]
         for (let i = 0; i < targets.length; i++) {
             if (this.Metrics[targets[i]].process == undefined)
@@ -97,6 +98,16 @@ export default class Steamworks extends EventEmitter{
             value: 0,
             incrementOnly: true,
             name: 'stat_count_uncaughtException',
+            increment: true,
+            type: 'int'
+        },
+        favorite_count: {
+            min: 0,
+            max: 0,
+            default: 0,
+            value: 0,
+            incrementOnly: true,
+            name: 'stat_count_postFavorite',
             increment: true,
             type: 'int'
         }

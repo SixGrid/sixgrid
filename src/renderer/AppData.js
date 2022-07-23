@@ -25,6 +25,9 @@ var AppData = {
     reloadClient () {
         let currentAuthentication = global.AppData.FetchClientParameters()
         global.AppData.Client = new esixapi.Client(currentAuthentication)
+        global.AppData.Client.on('post:favorite', () => {
+            AppData.Steamworks.Metrics.favorite_count.value++
+        })
     },
 
     tempStore: {},
