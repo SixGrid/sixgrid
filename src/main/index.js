@@ -36,9 +36,11 @@ else
 function createWindow () {
     app.allowRendererProcessReuse = false
     mainWindow = new BrowserWindow({
-        height: 720,
         useContentSize: true,
         width: 1280,
+        height: 720,
+        minWidth: 1280,
+        minHeight: 720,
         allowRendererProcessReuse: false,
         webPreferences: {
             allowRendererProcessReuse: false,
