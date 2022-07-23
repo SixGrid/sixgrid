@@ -27,6 +27,13 @@ if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 Vue.http = Vue.prototype.$http = axios
 Vue.config.productionTip = false
 
+var shared = {}
+shared.install = () => {
+    Object.defineProperty(Vue.prototype, '$appData', {
+        get () { return global.AppData }
+    })
+}
+Vue.use(shared)
 
 Vue.component('MdSelect', Vue.options.components.MdSelect.extend({
     methods: {
