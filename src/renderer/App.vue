@@ -76,6 +76,11 @@
     --md-theme-default-primary: #ec407a !important;
     --md-theme-default-accent: #9575cd !important;
 }*/
+pre.code {
+    padding: 0.5rem;
+    background: black;
+    border-radius: 0.5rem;
+}
 </style>
 <script>
 export default {
