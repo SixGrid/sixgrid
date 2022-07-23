@@ -50,6 +50,11 @@ export default new Router({
             component: require('@/components/SteamStorePage').default
         },
         {
+            path: '/debug/client',
+            name: 'Client Debugger',
+            component: require('@/components/ClientDebug').default
+        },
+        {
             path: '/:pathMatch(.*)*',
             name: '404',
             component: require('@/components/NotImplemented').default
