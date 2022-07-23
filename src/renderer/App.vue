@@ -80,6 +80,9 @@
         width: calc(100% - 120px);
         margin: 25px;
 }
+hr {
+    width: 100%;
+}
 /*:root {
     --md-theme-default-primary: #ec407a !important;
     --md-theme-default-accent: #9575cd !important;
