@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="container" style="padding-bottom: 5rem;">
         <fullscreen-result-as-page ref="Fullscreen" />
         <div ref="gridview-posts">
             <md-toolbar class="searchbar md-dense" :md-elevation="1">
@@ -17,16 +17,21 @@
                 </div>
             </md-toolbar>
 
-            <template v-if="postsLoading">
+            <template v-if="postsLoading && posts.posts.length < 1">
                 <div style="text-align: center; margin-top: 15rem;">
                     <h1>Fetching Query</h1>
                     <md-progress-spinner md-mode="indeterminate"></md-progress-spinner>
                 </div>
             </template>
 
-            <template v-if="!postsLoading">
+            <template v-if="posts.posts.length > 0">
                 <search-result-grid v-bind:result="posts" @postSelect="postClick" />
             </template>
+            <div style="text-align: center; position: absolute; bottom: 1rem; width: calc(100% - 120px); left: 25px;">
+                <template v-if="posts.posts.length > 0">
+                    <md-button @click="fetchNextPage()" v-bind:disabled="postsLoading" class="md-elevation-10 md-raised md-primary">Fetch Next Page</md-button>
+                </template>
+            </div>
         </div>
     </div>
 </template>
@@ -50,7 +55,9 @@ export default {
                 page: 1,
                 limit: 320
             },
-            posts: [],
+            posts: {
+                posts: []
+            },
             postsLoading: false,
             reachedEnd: false
         }
@@ -103,7 +110,7 @@ export default {
                 {
                     query: targetQuery
                 })
-            // this.$set(this.$data, 'postsLoading', true)
+            this.$set(this.$data, 'postsLoading', true)
             let posts = await AppData.Client.Search(options)
             if (posts.length < 1) {
                 console.log(`[Search->fetchNextPage] 0 posts left, looks like we've reached the end!`)
@@ -111,7 +118,7 @@ export default {
             }
             this.$set(this.$data.posts, 'posts', this.$data.posts.posts.concat(posts))
             this.$refs.Fullscreen.setPosts(this.$data.posts.posts)
-            // this.$set(this.$data, 'postsLoading', false)
+            this.$set(this.$data, 'postsLoading', false)
             console.log(`[Search->fetchNextPage] Took ${Date.now() - ts}ms (${targetQuery})`)
         }
     }
