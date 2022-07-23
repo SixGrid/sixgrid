@@ -76,7 +76,7 @@
         "axios": "^0.18.0",
         "greenworks": "file:greenworks",
         "jquery": "^3.6.0",
-        "libsixgrid": "^1.0.3",
+        "libsixgrid": "^1.0.4",
         "remove-markdown": "^0.3.0",
         "sweetalert": "^2.1.2",
         "tinytoolbox": "^0.0.9",
