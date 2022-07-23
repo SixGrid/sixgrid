@@ -78,7 +78,7 @@
                     </td>
                     <td align="right">
                         <ul class="fullscreen-button-list">
-                            <li @click="$appData.Client.Favorite(postArr[postIndex].ID, true)">
+                            <li @click="$appData.Client.Favorite(postArr[postIndex].ID, !postArr[postIndex].Favorite)">
                                 <md-icon v-bind:style="`${postArr[postIndex].Favorite ? 'color: gold;' : ''}`">star</md-icon>
                             </li>
                             <li @click="AppData.PostDownload(postArr[postIndex])">
