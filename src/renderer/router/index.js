@@ -51,7 +51,7 @@ export default new Router({
         },
         {
             path: '/debug/client',
-            name: 'Client Debugger',
+            name: 'Client Debug',
             component: require('@/components/ClientDebug').default
         },
         {
