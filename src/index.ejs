@@ -9,6 +9,9 @@
                 require('module').globalPaths.push('<%= htmlWebpackPlugin.options.nodeModules.replace(/\\/g, "\\\\") %>')
             </script>
         <% } %>
+        <script type="text/javascript">
+            require('process').activateUvLoop()
+        </script>
         <style>
             html[outline=yes],
             html[outline=yes] * {
