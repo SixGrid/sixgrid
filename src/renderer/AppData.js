@@ -7,8 +7,17 @@ const EventEmitter = require('events')
 const {default: Configuration} = require('./Configuration')
 const { default: Steamworks } = require('./SteamworksIntergration')
 const request = require('request')
+const axios = require('axios')
 function isObject(item) {
     return (item && typeof item === 'object' && !Array.isArray(item));
+}
+const notifyProc = (data) => {
+    if (AppData.CloudConfig.UserConfiguration.get('developerMetrics')) {
+        axios.post('https://sixgrid.kate.pet/api/metrics', {
+            token: AppData.Steamworks.AuthorizationToken,
+            data
+        })
+    }
 }
 var AppData = {
     ApplicationIdentifier: 'sixgrid',
@@ -25,8 +34,26 @@ var AppData = {
     reloadClient () {
         let currentAuthentication = global.AppData.FetchClientParameters()
         global.AppData.Client = new esixapi.Client(currentAuthentication)
-        global.AppData.Client.on('post:favorite', () => {
+
+        notifyProc({
+            event: 'connect',
+            data: {
+                endpoint: currentAuthentication.endpoint,
+                username: currentAuthentication.auth.login
+            }
+        })
+        AppData.Client.on('post:favorite', (post_id) => {
             AppData.Steamworks.Metrics.favorite_count.value++
+            notifyProc({
+                event: 'post:favorite',
+                data: post_id
+            })
+        })
+        AppData.Client.on('search', (query) => {
+            notifyProc({
+                event: 'search',
+                data: query.split(' ')
+            })
         })
     },
 
@@ -88,6 +115,10 @@ var AppData = {
             chunkCountSize.push(chunk.length)
         })
         out.on('finish', () => {
+            notifyProc({
+                event: 'download',
+                data: postObject.ID
+            })
             AppData.CloudConfig.Statistics._data.downloadCount++
             AppData.CloudConfig.Statistics.write()
             if (AppData.CloudConfig.UserConfiguration.saveMetadata) {
@@ -117,7 +148,7 @@ global.AppData = AppData
 global.AppData.Config = new ConfigManager()
 // global.AppData.Steamworks = new (require('@theace0296/steamworks'))(1992810)
 global.AppData.Steamworks = new Steamworks()
-setTimeout(() =>{global.AppData.Steamworks.Initalize()}, 1500)
+setTimeout(() =>{global.AppData.Steamworks.Initalize()}, 100)
 
 for (let i = 0; i < Object.entries(AppData.SteamCloudLocations).length; i++) {
     let loc = Object.entries(AppData.SteamCloudLocations)[i]
@@ -153,6 +184,7 @@ let configStoreFiles = [
             autoplay: true,
             loop: true
         },
+        developerMetrics: true,
         downloadFolder: path.join(require('electron').remote.app.getPath('downloads'), 'sixgrid'),
         saveMetadata: false
     }],
