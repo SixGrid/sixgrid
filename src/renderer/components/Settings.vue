@@ -75,6 +75,11 @@
                     <md-button class="md-elevation-1 md-raised" @click="steamworks.ResetMetrics()">Reset Steam Achievement Progress</md-button>
                 </div>
             </md-list-item>
+            <md-list-item>
+                <div class="md-list-item">
+                    <md-checkbox v-model="configFlags.developerMetrics">Developer Metrics</md-checkbox>
+                </div>
+            </md-list-item>
         </md-list>
         <md-list class="md-elevation-1">
             <md-subheader>Debug Settings</md-subheader>
