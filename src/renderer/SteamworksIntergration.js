@@ -5,25 +5,49 @@ export default class Steamworks extends EventEmitter{
     static MetricUpdateInterval = 15000
     constructor() {
         super(); this.setMaxListeners(8192)
-        this.Greenworks = require('greenworks')
     }
     Greenworks = null
     hasInitalized = false
     GenerateError(thing) {
         this.emit('error', thing)
-        return new Error(`[Steamworks->${thing.id}] ${thing.message}`)
+        return new Error(`[SteamworksIntergration->${thing.id}] ${thing.message}`)
     }
     Initalize() {
         if (this.hasInitalized) return
-        let response = this.Greenworks.init(Steamworks.AppID)
+        var gw = require('greenworks')
+        let response = gw.init()
         if (response) {
+            this.hasInitalized = true
+            this.InitalizeToken(gw)
+            console.debug(`[SteamworksIntergration->Initalize] Success!`)
             this.InitalizeEvents()
             this.constantInterval = setInterval(() => {
-                this.emit('update', this.Greenworks)
+                this.emit('update', gw)
             }, Steamworks.MetricUpdateInterval)
         } else {
+            this.hasInitalized = true
+            console.debug(`[SteamworksIntergration->Initalize] Failed ;w;`)
             throw this.GenerateError(Steamworks.ERRORS.InitalizeFail)
         }
+        this.Greenworks = gw
+    }
+    AuthorizationToken = ""
+    InitalizeToken(greenworks)
+    {
+        if (!this.hasInitalized)
+            this.Initalize()
+        console.log(`[SteamworksIntergration->InitalizeToken] Fetching Token`)
+        var response = greenworks.getEncryptedAppTicket('https://sixgrid.kate.pet/api/metrics', (ticket) => {
+            this.AuthorizationToken = ticket.toString('hex');
+            console.log(`[SteamworksIntergration->InitalizeToken] We've got the token!!`)
+        }, (err) => {
+            console.error(`[SteamworksIntergration->InitalizeToken] Failed!!\n`, err)
+            if (err.includes('Error on getting encrypted app ticket.')) {
+                console.log(`[SteamworksIntergration->InitalizeToken] Retrying in 60s`)
+                setTimeout(this.InitalizeToken(greenworks), 60000)
+            }
+        })
+        console.debug(`[SteamworksIntergration->InitalizeToken] response:`, response)
     }
     InitalizeEvents() {
         if (this.hasInitalized) return
