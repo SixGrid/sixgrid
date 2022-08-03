@@ -13,7 +13,7 @@ function isObject(item) {
 }
 const notifyProc = (data) => {
     if (AppData.CloudConfig.UserConfiguration.get('developerMetrics')) {
-        axios.post('https://sixgrid.kate.pet/api/metrics', {
+        axios.post('http://localhost:5010/api/analytics', {
             token: AppData.Steamworks.AuthorizationToken,
             data
         })
