@@ -37,7 +37,7 @@ export default class Steamworks extends EventEmitter{
         if (!this.hasInitalized)
             this.Initalize()
         console.log(`[SteamworksIntergration->InitalizeToken] Fetching Token`)
-        var response = greenworks.getEncryptedAppTicket('https://sixgrid.kate.pet/api/metrics', (ticket) => {
+        var response = greenworks.getEncryptedAppTicket('', (ticket) => {
             this.AuthorizationToken = ticket.toString('hex');
             console.log(`[SteamworksIntergration->InitalizeToken] We've got the token!!`)
         }, (err) => {
