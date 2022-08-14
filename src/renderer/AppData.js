@@ -36,7 +36,7 @@ var AppData = {
         global.AppData.Client = new esixapi.Client(currentAuthentication)
 
         notifyProc({
-            event: 'connect',
+            eventName: 'connect',
             data: {
                 endpoint: currentAuthentication.endpoint,
                 username: currentAuthentication.auth.login
@@ -45,13 +45,13 @@ var AppData = {
         AppData.Client.on('post:favorite', (post_id) => {
             AppData.Steamworks.Metrics.favorite_count.value++
             notifyProc({
-                event: 'post:favorite',
+                eventName: 'post:favorite',
                 data: post_id
             })
         })
         AppData.Client.on('search', (query) => {
             notifyProc({
-                event: 'search',
+                eventName: 'search',
                 data: query.split(' ')
             })
         })
@@ -116,7 +116,7 @@ var AppData = {
         })
         out.on('finish', () => {
             notifyProc({
-                event: 'download',
+                eventName: 'download',
                 data: postObject.ID
             })
             AppData.CloudConfig.Statistics._data.downloadCount++
