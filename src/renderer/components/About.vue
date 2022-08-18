@@ -2,7 +2,7 @@
     <div class="container">
         <h1>Sixgrid {{ packageJSON.version }}</h1>
         <div id="contributers">
-            <h3>Contributers</h3>
+            <h3>Contributors</h3>
             <template v-for="contrib in contributers">
                 <md-avatar v-bind:key="contrib[0]" style="margin: 15px;" class="md-avatar-icon md-medium md-accent">
                     <img :src="contrib[1]" :alt="contrib[0]">
