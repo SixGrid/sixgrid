@@ -15,7 +15,7 @@
                         </md-select>
                     </md-field>
                 </md-list-item>
-                <md-list-item>
+                <!-- <md-list-item>
                     <md-card>
                         <md-card-header>
                             <div class="md-title">Preload Pages</div>
@@ -34,7 +34,7 @@
                             <md-button @click="actionPreloadPage">Start</md-button>
                         </md-card-actions>
                     </md-card>
-                </md-list-item>
+                </md-list-item> -->
                 <md-list-item>
                         <md-chips v-model="userConfig.tagBlacklist" md-placeholder="Tag Blacklist" />
                 </md-list-item>
