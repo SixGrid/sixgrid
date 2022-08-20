@@ -9,7 +9,7 @@
                         <label>Search Query</label>
                         <md-input spellcheck="false" v-model="searchQuery" md-autogrow @keyup="ValidateSearch"></md-input>
                     </md-field>
-                    <md-button class="md-icon-button" ref="showParameterModal">
+                    <md-button class="md-icon-button" @click="showParameterModal">
                         <md-icon>tune</md-icon>
                     </md-button>
                     <!-- <md-button class="md-button" @click="fetchNextPage">
@@ -20,7 +20,7 @@
 
             <template v-if="postsLoading && posts.posts.length < 1">
                 <div style="text-align: center; margin-top: 15rem;">
-                    <h1>Fetching Query</h1>
+                    <h1>{{postLoadingMessage}}</h1>
                     <md-progress-spinner md-mode="indeterminate"></md-progress-spinner>
                 </div>
             </template>
@@ -62,6 +62,7 @@ export default {
                 posts: []
             },
             postsLoading: false,
+            postLoadingMessage: 'Fetching Query',
             reachedEnd: false
         }
     },
@@ -85,7 +86,21 @@ export default {
                     query: this.$data.targetSearchQuery
                 })
             this.$data.postsLoading = true
-            let posts = await AppData.Client.Search(options)
+            this.$set(this.$data, 'postLoadingMessage', 'Fetching Query')
+            let posts = []
+            try
+            {
+                posts = await AppData.Client.Search(options)
+            }
+            catch (err)
+            {
+                console.error(`[Search->ExecuteSearchQuery] Failed to run AppData.Client.Search(${JSON.stringify(options)})\n`, err)
+                if (err.message != undefined)
+                {
+                    this.$set(this.$data, 'postLoadingMessage', err.message)
+                    return
+                }
+            }
             this.$set(this.$data, 'posts', {
                 posts
             })
@@ -118,6 +133,7 @@ export default {
                     query: targetQuery
                 })
             this.$set(this.$data, 'postsLoading', true)
+            this.$set(this.$data, 'postLoadingMessage', 'Fetching Query')
             let posts = await AppData.Client.Search(options)
             if (posts.length < 1) {
                 console.log(`[Search->fetchNextPage] 0 posts left, looks like we've reached the end!`)
