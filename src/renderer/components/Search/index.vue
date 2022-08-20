@@ -1,6 +1,7 @@
 <template>
     <div class="container" style="padding-bottom: 5rem;">
         <fullscreen-result-as-page ref="Fullscreen" />
+        <search-parameter-modal ref="ParameterModal" />
         <div ref="gridview-posts">
             <md-toolbar class="searchbar md-dense" :md-elevation="1">
                 <div class="md-toolbar-row">
@@ -8,9 +9,9 @@
                         <label>Search Query</label>
                         <md-input spellcheck="false" v-model="searchQuery" md-autogrow @keyup="ValidateSearch"></md-input>
                     </md-field>
-                    <!-- <md-button class="md-icon-button" ref="buttonSearchSettings">
+                    <md-button class="md-icon-button" ref="showParameterModal">
                         <md-icon>tune</md-icon>
-                    </md-button> -->
+                    </md-button>
                     <!-- <md-button class="md-button" @click="fetchNextPage">
                         Fetch next page
                     </md-button> -->
@@ -45,12 +46,14 @@
 import SearchResultGrid from './SearchResultGrid.vue'
 import FullscreenResult from './FullscreenResult.vue'
 import FullscreenResultAsPage from './FullscreenResultAsPage.vue'
+import SearchParameterModal from './SearchParameterModal.vue'
 export default {
-  components: { SearchResultGrid, FullscreenResult, FullscreenResultAsPage },
+  components: { SearchResultGrid, FullscreenResult, FullscreenResultAsPage, SearchParameterModal },
     name: 'Search',
     data () {
         return {
             searchQuery: '',
+            targetSearchQuery: '',
             options: {
                 page: 1,
                 limit: 320
@@ -63,11 +66,15 @@ export default {
         }
     },
     methods: {
+        showParameterModal () {
+            this.$refs.ParameterModal.toggle()
+        },
         ValidateSearch (event) {
             let DoSubmit = event.code.toLowerCase() == 'enter'
             let IsValid = DoSubmit
             if (!IsValid) return
-            console.log(`[Search->ValidateSearch] Executing Query; '${this.$data.searchQuery}'`)
+            this.$set(this.$data, 'targetSearchQuery', AppData.CloudConfig.UserConfiguration.get().tagBlacklist.map(v => '-'+v).join(' ') + ` ${this.$data.searchQuery}`)
+            console.log(`[Search->ValidateSearch] Executing Query; '${this.$data.targetSearchQuery}'`)
             this.ExecuteSearchQuery()
         },
         async ExecuteSearchQuery () {
@@ -75,7 +82,7 @@ export default {
             if (AppData.Client == null) AppData.reloadClient()
             let options = Object.assign({}, this.$data.options,
                 {
-                    query: this.$data.searchQuery
+                    query: this.$data.targetSearchQuery
                 })
             this.$data.postsLoading = true
             let posts = await AppData.Client.Search(options)
@@ -103,7 +110,7 @@ export default {
 
         async fetchNextPage() {
             if (this.$data.reachedEnd) return
-            let targetQuery = `${this.$data.searchQuery} id:<${this.$data.posts.posts[this.$data.posts.posts.length - 1].ID}`
+            let targetQuery = `${this.$data.targetSearchQuery} id:<${this.$data.posts.posts[this.$data.posts.posts.length - 1].ID}`
             let ts = Date.now()
             if (AppData.Client == null) AppData.reloadClient()
             let options = Object.assign({}, this.$data.options,
