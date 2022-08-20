@@ -43,7 +43,7 @@
             <md-list-item>
                 <md-icon>key</md-icon>
                 <md-field>
-                    <label>API Key</label>
+                    <label>API Key (<a href="https://steamcommunity.com/sharedfiles/filedetails/?id=2841522348" openExternal>Tutorial</a>)</label>
                     <md-input type="password" v-model="clientParameters.auth.apikey" :disabled="!clientParameters.auth.enabled" />
                 </md-field>
             </md-list-item>
