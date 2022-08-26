@@ -55,15 +55,9 @@ jobs:
     strategy:
       matrix:
         include:
-          - os: macos-10.15
-            artifact_name: sixgrid.dmg
-            asset_name: "sixgrid.${{ github.event.inputs.tag }}.dmg"
           - os: ubuntu-latest
-            artifact_name: sixgrid.AppImage
-            asset_name: "sixgrid.${{ github.event.inputs.tag }}.AppImage"
-          - os: windows-latest
-            artifact_name: sixgrid.exe
-            asset_name: "sixgrid.${{ github.event.inputs.tag }}.x64_86.exe"
+            artifact_name: sixgrid-linux-amd64.tar.gz
+            asset_name: "sixgrid-linux-amd64.tar.gz"
     
     steps:
       - name: Check out Git Repo
@@ -72,24 +66,41 @@ jobs:
       - name: Install Node.js, and NPM
         uses: actions/setup-node@v1
         with:
-          node-version: 14
+          node-version: 16
           
       - run: npm i -g npm@latest-6
       - run: npm install --include=dev
-      
+      - run: node ./build-scripts/prebuild.js
       - name: Build Electron Application
-        run: npm run build-installer
+        run: npm run build
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        
+      
+      
+      - id: setup-steamcmd
+        name: Setup SteamCMD
+        uses: CyberAndrii/setup-steamcmd@v1.1.1
+      
+      - name: Deploy to Steam
+        env:
+          STEAM_HOME: ${{ steps.setup-steamcmd.outputs.directory }}
+          STEAM_CMD: ${{ steps.setup-steamcmd.outputs.executable }}
+          USERNAME: ${{ secrets.STEAM_USERNAME }}
+          PASSWORD: ${{ secrets.STEAM_PASSWORD }}
+          configVdf: ${{ secrets.STEAM_CONFIG_VDF }}
+          ssfnFileName: ${{ secrets.STEAM_SSFN_FILE_NAME }}
+          ssfnFileContents: ${{ secrets.STEAM_SSFN_FILE_CONTENTS }}
+        run: ./steampipe/gitlab-actions.sh
+        shell: bash
+      
       - name: Upload binaries to release
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ needs.mktag.outputs.upload_url }}
-          asset_path: ./dist/${{ matrix.artifact_name }}
-          asset_name: ${{ matrix.asset_name }}
+          asset_path: ./build/artifacts/sixgrid-linux-amd64.tar.gz
+          asset_name: "sixgrid-linux-amd64.tar.gz"
           asset_content_type: application/octet-stream
   notifydevs:
     name: Notify Developers
