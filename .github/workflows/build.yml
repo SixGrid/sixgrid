@@ -90,8 +90,7 @@ jobs:
           configVdf: ${{ secrets.STEAM_CONFIG_VDF }}
           ssfnFileName: ${{ secrets.STEAM_SSFN_FILE_NAME }}
           ssfnFileContents: ${{ secrets.STEAM_SSFN_FILE_CONTENTS }}
-        run: ./steampipe/gitlab-actions.sh
-        shell: bash
+        run: bash ./steampipe/gitlab-actions.sh
       
       - name: Upload binaries to release
         uses: actions/upload-release-asset@v1
