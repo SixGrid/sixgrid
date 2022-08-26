@@ -76,7 +76,16 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
+      - run: node build-scripts/get-artifacts.js
       
+      - name: Upload binaries to release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: build/artifacts/*
+          tag_name: ${{ github.event.inputs.tag }}
+          draft: false
+          prerelease: true
+          
       - id: setup-steamcmd
         name: Setup SteamCMD
         uses: CyberAndrii/setup-steamcmd@v1.1.1
@@ -92,13 +101,6 @@ jobs:
           ssfnFileContents: ${{ secrets.STEAM_SSFN_FILE_CONTENTS }}
         run: cd steampipe && bash ./gitlab-actions.sh
       
-      - name: Upload binaries to release
-        uses: softprops/action-gh-release@v1
-        with:
-          files: build/artifacts/*
-          tag_name: ${{ github.event.inputs.tag }}
-          draft: false
-          prerelease: true
   notifydevs:
     name: Notify Developers
     
