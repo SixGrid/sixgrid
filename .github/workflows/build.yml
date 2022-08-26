@@ -22,31 +22,31 @@ on:
   #  branches:
   #    - 'stable'
 jobs:
-  mktag:
-    runs-on: ubuntu-latest
+#   mktag:
+#     runs-on: ubuntu-latest
     
-    outputs:
-      upload_url: ${{ steps.create_release.outputs.upload_url }}
-      web_url: ${{ steps.create_release.outputs.html_url }}
+#     outputs:
+#       upload_url: ${{ steps.create_release.outputs.upload_url }}
+#       web_url: ${{ steps.create_release.outputs.html_url }}
     
-    permissions: write-all
+#     permissions: write-all
     
-    steps:
-      - uses: actions/checkout@master
+#     steps:
+#       - uses: actions/checkout@master
           
-      - name: Create Release Draft
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.event.inputs.tag }}
-          release_name: ${{ github.event.inputs.name }}
-          draft: false
-          prerelease: true
+#       - name: Create Release Draft
+#         id: create_release
+#         uses: actions/create-release@v1
+#         env:
+#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#         with:
+#           tag_name: ${{ github.event.inputs.tag }}
+#           release_name: ${{ github.event.inputs.name }}
+#           draft: false
+#           prerelease: true
       
   publish:
-    needs: mktag
+#     needs: mktag
   
     runs-on: ${{matrix.os}}
     
@@ -96,10 +96,13 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: build/artifacts/*
+          tag_name: ${{ github.event.inputs.tag }}
+          draft: false
+          prerelease: true
   notifydevs:
     name: Notify Developers
     
-    needs: [ mktag, publish ]
+    needs: [ publish ]
     
     runs-on: ubuntu-latest
     
