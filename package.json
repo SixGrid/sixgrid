@@ -51,6 +51,12 @@
                     "arch": [
                         "x64"
                     ]
+                },
+                {
+                    "target": "msi",
+                    "arch": [
+                        "x64"
+                    ]
                 }
             ]
         },
@@ -58,7 +64,7 @@
             "icon": "build/icons",
             "target": [
                 {
-                    "target": "deb",
+                    "target": "AppImage",
                     "arch": [
                         "x64"
                     ]

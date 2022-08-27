@@ -10,7 +10,9 @@ then
         cd steampipe
     fi
 fi
+if [ -f "secret.sh" ]; then
 source secret.sh
+fi;
 
 VDF_FILENAME="app_1993420"
 
