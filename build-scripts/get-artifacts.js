@@ -4,6 +4,8 @@ const packageJSON = require('../package.json')
 const tar = require('tar')
 const archiver = require('archiver')
 
+const commitHash = require('child_process').execSync(`git rev-parse HEAD`).toString().split('\n')[0]
+
 const kernelversion = require('os').release()
 
 let BuildLocation = path.join(process.cwd(), 'build')
@@ -38,23 +40,23 @@ let tarballDirectory = async (fullPath, self) => {
 let RegexMatrix = [
     {
         filename_regex: new RegExp(`^${regexEscapeReplace(packageJSON.build.productName)} ${regexEscapeReplace(packageJSON.version)}\.AppImage$`),
-        upload_name: `${packageJSON.name}-${packageJSON.version}-linux-amd64.AppImage`,
+        upload_name: `${packageJSON.name}-${commitHash}-linux-amd64.AppImage`,
         platform: 'linux'
     },
     {
         filename_regex: new RegExp(`^linux\-unpacked$`),
-        upload_name: `${packageJSON.name}-${packageJSON.version}-linux-amd64.tar.gz`,
+        upload_name: `${packageJSON.name}-${commitHash}-linux-amd64.tar.gz`,
         onMatch: tarballDirectory,
         platform: 'linux'
     },
     {
         filename_regex: new RegExp(`^win\-unpacked$`),
-        upload_name: `${packageJSON.name}-${packageJSON.version}-win-amd64.zip`,
+        upload_name: `${packageJSON.name}-${commitHash}-win-amd64.zip`,
         onMatch: zipDirectory
     },
     {
         filename_regex: new RegExp(`^${regexEscapeReplace(packageJSON.build.productName)} Setup ${regexEscapeReplace(packageJSON.version)}\.exe$`),
-        upload_name: `${packageJSON.name}-${packageJSON.version}-win-amd64-setup.exe`
+        upload_name: `${packageJSON.name}-${commitHash}-win-amd64-setup.exe`
     }
 ]
 
