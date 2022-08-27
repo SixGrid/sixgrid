@@ -11,6 +11,10 @@ export function fetchTitle () {
         electronMainWindow.webContents.send('title:update', value)
     return value
 }
+export function safeReload () {
+    if (electronMainWindow != undefined)
+        electronMainWindow.loadURL(winURL)
+}
 export const winURL = (() => {
     var value = isDevelopmentMode()
         ? `http://localhost:9080`
@@ -22,7 +26,7 @@ export function relaunch () {
     app.quit()
 }
 export function relaunchConfirm () {
-    var btn = dialog.showMessageBoxSync(global.electronInstance.mainWindow, {
+    var btn = dialog.showMessageBoxSync(electronMainWindow, {
         message: 'Are you sure you would like to relaunch?',
         title: `SixGrid ${__SIXGRID_PRODUCT_BUILD_VERSION} - Confirm`,
         buttons: [
