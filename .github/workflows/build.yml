@@ -110,23 +110,23 @@ jobs:
       #     ssfnFileContents: ${{ secrets.STEAM_SSFN_FILE_CONTENTS }}
       #   run: cd steampipe && bash ./gitlab-actions.sh
       
-  notifydevs:
-    name: Notify Developers
+  # notifydevs:
+  #   name: Notify Developers
     
-    needs: [ publish ]
+  #   needs: [ publish ]
     
-    runs-on: ubuntu-latest
+  #   runs-on: ubuntu-latest
     
-    permissions: read-all
+  #   permissions: read-all
     
-    steps:
-      - name: Send Discord Message
-        uses: appleboy/discord-action@master
-        with:
-          webhook_id: ${{ secrets.DISCORD_WEBHOOK_ID }}
-          webhook_token: ${{ secrets.DISCORD_WEBHOOK_TOKEN }}
-          username: "SixGrid Release Notifications"
-          avatar_url: "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
-          message: "<@&783624073812377601> New SixGrid Release `${{ github.event.inputs.name }} (${{ github.event.inputs.tag }})`\r\n${{ needs.mktag.outputs.web_url }}"
+  #   steps:
+  #     - name: Send Discord Message
+  #       uses: appleboy/discord-action@master
+  #       with:
+  #         webhook_id: ${{ secrets.DISCORD_WEBHOOK_ID }}
+  #         webhook_token: ${{ secrets.DISCORD_WEBHOOK_TOKEN }}
+  #         username: "SixGrid Release Notifications"
+  #         avatar_url: "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
+  #         message: "<@&783624073812377601> New SixGrid Release `${{ github.event.inputs.name }} (${{ github.event.inputs.tag }})`\r\n${{ needs.mktag.outputs.web_url }}"
         
 
