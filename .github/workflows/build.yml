@@ -63,10 +63,10 @@ jobs:
             asset_name: "sixgrid-${{ github.sha }}-linux-amd64.AppImage"
           - os: windows-latest
             artifact_name: sixgrid-windows-amd64-setup.msi
-            asset_name: "sixgrid-${{ github.sha }}-windows-amd64-setup.msi"
+            asset_name: "sixgrid-${{ github.sha }}-win-amd64-setup.msi"
           - os: windows-latest
             artifact_name: sixgrid-windows-amd64.zip
-            asset_name: "sixgrid-${{ github.sha }}-windows-amd64.zip"
+            asset_name: "sixgrid-${{ github.sha }}-win-amd64.zip"
     
     steps:
       - name: Check out Git Repo
