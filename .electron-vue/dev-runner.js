@@ -9,6 +9,25 @@ const webpack = require('webpack')
 const WebpackDevServer = require('webpack-dev-server')
 const webpackHotMiddleware = require('webpack-hot-middleware')
 
+const fs = require('fs')
+const dayjs = require('dayjs')
+const packageJSON = require('../package.json')
+const buildTimestamp = (new Date(process.env['CI_COMMIT_TIMESTAMP'] ?? '')).getTime() || Date.now()
+
+
+let buildInfo = {
+  __SIXGRIDBUILDTIMESTAMP__: buildTimestamp,
+  __SIXGRID_PRODUCT_BUILD_TIMESTAMP: dayjs(buildTimestamp).format('YYYY/MM/DD hh:mm:ss A'),
+  __SIXGRID_PRODUCT_BUILD_VERSION: packageJSON.version
+}
+let extendedBuildInfo = require('./releaseInfo')(buildInfo)
+buildInfo.__PRODUCT_EXTENDED_INFORMATION = extendedBuildInfo
+
+fs.writeFileSync('./build/release-info.json', JSON.stringify(extendedBuildInfo))
+
+let productInfoPlugin = new webpack.DefinePlugin(Object.fromEntries(Object.entries(buildInfo).map(r => [r[0], JSON.stringify(r[1])])))
+
+
 const mainConfig = require('./webpack.main.config')
 const rendererConfig = require('./webpack.renderer.config')
 
@@ -40,6 +59,7 @@ function logStats (proc, data) {
 
 function startRenderer () {
   return new Promise((resolve, reject) => {
+    rendererConfig.plugins.push(productInfoPlugin)
     rendererConfig.entry.renderer = [path.join(__dirname, 'dev-client')].concat(rendererConfig.entry.renderer)
     rendererConfig.mode = 'development'
     const compiler = webpack(rendererConfig)
@@ -80,6 +100,7 @@ function startRenderer () {
 
 function startMain () {
   return new Promise((resolve, reject) => {
+    mainConfig.plugins.push(productInfoPlugin)
     mainConfig.entry.main = [path.join(__dirname, '../src/main/index.dev.js')].concat(mainConfig.entry.main)
     mainConfig.mode = 'development'
     const compiler = webpack(mainConfig)
