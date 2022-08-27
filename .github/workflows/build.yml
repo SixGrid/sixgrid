@@ -7,7 +7,7 @@ on:
         required: true
       name:
         description: 'Github Release Name'
-        required: true
+        required: false
       description:
         description: 'Github Release Description'
         required: false
@@ -57,7 +57,16 @@ jobs:
         include:
           - os: ubuntu-latest
             artifact_name: sixgrid-linux-amd64.tar.gz
-            asset_name: "sixgrid-linux-amd64.tar.gz"
+            asset_name: "sixgrid-${{ github.sha }}-linux-amd64.tar.gz"
+          - os: ubuntu-latest
+            artifact_name: "sixgrid-linux-amd64.AppImage"
+            asset_name: "sixgrid-${{ github.sha }}-linux-amd64.AppImage"
+          - os: windows-latest
+            artifact_name: sixgrid-windows-amd64-setup.exe
+            asset_name: "sixgrid-${{ github.sha }}-windows-amd64-setup.exe"
+          - os: windows-latest
+            artifact_name: sixgrid-windows-amd64.zip
+            asset_name: "sixgrid-${{ github.sha }}-windows-amd64.zip"
     
     steps:
       - name: Check out Git Repo
@@ -81,25 +90,25 @@ jobs:
       - name: Upload binaries to release
         uses: softprops/action-gh-release@v1
         with:
-          files: build/artifacts/*
+          files: build/artifacts/${{ matrix.asset_name }}
           tag_name: ${{ github.event.inputs.tag }}
           draft: false
           prerelease: true
           
-      - id: setup-steamcmd
-        name: Setup SteamCMD
-        uses: CyberAndrii/setup-steamcmd@v1.1.1
+      # - id: setup-steamcmd
+      #   name: Setup SteamCMD
+      #   uses: CyberAndrii/setup-steamcmd@v1.1.1
       
-      - name: Deploy to Steam
-        env:
-          STEAM_HOME: ${{ steps.setup-steamcmd.outputs.directory }}
-          STEAM_CMD: ${{ steps.setup-steamcmd.outputs.executable }}
-          USERNAME: ${{ secrets.STEAM_USERNAME }}
-          PASSWORD: ${{ secrets.STEAM_PASSWORD }}
-          configVdf: ${{ secrets.STEAM_CONFIG_VDF }}
-          ssfnFileName: ${{ secrets.STEAM_SSFN_FILE_NAME }}
-          ssfnFileContents: ${{ secrets.STEAM_SSFN_FILE_CONTENTS }}
-        run: cd steampipe && bash ./gitlab-actions.sh
+      # - name: Deploy to Steam
+      #   env:
+      #     STEAM_HOME: ${{ steps.setup-steamcmd.outputs.directory }}
+      #     STEAM_CMD: ${{ steps.setup-steamcmd.outputs.executable }}
+      #     USERNAME: ${{ secrets.STEAM_USERNAME }}
+      #     PASSWORD: ${{ secrets.STEAM_PASSWORD }}
+      #     configVdf: ${{ secrets.STEAM_CONFIG_VDF }}
+      #     ssfnFileName: ${{ secrets.STEAM_SSFN_FILE_NAME }}
+      #     ssfnFileContents: ${{ secrets.STEAM_SSFN_FILE_CONTENTS }}
+      #   run: cd steampipe && bash ./gitlab-actions.sh
       
   notifydevs:
     name: Notify Developers
