@@ -23,6 +23,7 @@ npm run build:wintux
 
 cd steampipe
 ./publish.sh
+./publish.beta.sh
 cd ..
 
 node build-scripts/get-artifacts.js
