@@ -22,32 +22,7 @@ on:
   #  branches:
   #    - 'stable'
 jobs:
-#   mktag:
-#     runs-on: ubuntu-latest
-    
-#     outputs:
-#       upload_url: ${{ steps.create_release.outputs.upload_url }}
-#       web_url: ${{ steps.create_release.outputs.html_url }}
-    
-#     permissions: write-all
-    
-#     steps:
-#       - uses: actions/checkout@master
-          
-#       - name: Create Release Draft
-#         id: create_release
-#         uses: actions/create-release@v1
-#         env:
-#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#         with:
-#           tag_name: ${{ github.event.inputs.tag }}
-#           release_name: ${{ github.event.inputs.name }}
-#           draft: false
-#           prerelease: true
-      
   publish:
-#     needs: mktag
-  
     runs-on: ${{matrix.os}}
     
     permissions: write-all
@@ -109,24 +84,3 @@ jobs:
       #     ssfnFileName: ${{ secrets.STEAM_SSFN_FILE_NAME }}
       #     ssfnFileContents: ${{ secrets.STEAM_SSFN_FILE_CONTENTS }}
       #   run: cd steampipe && bash ./gitlab-actions.sh
-      
-  # notifydevs:
-  #   name: Notify Developers
-    
-  #   needs: [ publish ]
-    
-  #   runs-on: ubuntu-latest
-    
-  #   permissions: read-all
-    
-  #   steps:
-  #     - name: Send Discord Message
-  #       uses: appleboy/discord-action@master
-  #       with:
-  #         webhook_id: ${{ secrets.DISCORD_WEBHOOK_ID }}
-  #         webhook_token: ${{ secrets.DISCORD_WEBHOOK_TOKEN }}
-  #         username: "SixGrid Release Notifications"
-  #         avatar_url: "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
-  #         message: "<@&783624073812377601> New SixGrid Release `${{ github.event.inputs.name }} (${{ github.event.inputs.tag }})`\r\n${{ needs.mktag.outputs.web_url }}"
-        
-
