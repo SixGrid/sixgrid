@@ -62,8 +62,8 @@ jobs:
             artifact_name: "sixgrid-linux-amd64.AppImage"
             asset_name: "sixgrid-${{ github.sha }}-linux-amd64.AppImage"
           - os: windows-latest
-            artifact_name: sixgrid-windows-amd64-setup.exe
-            asset_name: "sixgrid-${{ github.sha }}-windows-amd64-setup.exe"
+            artifact_name: sixgrid-windows-amd64-setup.msi
+            asset_name: "sixgrid-${{ github.sha }}-windows-amd64-setup.msi"
           - os: windows-latest
             artifact_name: sixgrid-windows-amd64.zip
             asset_name: "sixgrid-${{ github.sha }}-windows-amd64.zip"

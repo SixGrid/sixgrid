@@ -57,6 +57,10 @@ let RegexMatrix = [
     {
         filename_regex: new RegExp(`^${regexEscapeReplace(packageJSON.build.productName)} Setup ${regexEscapeReplace(packageJSON.version)}\.exe$`),
         upload_name: `${packageJSON.name}-${commitHash}-win-amd64-setup.exe`
+    },
+    {
+        filename_regex: new RegExp(`^${regexEscapeReplace(packageJSON.build.productName)} ${regexEscapeReplace(packageJSON.version)}\.msi$`),
+        upload_name: `${packageJSON.name}-${commitHash}-win-amd64-setup.msi`
     }
 ]
 
