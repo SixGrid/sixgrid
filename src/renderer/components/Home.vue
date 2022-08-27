@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <md-content style="margin: 3rem; padding: 3rem;" class="md-elevation-1">
+    <div class="container">
+        <md-content style="margin: 1rem; padding: 2rem;" class="md-elevation-1">
             <div class="md-layout md-gutter md-alignment-top-center md-elevation-2 clickable-bigbutton" style="width: 40vw;">
                 <div class="md-layout-item md-alignment-top-center" @click="OpenExternal('https://sixgrid.kate.pet/discord')">
                     <img src="@/assets/Discord-Logo-White.svg" style="width: 3rem;"/>
@@ -14,6 +14,8 @@
                 </div>
             </div>
         </md-content>
+        <hr>
+        <steam-news />
     </div>
 </template>
 <style>
@@ -58,8 +60,10 @@
 }
 </style>
 <script>
+import SteamNews from './SteamNews.vue'
 export default {
     name: 'home',
+    components: {SteamNews},
     methods: {
         OpenExternal (url) {
             global.AppData.OpenExternal(url)

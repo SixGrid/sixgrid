@@ -16,10 +16,10 @@ import * as packageJSON from '../../package.json'
 
 import 'vue-material/dist/vue-material.min.css'
 import 'vue-material/dist/theme/default-dark.css'
+import { ipcRenderer } from 'electron'
 
 window.toastr = require('toastr')
 
-document.title = `SixGrid v${packageJSON.version}`
 
 Vue.use(VueMaterial)
 Vue.use(VueToastr2)
@@ -27,6 +27,13 @@ if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 Vue.http = Vue.prototype.$http = axios
 Vue.config.productionTip = false
 
+var shared = {}
+shared.install = () => {
+    Object.defineProperty(Vue.prototype, '$appData', {
+        get () { return global.AppData }
+    })
+}
+Vue.use(shared)
 
 Vue.component('MdSelect', Vue.options.components.MdSelect.extend({
     methods: {
@@ -35,7 +42,7 @@ Vue.component('MdSelect', Vue.options.components.MdSelect.extend({
         }
     }
 }))
-
+ipcRenderer.send('updateTitle', '')
 AppData.tempStoreEventEmitter.on('debugElementOutline', (value) => {
     localStorage.debugElementOutline = value
     if (value) {        

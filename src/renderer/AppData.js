@@ -25,6 +25,9 @@ var AppData = {
     reloadClient () {
         let currentAuthentication = global.AppData.FetchClientParameters()
         global.AppData.Client = new esixapi.Client(currentAuthentication)
+        global.AppData.Client.on('post:favorite', () => {
+            AppData.Steamworks.Metrics.favorite_count.value++
+        })
     },
 
     tempStore: {},
@@ -151,7 +154,11 @@ let configStoreFiles = [
             loop: true
         },
         downloadFolder: path.join(require('electron').remote.app.getPath('downloads'), 'sixgrid'),
-        saveMetadata: false
+        saveMetadata: false,
+        tagBlacklist: [],
+        ratingFilter: 'none',
+        preloadPageCount: 1,
+        preloadStartIndex: 0
     }],
     ['stats.json', 'Statistics', {
         downloads: 0

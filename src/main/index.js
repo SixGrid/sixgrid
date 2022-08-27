@@ -1,5 +1,7 @@
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, globalShortcut, ipcMain, Menu } from 'electron'
 import '../renderer/store'
+import menu from './menu'
+import * as helpers from './helpers.js'
 
 /**
  * Set `__static` path to static files in production
@@ -9,13 +11,19 @@ if (process.env.NODE_ENV !== 'development') {
     global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\')
 }
 
+ipcMain.handle('updateTitle', (event, data) => {
+    if (data.length < 1)
+        electronMainWindow.mainWindow.setTitle(helpers.fetchTitle())
+    else
+        electronMainWindow.mainWindow.setTitle(helpers.fetchTitle() + ` - ${data}`)
+})
+
 global.debugMode = app.commandLine.hasSwitch('developer')
 
 let customURL_enable = app.commandLine.hasSwitch('url')
 let customURL = app.commandLine.getSwitchValue('url')
 
 const winURL_dev = 'http://dev.sixgrid.kate.pet:9080'
-let mainWindow
 let winURL
 if (global.debugMode && customURL_enable)
 {
@@ -32,44 +40,77 @@ else
 {
     winURL = process.env.NODE_ENV === 'development' ? winURL_dev : `file://${__dirname}/index.html`
 }
-
+global.electronMainWindow = null
 function createWindow () {
     app.allowRendererProcessReuse = false
-    mainWindow = new BrowserWindow({
-        height: 720,
+    global.electronMainWindow = new BrowserWindow({
         useContentSize: true,
         width: 1280,
+        height: 720,
+        minWidth: 1280,
+        minHeight: 720,
+        allowRendererProcessReuse: false,
+        useContentSize: true,
         allowRendererProcessReuse: false,
         webPreferences: {
-            allowRendererProcessReuse: false,
             nodeIntegration: true,
             enableRemoteModule: true,
-            webSecurity: false
+            webSecurity: false,
+            allowRunningInsecureContent: false,
+            devTools: true,
+            experimentalFeatures: true
         }
     })
 
-    mainWindow.loadURL(winURL)
+    electronMainWindow.setMenu(null)
+    Menu.setApplicationMenu(Menu.buildFromTemplate(menu))
+    electronMainWindow.setTitle(helpers.fetchTitle())
 
-    mainWindow.on('closed', () => {
-        mainWindow = null
+    electronMainWindow.loadURL(winURL)
+
+    electronMainWindow.on('closed', () => {
+        electronMainWindow = null
     })
 
-    mainWindow.webContents.on('before-input-event', (event, input) => {
+    electronMainWindow.webContents.on('before-input-event', (event, input) => {
         switch (input.key.toLowerCase()) {
             case 'f8':
                 event.preventDefault()
-                mainWindow.loadURL(winURL)
+                electronMainWindow.loadURL(winURL)
                 break
         }
     })
 
     // Send uncaught exceptions to renderer
     process.on('uncaughtException', (error) => {
-        mainWindow.webContents.send('uncaughtException', JSON.stringify(error))
+        electronMainWindow.webContents.send('uncaughtException', JSON.stringify(error))
+    })
+    ipcMain.on('restart', () => {
+        helpers.relaunch()
     })
 }
 
 app.on('ready', createWindow)
+
+app.on('ready', () => {
+    const SHORTCUTDICT = {
+        'F12': electronMainWindow.webContents.openDevTools,
+        'F10': () => {
+            helpers.relaunchConfirm()
+        },
+        'F9': () => {
+            electronMainWindow.webContents.send('debug:elementOutline')
+        },
+        'F8': () => {
+            helpers.safeReload()
+        }
+    }
+
+    let entries = Object.entries(SHORTCUTDICT)
+    for (let i = 0; i < entries.length; i++) {
+        globalShortcut.register(...entries[i])
+    }
+})
 
 // Register 'file://' URL's
 app.on('ready', () => {
@@ -87,7 +128,7 @@ app.on('window-all-closed', () => {
 })
 
 app.on('activate', () => {
-    if (mainWindow === null) {
+    if (electronMainWindow === null) {
         createWindow()
     }
 })
