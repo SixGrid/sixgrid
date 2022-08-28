@@ -1,4 +1,5 @@
 import { app, BrowserWindow } from 'electron'
+import TelemetryManager from './telemetryManager'
 import '../renderer/store'
 
 /**
@@ -15,6 +16,7 @@ let customURL_enable = app.commandLine.hasSwitch('url')
 let customURL = app.commandLine.getSwitchValue('url')
 
 const winURL_dev = 'http://dev.sixgrid.kate.pet:9080'
+var telemetry
 let mainWindow
 let winURL
 if (global.debugMode && customURL_enable)
@@ -49,6 +51,8 @@ function createWindow () {
             webSecurity: false
         }
     })
+
+    telemetry = new TelemetryManager(mainWindow)
 
     mainWindow.loadURL(winURL)
 
