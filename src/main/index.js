@@ -1,5 +1,5 @@
 import { app, BrowserWindow } from 'electron'
-import TelemetryManager from './telemetryManager'
+import TelemetryManager from './telemetryManager/index'
 import '../renderer/store'
 
 /**
