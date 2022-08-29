@@ -94,7 +94,6 @@ app.on('ready', createWindow)
 
 app.on('ready', () => {
     const SHORTCUTDICT = {
-        'F12': electronMainWindow.webContents.openDevTools,
         'F10': () => {
             helpers.relaunchConfirm()
         },
