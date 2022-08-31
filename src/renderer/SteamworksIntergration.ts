@@ -1,15 +1,31 @@
+import type * as greenworks from 'greenworks'
+
 import {EventEmitter} from 'events'
+
+export type SteamMetricType = 'int'
+export interface ISteamMetric
+{
+    min: number,
+    max: number,
+    default: number,
+    value: number,
+    incrementOnly: boolean,
+    name: string,
+    increment: boolean,
+    type: SteamMetricType
+}
 
 export default class Steamworks extends EventEmitter{
     static AppID = 1992810
     static MetricUpdateInterval = 15000
+    public Greenworks: typeof greenworks
+    public constantInterval?: NodeJS.Timeout
     constructor() {
         super(); this.setMaxListeners(8192)
         this.Greenworks = require('greenworks')
     }
-    Greenworks = null
     hasInitalized = false
-    GenerateError(thing) {
+    GenerateError(thing: any) {
         this.emit('error', thing)
         return new Error(`[Steamworks->${thing.id}] ${thing.message}`)
     }
@@ -44,15 +60,15 @@ export default class Steamworks extends EventEmitter{
         let entries = Object.entries(this.Metrics)
         for (let i = 0; i < entries.length; i++) {
             let pair = entries[i]
-            if (pair.incrementOnly) continue
-            if (pair.type == 'int') {
-                this.Greenworks.setStatInt(pair.name, pair.default)
-            } else if (pair.type == 'float') {
-                this.Greenworks.setFloatInt(pair.name, pair.default)
+            if (pair[1].incrementOnly) continue
+            if (pair[1].type == 'int') {
+                this.Greenworks.setStatInt(pair[1].name, pair[1].default)
+            } else if (pair[1].type == 'float') {
+                this.Greenworks.setFloatInt(pair[1].name, pair[1].default)
             }
         } 
     }
-    static MetricsDefault = (steamworks, scope, key) => {
+    static MetricsDefault = (steamworks: typeof greenworks, scope: any, key: string) => {
         if (scope.value > 0) {
             let currentCount = 0
             if (scope.type == 'int')
@@ -80,7 +96,7 @@ export default class Steamworks extends EventEmitter{
         }
         return scope
     }
-    Metrics = {
+    Metrics: {[key: string]: ISteamMetric} = {
         download_completeCount: {
             min: 0,
             max: -1,

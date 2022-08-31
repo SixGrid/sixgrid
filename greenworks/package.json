@@ -1,5 +1,6 @@
 {
   "name": "greenworks",
   "version": "1.0.0",
-  "main": "greenworks.js"
+  "main": "greenworks.js",
+  "types": "greenworks.d.ts"
 }
