@@ -37,6 +37,10 @@ let webConfig = {
         exclude: /node_modules/
       },
       {
+        test: /\.ts$/,
+        use: 'ts-loader'
+      },
+      {
         test: /\.vue$/,
         use: {
           loader: 'vue-loader',
@@ -112,7 +116,7 @@ let webConfig = {
       '@': path.join(__dirname, '../src/renderer'),
       'vue$': 'vue/dist/vue.esm.js'
     },
-    extensions: ['.js', '.vue', '.json', '.css']
+    extensions: ['.js', '.vue', '.json', '.css', '.ts']
   },
   target: 'web'
 }
