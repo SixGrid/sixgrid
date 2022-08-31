@@ -19,7 +19,8 @@ export default [
         label: 'Window',
         submenu: [
             { role: 'minimize' },
-            { role: 'zoom' }
+            { role: 'zoom' },
+            { role: 'togglefullscreen' }
         ]
     },
     {
