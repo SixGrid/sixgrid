@@ -32,7 +32,7 @@ let webConfig = {
       },
       {
         test: /\.js$/,
-        use: 'babel-loader',
+        use: 'esbuild-loader',
         include: [ path.resolve(__dirname, '../src/renderer') ],
         exclude: /node_modules/
       },

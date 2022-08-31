@@ -46,7 +46,7 @@ let rendererConfig = {
       },
       {
         test: /\.js$/,
-        use: 'babel-loader',
+        use: 'esbuild-loader',
         exclude: /node_modules/
       },
       {
