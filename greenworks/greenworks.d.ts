@@ -56,6 +56,8 @@ export function ugcPublishUpdate(
 //- Stats
 export function getStatInt(key: string): number
 export function getStatFloat(key: string): number
+export function setStatInt(key: string, value: number): boolean
+export function setFloatInt(key: string, value: number): boolean
 export function setStat(key: string, value: number): boolean
 export function storeStats(
     success_callback: (game_id: number) => void,

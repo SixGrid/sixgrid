@@ -1,4 +1,4 @@
-import type * as greenworks from 'greenworks'
+import * as greenworks from 'greenworks'
 
 import {EventEmitter} from 'events'
 
@@ -13,11 +13,13 @@ export interface ISteamMetric
     name: string,
     increment: boolean,
     type: SteamMetricType
+    process?: SteamMetricProcess
 }
+export type SteamMetricProcess = (steamworks: typeof greenworks, scope: any, key: string) => any
 
-export default class Steamworks extends EventEmitter{
-    static AppID = 1992810
-    static MetricUpdateInterval = 15000
+export default class Steamworks extends EventEmitter {
+    public static AppID = 1992810
+    public static MetricUpdateInterval = 15000
     public Greenworks: typeof greenworks
     public constantInterval?: NodeJS.Timeout
     constructor() {
@@ -31,7 +33,7 @@ export default class Steamworks extends EventEmitter{
     }
     Initalize() {
         if (this.hasInitalized) return
-        let response = this.Greenworks.init(Steamworks.AppID)
+        let response = this.Greenworks.init()
         if (response) {
             this.InitalizeEvents()
             this.constantInterval = setInterval(() => {
@@ -52,7 +54,9 @@ export default class Steamworks extends EventEmitter{
             if (this.Metrics[targets[i]].process == undefined)
                 this.Metrics[targets[i]].process = Steamworks.MetricsDefault
             this.on('update', (steamworks) => {
-                this.Metrics[targets[i]] = this.Metrics[targets[i]].process(steamworks, this.Metrics[targets[i]], targets[i])
+                let t = this.Metrics[targets[i]]
+                if (t.process != undefined)
+                    t.process(steamworks, this.Metrics[targets[i]], targets[i])
             })
         }
     }
