@@ -2,12 +2,13 @@ const fs = require('fs')
 const path = require('path')
 
 export default class Configuration {
-    constructor(location) {
+    public Location: string
+    constructor(location: string) {
         this.Location = path.resolve(location)
         this.read()
     }
 
-    _data = null
+    public _data: {[key: string]: any} = {}
 
     read() {
         let data = fs.readFileSync(this.Location).toString()
@@ -18,12 +19,12 @@ export default class Configuration {
         fs.writeFileSync(this.Location, stringify)
     }
 
-    get(key) {
+    get(key: string): any {
         if (key == undefined)
             return Object.assign({}, this._data)
         return this._data[key]
     }
-    set(key, value) {
+    set(key: string, value: any) {
         if (arguments.length == 1)
         {
             this._data = arguments[0]
@@ -33,7 +34,7 @@ export default class Configuration {
         this.write()
     }
 
-    default(target) {
+    default(target: any) {
         if (this._data == null)
             this._data = {}
         this._data = {
