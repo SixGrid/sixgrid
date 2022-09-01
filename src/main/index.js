@@ -1,7 +1,7 @@
 import { app, BrowserWindow, globalShortcut, ipcMain, Menu } from 'electron'
 import '../renderer/store'
 import menu from './menu'
-import * as helpers from './helpers.js'
+import * as helpers from './helpers'
 
 /**
  * Set `__static` path to static files in production
