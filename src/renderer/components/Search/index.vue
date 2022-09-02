@@ -121,6 +121,7 @@ export default {
                 posts
             })
             console.log(`[Search->ExecuteSearchQuery] Took ${Date.now() - ts}ms (${options.query})`, posts)
+            AppData.Steamworks.Metrics.search_count.value++
             this.$data.postsLoading = false
             this.$set(this.$data, 'reachedEnd', false)
         },

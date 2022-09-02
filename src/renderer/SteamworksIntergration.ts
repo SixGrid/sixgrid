@@ -130,6 +130,16 @@ export default class Steamworks extends EventEmitter {
             name: 'stat_count_postFavorite',
             increment: true,
             type: 'int'
+        },
+        search_count: {
+            min: 0,
+            max: 0,
+            default: 0,
+            value: 0,
+            incrementOnly: true,
+            name: 'stat_count_query',
+            increment: true,
+            type: 'int'
         }
     }
     static ERRORS = {
