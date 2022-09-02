@@ -140,6 +140,26 @@ export default class Steamworks extends EventEmitter {
             name: 'stat_count_query',
             increment: true,
             type: 'int'
+        },
+        post_downvote_count: {
+            min: 0,
+            max: 0,
+            default: 0,
+            value: 0,
+            incrementOnly: true,
+            name: 'stat_count_postdownvote',
+            increment: true,
+            type: 'int'
+        },
+        post_upvote_count: {
+            min: 0,
+            max: 0,
+            default: 0,
+            value: 0,
+            incrementOnly: true,
+            name: 'stat_count_postupvote',
+            increment: true,
+            type: 'int'
         }
     }
     static ERRORS = {
