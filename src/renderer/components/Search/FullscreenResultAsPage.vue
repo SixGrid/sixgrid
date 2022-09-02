@@ -78,9 +78,11 @@
                     </td>
                     <td align="right">
                         <ul class="fullscreen-button-list">
-                            <li @click="$appData.Client.Favorite(postArr[postIndex].ID, !postArr[postIndex].Favorite)">
-                                <md-icon v-bind:style="`${postArr[postIndex].Favorite ? 'color: gold;' : ''}`">star</md-icon>
-                            </li>
+                            <template v-if="postArr[postIndex].Client.Auth.Enable">
+                                <li @click="$appData.Client.Favorite(postArr[postIndex].ID, !postArr[postIndex].IsFavorite)">
+                                    <md-icon v-bind:style="`${postArr[postIndex].IsFavorite ? 'color: gold;' : ''}`">star</md-icon>
+                                </li>
+                            </template>
                             <li @click="AppData.PostDownload(postArr[postIndex])">
                                 <md-icon>download</md-icon>
                             </li>
