@@ -1,6 +1,7 @@
 import Configuration from './Configuration'
 import type {EventEmitter} from 'events'
 import Post from 'libsixgrid/dist/src/Post'
+import {IProductInformation} from '../shared'
 interface ISteamCloudLocations
 {
     Config: string
@@ -31,5 +32,7 @@ interface IAppData
 declare global
 {
     var AppData: IAppData
+    var __SIXGRID_PRODUCT_BUILD_VERSION: string
+    var __PRODUCT_EXTENDED_INFORMATION: IProductInformation
 }
 export {}
