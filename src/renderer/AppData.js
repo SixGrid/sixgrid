@@ -30,6 +30,15 @@ var AppData = {
         global.AppData.Client.on('post:favorite', () => {
             AppData.Steamworks.Metrics.favorite_count.value++
         })
+        global.AppData.Client.on('post:vote', (data) => {
+            if (data.state > 0)
+                AppData.Steamworks.Metrics.post_upvote_count++
+            else if (data.state < 0)
+                AppData.Steamworks.Metrics.post_downvote_count++
+        })
+        global.AppData.Client.on('post:search', () => {
+            AppData.Steamworks.Metrics.search_count++
+        })
     },
 
     tempStore: {},
