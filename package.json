@@ -87,7 +87,7 @@
         "libsixgrid": "^1.1.2",
         "remove-markdown": "^0.3.0",
         "sweetalert": "^2.1.2",
-        "tinytoolbox": "^0.0.9",
+        "tinytoolbox": "^0.0.16",
         "toastr": "^2.1.4",
         "vue": "^2.5.16",
         "vue-electron": "^1.0.6",
@@ -98,6 +98,7 @@
         "vuex-electron": "^1.0.0"
     },
     "devDependencies": {
+        "@types/request": "^2.48.8",
         "ajv": "^6.5.0",
         "archiver": "^5.3.1",
         "cfonts": "^2.1.2",
