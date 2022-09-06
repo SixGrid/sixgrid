@@ -1,4 +1,5 @@
 import { app, BrowserWindow, globalShortcut, ipcMain, Menu } from 'electron'
+import DownloadManager from './DownloadManager'
 import '../renderer/store'
 import menu from './menu'
 import * as helpers from './helpers'
@@ -41,6 +42,7 @@ else
     winURL = process.env.NODE_ENV === 'development' ? winURL_dev : `file://${__dirname}/index.html`
 }
 global.electronMainWindow = null
+global.sixgridDownloadManager = null
 function createWindow () {
     app.allowRendererProcessReuse = false
     global.electronMainWindow = new BrowserWindow({
@@ -61,6 +63,7 @@ function createWindow () {
             experimentalFeatures: true
         }
     })
+    global.sixgridDownloadManager = new DownloadManager(global.electronMainWindow)
 
     electronMainWindow.setMenu(null)
     Menu.setApplicationMenu(Menu.buildFromTemplate(menu))

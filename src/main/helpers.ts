@@ -1,4 +1,6 @@
 import { app, dialog } from 'electron'
+import * as fs from 'fs'
+import * as crypto from 'crypto'
 const _ProductInformation = __PRODUCT_EXTENDED_INFORMATION
 export function isDevelopmentMode () {
     if (app.commandLine.hasSwitch('dev'))
@@ -70,4 +72,8 @@ export function paragraphSplit (input: string, maximumLineWidth: number) {
         resultArray.push(tmpString)
     }
     return resultArray.join('\n')
+}
+export function SHA256Checksum(fileLocation: string): string
+{
+    return crypto.createHash('sha256').update(fs.readFileSync(fileLocation)).digest('hex')
 }
