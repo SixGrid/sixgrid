@@ -3,6 +3,7 @@ import type {EventEmitter} from 'events'
 import Post from 'libsixgrid/dist/src/Post'
 import {IProductInformation} from '../shared'
 import { IConfig_AuthProfile, IConfig_Stats, IConfig_User } from './ConfigTemplate'
+import { DownloadManagerBridge } from './DownloadManagerBridge'
 
 declare interface ICloudConfig 
 {
@@ -34,6 +35,8 @@ declare interface IAppData
         Config: string
     }
     CloudConfig: ICloudConfig & {[key: string]: Configuration}
+
+    DownloadBridge: DownloadManagerBridge
 }
 declare global
 {
