@@ -1,7 +1,20 @@
 const fs = require('fs')
 const path = require('path')
 
-export default class Configuration {
+export interface IConfiguration<T>
+{
+    Location: string
+    _data: T
+
+    read(): void
+    write(): void
+
+    get(key: string): any
+    set(key: string, value: any): void
+
+    default(data: T): void
+}
+export default class Configuration implements IConfiguration<{[key: string]: any}> {
     public Location: string
     constructor(location: string) {
         this.Location = path.resolve(location)
