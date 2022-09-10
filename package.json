@@ -99,6 +99,7 @@
     },
     "devDependencies": {
         "@types/request": "^2.48.8",
+        "@types/node": "^16.11.7",
         "ajv": "^6.5.0",
         "archiver": "^5.3.1",
         "cfonts": "^2.1.2",

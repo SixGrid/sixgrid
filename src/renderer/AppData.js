@@ -128,7 +128,7 @@ global.AppData = AppData
 global.AppData.Config = new ConfigManager()
 // global.AppData.Steamworks = new (require('@theace0296/steamworks'))(1992810)
 global.AppData.Steamworks = new Steamworks()
-setTimeout(() =>{global.AppData.Steamworks.Initalize()}, 1500)
+setTimeout(() =>{global.AppData.Steamworks.Initialize()}, 1500)
 
 for (let i = 0; i < Object.entries(AppData.SteamCloudLocations).length; i++) {
     let loc = Object.entries(AppData.SteamCloudLocations)[i]
@@ -137,52 +137,5 @@ for (let i = 0; i < Object.entries(AppData.SteamCloudLocations).length; i++) {
     }
 }
 
-let configStoreFiles = [
-    ['authProfile.json', 'Authentication', {
-        items: [
-            {
-                auth: {
-                    login: '',
-                    apikey: '',
-                    enabled: false
-                },
-                endpoint: 'https://e926.net'
-            },
-            {
-                auth: {
-                    login: '',
-                    apikey: '',
-                    enabled: false
-                },
-                endpoint: 'https://e621.net'
-            }
-        ],
-        _current: 0
-    }],
-    ['config.json', 'UserConfiguration', {
-        media: {
-            autoplay: true,
-            loop: true
-        },
-        downloadFolder: path.join(require('electron').remote.app.getPath('downloads'), 'sixgrid'),
-        saveMetadata: false,
-        tagBlacklist: [],
-        ratingFilter: 'none',
-        preloadPageCount: 1,
-        preloadStartIndex: 0
-    }],
-    ['stats.json', 'Statistics', {
-        downloads: 0
-    }]
-]
+require('./ConfigInit').Initialize()
 
-for (let i = 0; i < configStoreFiles.length; i++) {
-    let location = path.join(AppData.SteamCloudLocations.Config, configStoreFiles[i][0])
-
-    if (!fs.existsSync(location)) {
-        fs.writeFileSync(location, JSON.stringify(configStoreFiles[i][2]))
-    }
-    global.AppData.CloudConfig[configStoreFiles[i][1]] = new Configuration(location)
-    global.AppData.CloudConfig[configStoreFiles[i][1]].default(configStoreFiles[i][2])
-    global.AppData.CloudConfig[configStoreFiles[i][1]].write()
-}

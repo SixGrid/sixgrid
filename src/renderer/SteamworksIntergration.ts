@@ -31,11 +31,11 @@ export default class Steamworks extends EventEmitter {
         this.emit('error', thing)
         return new Error(`[Steamworks->${thing.id}] ${thing.message}`)
     }
-    Initalize() {
+    Initialize() {
         if (this.hasInitalized) return
         let response = this.Greenworks.init()
         if (response) {
-            this.InitalizeEvents()
+            this.InitializeEvents()
             this.constantInterval = setInterval(() => {
                 this.emit('update', this.Greenworks)
             }, Steamworks.MetricUpdateInterval)
@@ -43,7 +43,7 @@ export default class Steamworks extends EventEmitter {
             throw this.GenerateError(Steamworks.ERRORS.InitalizeFail)
         }
     }
-    InitalizeEvents() {
+    InitializeEvents() {
         if (this.hasInitalized) return
         let targets = [
             'download_completeCount',
@@ -86,6 +86,10 @@ export default class Steamworks extends EventEmitter {
                 scope.value = 0
             } else {
                 targetValue = scope.value
+            }
+            if (global.AppData.CloudConfig.Statistics != undefined) {
+                global.AppData.CloudConfig.Statistics.set(scope.name, targetValue)
+                global.AppData.CloudConfig.Statistics.write()
             }
             let didError = false
             try {
