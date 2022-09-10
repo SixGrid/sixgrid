@@ -18,8 +18,8 @@
             @loadedmetadata="onPostLoad"
             controls="controls"
             :poster="postArray[postIndex].Image.Preview.url || postArray[postIndex].Image.Sample.url"
-            :autoplay="AppData.CloudConfig.UserConfiguration.get().media.autoplay"
-            :loop="AppData.CloudConfig.UserConfiguration.get().media.loop"
+            :autoplay="AppData.CloudConfig.User.get().media.autoplay"
+            :loop="AppData.CloudConfig.User.get().media.loop"
             v-bind:visible="visible ? 'yes':'no'">
                     <source
                     :src="postArray[postIndex].Image.File.url"
