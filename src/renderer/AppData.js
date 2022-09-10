@@ -4,8 +4,8 @@ const path = require('path')
 const ConfigManager = require('./ConfigManager').default
 const esixapi = require('libsixgrid')
 const EventEmitter = require('events')
-const {default: Configuration} = require('./Configuration')
 const { default: Steamworks } = require('./SteamworksIntergration')
+const { DownloadManagerBridge } = require('./DownloadManagerBridge')
 const request = require('request')
 function isObject(item) {
     return (item && typeof item === 'object' && !Array.isArray(item));
@@ -84,7 +84,7 @@ var AppData = {
             method: 'GET',
             url: targetURL
         })
-        let out = fs.createWriteStream(path.join(AppData.CloudConfig.UserConfiguration.get().downloadFolder, `${postObject.ID}.${postObject.Image.File.md5}.${postObject.Image.File.ext}`))
+        let out = fs.createWriteStream(path.join(AppData.CloudConfig.User.get().downloadFolder, `${postObject.ID}.${postObject.Image.File.md5}.${postObject.Image.File.ext}`))
 
         let totalBytes = 0
         let recievedBytes = 0
@@ -101,8 +101,8 @@ var AppData = {
         out.on('finish', () => {
             AppData.CloudConfig.Statistics._data.downloadCount++
             AppData.CloudConfig.Statistics.write()
-            if (AppData.CloudConfig.UserConfiguration.saveMetadata) {
-                let loc = path.join(AppData.CloudConfig.UserConfiguration.get().downloadFolder, `${postObject.ID}.${postObject.Image.File.md5}.json`)
+            if (AppData.CloudConfig.User.saveMetadata) {
+                let loc = path.join(AppData.CloudConfig.User.get().downloadFolder, `${postObject.ID}.${postObject.Image.File.md5}.json`)
                 if (!fs.existsSync(loc)) {
                     fs.writeFileSync(loc, JSON.stringify(postObject.toJSON(), null, '    '))
                     console.log(`[AppData->PostDownload] Saved metadata for post ${postObject.ID}`)
@@ -122,12 +122,15 @@ var AppData = {
         Config: path.join(process.cwd(), 'AppConfig')
     },
 
-    CloudConfig: {}
+    CloudConfig: {},
+
+    DownloadBridge: null
 }
 global.AppData = AppData
 global.AppData.Config = new ConfigManager()
 // global.AppData.Steamworks = new (require('@theace0296/steamworks'))(1992810)
 global.AppData.Steamworks = new Steamworks()
+global.AppData.DownloadBridge = new DownloadManagerBridge()
 setTimeout(() =>{global.AppData.Steamworks.Initialize()}, 1500)
 
 for (let i = 0; i < Object.entries(AppData.SteamCloudLocations).length; i++) {
