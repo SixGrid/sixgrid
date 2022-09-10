@@ -98,6 +98,7 @@
         "vuex-electron": "^1.0.0"
     },
     "devDependencies": {
+        "@types/node": "^16.11.7",
         "ajv": "^6.5.0",
         "archiver": "^5.3.1",
         "cfonts": "^2.1.2",
