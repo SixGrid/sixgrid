@@ -8,7 +8,7 @@ const webpack = require('webpack')
 
 let mainConfig = {
   entry: {
-    main: path.join(__dirname, '../src/main/index.js')
+    main: path.join(__dirname, '../src/main/index.ts')
   },
   externals: [
     ...Object.keys(dependencies || {})
@@ -22,7 +22,8 @@ let mainConfig = {
       },
       {
         test: /\.ts$/,
-        use: 'ts-loader'
+        use: 'ts-loader',
+        exclude: /node_modules/
       },
       {
         test: /\.node$/,

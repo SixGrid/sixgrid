@@ -26,7 +26,8 @@ export function relaunch () {
     app.quit()
 }
 export function relaunchConfirm () {
-    var btn = dialog.showMessageBoxSync(electronMainWindow, {
+    if (global.electronMainWindow == undefined) return
+    var btn = dialog.showMessageBoxSync(global.electronMainWindow, {
         message: 'Are you sure you would like to relaunch?',
         title: `SixGrid ${__SIXGRID_PRODUCT_BUILD_VERSION} - Confirm`,
         buttons: [
