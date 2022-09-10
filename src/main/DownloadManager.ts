@@ -7,34 +7,8 @@ import * as path from 'path'
 import * as toolbox from 'tinytoolbox'
 import request from 'request'
 
-export interface IPostState
-{
-    id: number
-    url: string
-    endpoint: string
-    bytesDownloaded: number
-    bytesTotal: number
-    fileLocation: string
-    fileHash: string
-    timestamp: EpochTimeStamp
-    completeTimestamp: EpochTimeStamp
-}
-export interface IDownloadEventData
-{
-    id: number
-    url: string
-    endpoint: string
-    targetLocation: string
-    forceDownload: boolean
-}
-export const DefaultIDownloadEventData: IDownloadEventData =
-{
-    id: 0,
-    url: '',
-    endpoint: '',
-    targetLocation: '',
-    forceDownload: false
-}
+import {IPostState, IDownloadEventData, DefaultIDownloadEventData} from '../DownloadManager.shared'
+
 export default class DownloadManager
 {
     public Window: BrowserWindow
@@ -51,6 +25,8 @@ export default class DownloadManager
     {
         ipcMain.handle('downloadManager:post:state', (event, postID) =>
         {
+            if (postID == undefined || postID == null)
+                return this.Posts
             return this.Posts[postID]
         })
         ipcMain.handle('downloadManager:post:download', (event, data: IDownloadEventData=DefaultIDownloadEventData) =>
@@ -59,7 +35,14 @@ export default class DownloadManager
                 ...DefaultIDownloadEventData,
                 ...data
             }
-            
+            if (data.url.length < 1)
+            {
+                return {
+                    success: false,
+                    error: new Error(`Invalid URL`),
+                    message: `url=invalid`
+                }
+            }
             if (data.forceDownload)
             {
                 let existsAlready = false
@@ -123,12 +106,14 @@ export default class DownloadManager
         let fileExtension = options.url.split('.').pop()
         let fileHash = ''
         let temporaryFileLocation = path.join(DownloadManager.PostCacheLocation, `.tmp_${toolbox.stringGen(16, toolbox.StringGenCharsetType.AlphaNumeric)}`)
+        if (!fs.existsSync(path.dirname(temporaryFileLocation)))
+            fs.mkdirSync(path.dirname(temporaryFileLocation), {recursive: true})
 
         let req: request.Request = request({
             method: 'GET',
             url: options.url
         })
-
+        console.log(temporaryFileLocation)
         let outputStream = fs.createWriteStream(temporaryFileLocation, { flags: 'w' })
 
         let totalBytes = 0
@@ -150,28 +135,40 @@ export default class DownloadManager
 
         let updateInterval: NodeJS.Timeout
         let previousRecievedBytes = -100
+        console.log(options)
         req.on('response', (data: request.Request) => {
             totalBytes = parseInt(data.headers['content-length'])
             updateInterval = setInterval(() => {
+                console.log(recievedBytes, previousRecievedBytes)
                 if (recievedBytes != previousRecievedBytes)
                 {
                     previousRecievedBytes = recievedBytes
                     this.Window.webContents.send('downloadManager:post:download:status', cacheData)
                 }
-            }, 30)
+            }, 100)
         })
         req.on('data', (chunk) => {
             recievedBytes += chunk.length
             cacheData.bytesDownloaded = recievedBytes
             cacheData.bytesTotal = totalBytes
+            console.log((recievedBytes / totalBytes).toFixed(2))
         })
         outputStream.on('finish', () => {
+            console.log('complete')
             clearInterval(updateInterval)
             this.Window.webContents.send('downloadManager:post:download:status', cacheData)
             fileHash = helpers.SHA256Checksum(temporaryFileLocation)
+            console.log(fileHash)
             let outputLocation = path.join(DownloadManager.PostCacheLocation, fileHash + '.' + fileExtension)
-            fs.writeFileSync(outputLocation, fs.readFileSync(temporaryFileLocation), { mode: 'w' })
+            console.log(outputLocation)
+            if (!fs.existsSync(path.dirname(outputLocation)))   
+                fs.mkdirSync(path.dirname(outputLocation), {recursive: true})
+            debugger;
+            console.log('copyStart')
+            fs.copyFileSync(temporaryFileLocation, outputLocation)
+            console.log('copyEnd')
             fs.unlinkSync(temporaryFileLocation)
+            console.log('unlink')
 
             cacheData = {
                 id: options.id,
@@ -185,7 +182,7 @@ export default class DownloadManager
                 completeTimestamp: Date.now()
             }
             this.Posts[options.id] = cacheData
-
+            console.log(`done`, this.Posts[options.id])
             this.Window.webContents.send('downloadManager:post:download:complete', this.Posts[options.id])
         })
     }
