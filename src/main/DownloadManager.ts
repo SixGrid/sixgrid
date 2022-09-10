@@ -163,7 +163,6 @@ export default class DownloadManager
             console.log(outputLocation)
             if (!fs.existsSync(path.dirname(outputLocation)))   
                 fs.mkdirSync(path.dirname(outputLocation), {recursive: true})
-            debugger;
             console.log('copyStart')
             fs.copyFileSync(temporaryFileLocation, outputLocation)
             console.log('copyEnd')
