@@ -1,12 +1,16 @@
-import Configuration from './Configuration'
+import Configuration, { IConfiguration } from './Configuration'
 import type {EventEmitter} from 'events'
 import Post from 'libsixgrid/dist/src/Post'
 import {IProductInformation} from '../shared'
-interface ISteamCloudLocations
+import { IConfig_AuthProfile, IConfig_Stats, IConfig_User } from './ConfigTemplate'
+
+declare interface ICloudConfig 
 {
-    Config: string
+    Statistics: IConfiguration<IConfig_Stats>
+    User: IConfiguration<IConfig_User>
+    Authentication: IConfiguration<IConfig_AuthProfile>
 }
-interface IAppData
+declare interface IAppData
 {
     ApplicationIdentifier: string
 
@@ -26,8 +30,10 @@ interface IAppData
 
     PostDownload(postObject: Post): void
     FetchClientParameters(): any
-    SteamCloudLocations: ISteamCloudLocations
-    CloudConfig: {[key: string]: Configuration}
+    SteamCloudLocations: {
+        Config: string
+    }
+    CloudConfig: ICloudConfig & {[key: string]: Configuration}
 }
 declare global
 {
