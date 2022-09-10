@@ -20,7 +20,7 @@ export function safeReload () {
 export const winURL = (() => {
     var value = isDevelopmentMode()
         ? `http://localhost:9080`
-        : `file://${process.platform == 'win32' ? '/' : ''}${__dirname.replaceAll('\\', '/')}/index.html`
+        : `file://${process.platform == 'win32' ? '/' : ''}${__dirname.replace(/\\/g, '/')}/index.html`
     return value
 })()
 export function relaunch () {
