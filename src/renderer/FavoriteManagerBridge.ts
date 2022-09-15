@@ -42,4 +42,14 @@ export class FavoriteManagerBridge extends EventEmitter
     {
         return await ipcRenderer.invoke('favoriteManager:remove', url)
     }
+
+    public async Toggle(url: string): Promise<boolean>
+    {
+        let target = !this.Favorites.includes(url)
+        if (target)
+            await this.Add(url)
+        else
+            await this.Remove(url)
+        return target
+    }
 }
