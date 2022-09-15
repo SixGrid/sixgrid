@@ -241,7 +241,6 @@
 </style>
 <script>
 import PostFilePreview from './PostFilePreview.vue'
-const $ = require('jquery')
 export default {
     name: 'FullscreenResultAsPage',
     components: {PostFilePreview},

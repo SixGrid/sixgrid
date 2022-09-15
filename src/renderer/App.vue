@@ -151,12 +151,7 @@ export default {
         }
     },
     mounted () {
-        var $ = require('jquery')
-        $(this.$refs['app-drawer']).width(parseInt(this.$refs['app-drawer'].getDrawerWidth().replace("px", "")))
-        $(document).on('click', () => {
-            setTimeout(() => {
-            }, 1000)
-        })
+        this.$refs['app-drawer'].$el.style.width = parseInt(this.$refs['app-drawer'].getDrawerWidth().replace("px", ""))
     },
     created () {
         document.styleSheets[0].insertRule(`:root{ --screen-width: ${window.innerWidth}px; --screen-height: ${window.innerHeight}px;`)
