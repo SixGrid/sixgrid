@@ -40,6 +40,11 @@ export default new Router({
             component: require('@/components/Favorites').default
         },
         {
+            path: '/downloadmanager',
+            name: 'Downloads',
+            component: require('@/components/DownloadManager').default
+        },
+        {
             path: '/script/manager',
             name: 'Scripts',
             component: require('@/components/ScriptManager').default
