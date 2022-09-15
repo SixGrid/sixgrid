@@ -3,6 +3,7 @@ import DownloadManager from './DownloadManager'
 import '../renderer/store'
 import menu from './menu'
 import * as helpers from './helpers'
+import FavoriteManager from './FavoriteManager'
 
 /**
  * Set `__static` path to static files in production
@@ -61,6 +62,7 @@ function createWindow () {
         }
     })
     global.sixgridDownloadManager = new DownloadManager(global.electronMainWindow)
+    global.sixgridFavoriteManager = new FavoriteManager(global.electronMainWindow)
 
     global.electronMainWindow.setMenu(null)
     Menu.setApplicationMenu(Menu.buildFromTemplate(menu))
