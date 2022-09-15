@@ -6,6 +6,7 @@ const esixapi = require('libsixgrid')
 const EventEmitter = require('events')
 const { default: Steamworks } = require('./SteamworksIntergration')
 const { DownloadManagerBridge } = require('./DownloadManagerBridge')
+const { FavoriteManagerBridge } = require('./FavoriteManagerBridge')
 const request = require('request')
 function isObject(item) {
     return (item && typeof item === 'object' && !Array.isArray(item));
@@ -128,9 +129,9 @@ var AppData = {
 }
 global.AppData = AppData
 global.AppData.Config = new ConfigManager()
-// global.AppData.Steamworks = new (require('@theace0296/steamworks'))(1992810)
 global.AppData.Steamworks = new Steamworks()
 global.AppData.DownloadBridge = new DownloadManagerBridge()
+global.AppData.FavoriteBridge = new FavoriteManagerBridge()
 setTimeout(() =>{global.AppData.Steamworks.Initialize()}, 1500)
 
 for (let i = 0; i < Object.entries(AppData.SteamCloudLocations).length; i++) {

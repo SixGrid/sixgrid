@@ -4,6 +4,7 @@ import Post from 'libsixgrid/dist/src/Post'
 import {IProductInformation} from '../shared'
 import { IConfig_AuthProfile, IConfig_Stats, IConfig_User } from './ConfigTemplate'
 import { DownloadManagerBridge } from './DownloadManagerBridge'
+import { FavoriteManagerBridge } from './FavoriteManagerBridge'
 
 declare interface ICloudConfig 
 {
@@ -37,6 +38,7 @@ declare interface IAppData
     CloudConfig: ICloudConfig & {[key: string]: Configuration}
 
     DownloadBridge: DownloadManagerBridge
+    FavoriteBridge: FavoriteManagerBridge
 }
 declare global
 {
