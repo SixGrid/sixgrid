@@ -13,6 +13,8 @@ export default class FavoriteManager extends EventEmitter
         super()
         this.Window = window
 
+        this.InitializeListeners()
+
         this.on('read', this.Read)
         this.on('write', this.Write)
 
@@ -22,7 +24,7 @@ export default class FavoriteManager extends EventEmitter
 
     public Favorites: string[] = []
 
-    private InitializeListeners(): void
+    private async InitializeListeners(): Promise<void>
     {
         ipcMain.handle('favoriteManager:state', (event, url) => {
             return this.Favorites.includes(url)
@@ -40,6 +42,7 @@ export default class FavoriteManager extends EventEmitter
         if (!this.Favorites.includes(url))
             return false
         this.Favorites = this.Favorites.filter(v => v != url)
+        this.emit('write')
         return true
     }
 
