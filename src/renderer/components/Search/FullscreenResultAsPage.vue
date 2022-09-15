@@ -53,7 +53,7 @@
                     <td align="right">
                         <ul class="fullscreen-button-list">
                             <template v-if="postArr[postIndex].Client.Auth.Enable">
-                                <li @click="$appData.Client.Favorite(postArr[postIndex].ID, !postArr[postIndex].IsFavorite)">
+                                <li @click="favorite(postArr[postIndex], !postArr[postIndex].IsFavorite)">
                                     <md-icon v-bind:style="`${postArr[postIndex].IsFavorite ? 'color: gold;' : ''}`">star</md-icon>
                                 </li>
                             </template>
@@ -303,6 +303,13 @@ export default {
                 this.$refs.postfile.vis(true)
                 this.$set(this.$data, 'fileLoaded', true)
             }, 30)
+        },
+
+        favorite () {
+            let state = !this.$data.postArr[this.$data.postIndex].IsFavorite
+            let id = this.$data.postArr[this.$data.postIndex].ID
+            AppData.Client.Favorite(id, state)
+            AppData.FavoriteBridge.SetState(`${AppData.Client.Endpoint}/posts/${id}.json`, state)
         }
     },
     watch: {
