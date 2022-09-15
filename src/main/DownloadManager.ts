@@ -143,7 +143,7 @@ export default class DownloadManager
                 if (recievedBytes != previousRecievedBytes)
                 {
                     previousRecievedBytes = recievedBytes
-                    this.Window.webContents.send('downloadManager:post:download:status', cacheData)
+                    this.Window.webContents.postMessage('downloadManager:post:download:status', cacheData)
                 }
             }, 100)
         })
@@ -156,7 +156,7 @@ export default class DownloadManager
         outputStream.on('finish', () => {
             console.log('complete')
             clearInterval(updateInterval)
-            this.Window.webContents.send('downloadManager:post:download:status', cacheData)
+            this.Window.webContents.postMessage('downloadManager:post:download:status', cacheData)
             fileHash = helpers.SHA256Checksum(temporaryFileLocation)
             console.log(fileHash)
             let outputLocation = path.join(DownloadManager.PostCacheLocation, fileHash + '.' + fileExtension)
@@ -182,7 +182,7 @@ export default class DownloadManager
             }
             this.Posts[options.id] = cacheData
             console.log(`done`, this.Posts[options.id])
-            this.Window.webContents.send('downloadManager:post:download:complete', this.Posts[options.id])
+            this.Window.webContents.postMessage('downloadManager:post:download:complete', this.Posts[options.id])
         })
     }
 }
