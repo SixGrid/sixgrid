@@ -182,6 +182,10 @@ export default class DownloadManager
             }
             this.Posts[options.id] = cacheData
             console.log(`done`, this.Posts[options.id])
+            fs.writeFileSync(path.join(path.dirname(outputLocation), `${fileHash}.json`), JSON.stringify({
+                ...cacheData,
+                fileLocation: path.basename(outputLocation)
+            }))
             this.Window.webContents.postMessage('downloadManager:post:download:complete', this.Posts[options.id])
         })
     }
