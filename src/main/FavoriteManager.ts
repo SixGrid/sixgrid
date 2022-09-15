@@ -1,12 +1,12 @@
 import * as path from 'path'
 import { BrowserWindow, ipcMain } from "electron"
 import {EventEmitter} from 'events'
-import { existsSync, fstat, readFileSync, writeFileSync } from 'fs'
+import { existsSync, readFileSync, writeFileSync } from 'fs'
 
 export default class FavoriteManager extends EventEmitter
 {
     public Window: BrowserWindow
-    public static FavoriteLocation: string = path.resolve('./config/favorite.json')
+    public static FavoriteLocation: string = path.resolve('./AppConfig/favorite.json')
 
     public constructor(window: BrowserWindow)
     {
