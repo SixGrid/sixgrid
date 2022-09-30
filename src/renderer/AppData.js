@@ -20,6 +20,7 @@ const notifyProc = (data) => {
     }
 }
 var AppData = {
+    notifyProc,
     ApplicationIdentifier: 'sixgrid',
     get UserDataPath () {
         let val = path.join(
