@@ -38,7 +38,7 @@ const menuTemplate: any = [
                 accelerator: 'F12',
                 click: () => {
                     if (global.electronMainWindow != undefined && global.electronMainWindow.webContents != undefined)
-                        global.electronMainWindow.webContents.openDevTools()
+                        global.electronMainWindow.webContents.toggleDevTools()
                 }
             }
         ]
