@@ -127,7 +127,11 @@ var AppData = {
 global.AppData = AppData
 global.AppData.Config = new ConfigManager()
 // global.AppData.Steamworks = new (require('@theace0296/steamworks'))(1992810)
-global.AppData.Steamworks = new Steamworks()
+try {
+    global.AppData.Steamworks = new Steamworks()
+} catch (e) {
+    alert('Failed to initialize Steamworks')
+}
 setTimeout(() =>{global.AppData.Steamworks.Initialize()}, 1500)
 
 for (let i = 0; i < Object.entries(AppData.SteamCloudLocations).length; i++) {

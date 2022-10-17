@@ -33,14 +33,18 @@ export default class Steamworks extends EventEmitter {
     }
     Initialize() {
         if (this.hasInitalized) return
-        let response = this.Greenworks.init()
-        if (response) {
-            this.InitializeEvents()
-            this.constantInterval = setInterval(() => {
-                this.emit('update', this.Greenworks)
-            }, Steamworks.MetricUpdateInterval)
-        } else {
-            throw this.GenerateError(Steamworks.ERRORS.InitalizeFail)
+        try {
+            let response = this.Greenworks.init()
+            if (response) {
+                this.InitializeEvents()
+                this.constantInterval = setInterval(() => {
+                    this.emit('update', this.Greenworks)
+                }, Steamworks.MetricUpdateInterval)
+            } else {
+                throw this.GenerateError(Steamworks.ERRORS.InitalizeFail)
+            }
+        } catch (e) {
+            alert('Failed to initalize Steamworks\n' + e)
         }
     }
     InitializeEvents() {
