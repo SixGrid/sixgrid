@@ -128,7 +128,7 @@ export default {
                     customEndpointEnable: false,
                     customEndpoint: null
                 },
-                configFlags: AppData.CloudConfig.UserConfiguration.get(),
+                configFlags: AppData.CloudConfig.User.get(),
                 clientParameters: AppData.FetchClientParameters(),
                 debugElementOutline: localStorage.debugElementOutline == 'true' ? true : false
             }
@@ -159,8 +159,8 @@ export default {
             global.AppData.CloudConfig.Authentication.write()
             if (!fs.existsSync(this.$data.configFlags.downloadFolder))
                 fs.mkdirSync(this.$data.configFlags.downloadFolder, {recursive: true})
-            global.AppData.CloudConfig['UserConfiguration'].set(JSON.parse(JSON.stringify(this.$data.configFlags)))
-            global.AppData.CloudConfig['UserConfiguration'].write()
+            global.AppData.CloudConfig['User'].set(JSON.parse(JSON.stringify(this.$data.configFlags)))
+            global.AppData.CloudConfig['User'].write()
             vueJS.$toastr.success(`Took ${Date.now() - ts}ms`, 'Settings Saved')
             global.AppData.reloadClient()
             this.reloadEndpointOptions()

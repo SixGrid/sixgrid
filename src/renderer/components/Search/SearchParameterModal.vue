@@ -56,7 +56,7 @@ export default {
         InitialData () {
             return {
                 showModal: false,
-                userConfig: AppData.CloudConfig.UserConfiguration.get()
+                userConfig: AppData.CloudConfig.User.get()
             }
         },
         toggle () {
@@ -69,8 +69,8 @@ export default {
     watch: {
         showModal (target) {
             if (!target) {
-                AppData.CloudConfig['UserConfiguration'].set(JSON.parse(JSON.stringify(this.$data.userConfig)))
-                AppData.CloudConfig['UserConfiguration'].write()
+                AppData.CloudConfig['User'].set(JSON.parse(JSON.stringify(this.$data.userConfig)))
+                AppData.CloudConfig['User'].write()
             }
         }
     }

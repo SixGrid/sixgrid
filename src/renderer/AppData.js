@@ -84,7 +84,7 @@ var AppData = {
             method: 'GET',
             url: targetURL
         })
-        let out = fs.createWriteStream(path.join(AppData.CloudConfig.UserConfiguration.get().downloadFolder, `${postObject.ID}.${postObject.Image.File.md5}.${postObject.Image.File.ext}`))
+        let out = fs.createWriteStream(path.join(AppData.CloudConfig.User.get().downloadFolder, `${postObject.ID}.${postObject.Image.File.md5}.${postObject.Image.File.ext}`))
 
         let totalBytes = 0
         let recievedBytes = 0
@@ -101,8 +101,8 @@ var AppData = {
         out.on('finish', () => {
             AppData.CloudConfig.Statistics._data.downloadCount++
             AppData.CloudConfig.Statistics.write()
-            if (AppData.CloudConfig.UserConfiguration.saveMetadata) {
-                let loc = path.join(AppData.CloudConfig.UserConfiguration.get().downloadFolder, `${postObject.ID}.${postObject.Image.File.md5}.json`)
+            if (AppData.CloudConfig.User.saveMetadata) {
+                let loc = path.join(AppData.CloudConfig.User.get().downloadFolder, `${postObject.ID}.${postObject.Image.File.md5}.json`)
                 if (!fs.existsSync(loc)) {
                     fs.writeFileSync(loc, JSON.stringify(postObject.toJSON(), null, '    '))
                     console.log(`[AppData->PostDownload] Saved metadata for post ${postObject.ID}`)

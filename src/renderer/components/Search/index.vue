@@ -74,12 +74,12 @@ export default {
             let DoSubmit = event.code.toLowerCase() == 'enter'
             let IsValid = DoSubmit
             if (!IsValid) return
-            switch (AppData.CloudConfig.UserConfiguration.get().ratingFilter)
+            switch (AppData.CloudConfig.User.get().ratingFilter)
             {
                 case 'safe':
                 case 'questionable':
                 case 'explicit':
-                    let targetString = `rating:${AppData.CloudConfig.UserConfiguration.get().ratingFilter}`
+                    let targetString = `rating:${AppData.CloudConfig.User.get().ratingFilter}`
                     let newSearchQuery = []
                     newSearchQuery.push(targetString)
                     for (var item of this.$data.searchQuery.split(' '))
@@ -90,7 +90,7 @@ export default {
                     this.$set(this.$data, 'searchQuery', newSearchQuery.join(' '))
                     break
             }
-            this.$set(this.$data, 'targetSearchQuery', AppData.CloudConfig.UserConfiguration.get().tagBlacklist.map(v => '-'+v).join(' ') + ` ${this.$data.searchQuery}`)
+            this.$set(this.$data, 'targetSearchQuery', AppData.CloudConfig.User.get().tagBlacklist.map(v => '-'+v).join(' ') + ` ${this.$data.searchQuery}`)
             console.log(`[Search->ValidateSearch] Executing Query; '${this.$data.targetSearchQuery}'`)
             this.ExecuteSearchQuery()
         },
