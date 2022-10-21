@@ -119,7 +119,13 @@ var AppData = {
     },
 
     SteamCloudLocations: {
-        Config: path.join(process.cwd(), 'AppConfig')
+        get Config() {
+            let target = path.join(path.dirname(process.execPath), 'AppConfig')
+            if (path.basename(process.execPath).startsWith('electron')) {
+                target = path.join(process.cwd(), 'AppConfig')
+            }
+            return target
+        }
     },
 
     CloudConfig: {}
