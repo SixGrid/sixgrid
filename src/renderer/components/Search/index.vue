@@ -89,26 +89,32 @@ export default {
             {
                 return
             }
-            switch (AppData.CloudConfig.User.get().ratingFilter)
+            let conf = AppData.CloudConfig.User.get()
+
+            let value = conf.tagBlacklist.map(v => '-'+v).join(' ') + ` ${this.$data.searchQuery}`
+
+            if (conf.ratingSafe)
             {
-                case 'safe':
-                case 'questionable':
-                case 'explicit':
-                    let targetString = `rating:${AppData.CloudConfig.User.get().ratingFilter}`
-                    let newSearchQuery = []
-                    newSearchQuery.push(targetString)
-                    for (var item of this.$data.searchQuery.split(' '))
-                    {
-                        if (!/^rating:/i.test(item) && !item.startsWith('safe') && !item.startsWith('questionable') && !item.startsWith('explicit'))
-                            newSearchQuery.push(item)
-                    }
-                    this.$set(this.$data, 'searchQuery', newSearchQuery.join(' '))
-                    break
+                if (conf.ratingQuestionable && !conf.ratingExplicit)
+                    value += ' -rating:e'
+                else if (!conf.ratingQuestionable && conf.ratingExplicit)
+                    value += ' -rating:q'
+                else if (!conf.ratingQuestionable && !conf.ratingExplicit)
+                    value += ' rating:s'
             }
-            let value = AppData.CloudConfig.User.get().tagBlacklist.map(v => '-'+v).join(' ') + ` ${this.$data.searchQuery}`
-            if (AppData.CloudConfig.User.get().sortByScore)
+            else
+            {
+                if (conf.ratingQuestionable && conf.ratingExplicit)
+                    value += ' -rating:s'
+                else if (conf.ratingQuestionable && !conf.ratingExplicit)
+                    value += ' rating:q'
+                else if (!conf.ratingQuestionable && conf.ratingExplicit)
+                    value += ' rating:e'
+            }
+
+            if (conf.sortByScore)
                 value += ' order:score'
-            if (AppData.CloudConfig.User.get().sortByFavorite)
+            if (conf.sortByFavorite)
                 value += ' order:favcount'
             this.$set(this.$data, 'targetSearchQuery', value)
             console.log(`[Search->ValidateSearch] Executing Query; '${this.$data.targetSearchQuery}'`)

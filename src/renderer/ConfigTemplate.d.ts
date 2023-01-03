@@ -27,6 +27,9 @@ export interface IConfig_User
     highQualityPreview: boolean
     sortByScore: boolean
     sortByFavorite: boolean
+    ratingSafe: boolean
+    ratingQuestionable: boolean
+    ratingExplicit: boolean
 }
 
 export interface IConfig_Stats

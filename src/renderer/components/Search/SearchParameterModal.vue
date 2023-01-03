@@ -5,15 +5,12 @@
 
             <md-list>
                 <md-list-item>
-                    <md-field>
                         <label>Rating Filter</label>
-                        <md-select v-model="userConfig.ratingFilter" name="search-ratingFilter" id="search-ratingFilter">
-                            <md-option value="none">No Rating Filter</md-option>
-                            <md-option value="safe">Safe</md-option>
-                            <md-option value="questionable">Questionable</md-option>
-                            <md-option value="explicit">Explicit</md-option>
-                        </md-select>
-                    </md-field>
+                        <md-list>
+                            <md-list-item><md-checkbox v-model="userConfig.ratingSafe">Safe</md-checkbox></md-list-item>
+                            <md-list-item><md-checkbox v-model="userConfig.ratingQuestionable">Questionable</md-checkbox></md-list-item>
+                            <md-list-item><md-checkbox v-model="userConfig.ratingExplicit">Explicit</md-checkbox></md-list-item>
+                        </md-list>
                 </md-list-item>
                 <md-list-item>
                     <md-checkbox v-model="userConfig.sortByScore">Order by Score</md-checkbox>

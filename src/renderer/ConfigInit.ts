@@ -49,7 +49,10 @@ export const configStoreProfiles: IConfigTemplate<any>[] = [
             preloadStartIndex: 0,
             highQualityPreview: false,
             sortByScore: false,
-            sortByFavorite: false
+            sortByFavorite: false,
+            ratingSafe: false,
+            ratingQuestionable: false,
+            ratingExplicit: false
         }
     },
     {
