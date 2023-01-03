@@ -67,6 +67,9 @@
             <md-list-item>
                 <md-checkbox v-model="configFlags.media.loop">Loop Media</md-checkbox>
             </md-list-item>
+            <md-list-item>
+                <md-checkbox v-model="configFlags.highQualityPreview">High-quality Preview</md-checkbox>
+            </md-list-item>
         </md-list>
         <md-list class="md-elevation-1">
             <md-subheader>General</md-subheader>

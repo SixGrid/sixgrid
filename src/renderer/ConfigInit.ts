@@ -46,7 +46,8 @@ export const configStoreProfiles: IConfigTemplate<any>[] = [
             tagBlacklist: [],
             ratingFilter: 'none',
             preloadPageCount: 1,
-            preloadStartIndex: 0
+            preloadStartIndex: 0,
+            highQualityPreview: false
         }
     },
     {

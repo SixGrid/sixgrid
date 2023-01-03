@@ -24,6 +24,7 @@ export interface IConfig_User
     ratingFilter: PostRating
     preloadPageCount: number
     preloadStartIndex: number
+    highQualityPreview: boolean
 }
 
 export interface IConfig_Stats
