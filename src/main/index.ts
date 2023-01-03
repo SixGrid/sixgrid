@@ -20,7 +20,7 @@ ipcMain.handle('updateTitle', (event, data) => {
 })
 
 global.debugMode = app.commandLine.hasSwitch('developer')
-
+app.commandLine.appendSwitch('in-process-gpu')
 let customURL_enable = app.commandLine.hasSwitch('url')
 let customURL = app.commandLine.getSwitchValue('url')
 
