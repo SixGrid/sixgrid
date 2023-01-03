@@ -9,6 +9,16 @@
                         <label>Search Query</label>
                         <md-input spellcheck="false" v-model="searchQuery" md-autogrow @keyup="ValidateSearch"></md-input>
                     </md-field>
+                    <!-- <md-autocomplete
+                        @submit="ValidateSearch"
+                        ref="autocomplete"
+                        md-inline
+                        v-bind:md-options="autoCompleteOptions"
+                        v-model="searchQuery"
+                        @md-opened="UpdateAutocomplete"
+                        @md-changed="UpdateAutocomplete">
+                        <label>Search Query</label>
+                    </md-autocomplete> -->
                     <md-button class="md-icon-button" @click="showParameterModal">
                         <md-icon>tune</md-icon>
                     </md-button>
@@ -53,6 +63,7 @@ export default {
     data () {
         return {
             searchQuery: '',
+            previousSearchQuery: '',
             targetSearchQuery: '',
             options: {
                 page: 1,
@@ -63,7 +74,8 @@ export default {
             },
             postsLoading: false,
             postLoadingMessage: 'Fetching Query',
-            reachedEnd: false
+            reachedEnd: false,
+            autoCompleteOptions: []
         }
     },
     methods: {
@@ -73,7 +85,10 @@ export default {
         ValidateSearch (event) {
             let DoSubmit = event.code.toLowerCase() == 'enter'
             let IsValid = DoSubmit
-            if (!IsValid) return
+            if (!IsValid)
+            {
+                return
+            }
             switch (AppData.CloudConfig.User.get().ratingFilter)
             {
                 case 'safe':
@@ -99,6 +114,26 @@ export default {
             console.log(`[Search->ValidateSearch] Executing Query; '${this.$data.targetSearchQuery}'`)
             this.ExecuteSearchQuery()
         },
+        async UpdateAutocomplete () {
+            if (AppData.Client == null) AppData.reloadClient()
+            console.log(this.$refs.autocomplete)
+            let data = await AppData.Client.FetchAutocomplete('name_matches', this.searchQuery)
+            this.$set(this.$data, 'previousSearchQuery', this.searchQuery)
+            this.$set(this.$data, 'autoCompleteOptions', data.map(v => v.name))
+            return this.autoCompleteOptions
+        },
+        // async calculateAutocomplete () {
+        //     console.log('attempting autocomplete')
+        //     if (AppData.Client == null) AppData.reloadClient()
+        //     if (this.previousSearchQuery == this.searchQuery)
+        //         return;
+        //     if (this.searchQuery.length < 3)
+        //         return;
+        //     let data = await AppData.Client.FetchAutocomplete('name_matches', this.searchQuery)
+        //     this.$set(this.$data, 'previousSearchQuery', this.searchQuery)
+        //     this.$set(this.$data, 'autoCompleteOptions', data.map(v => v.name))
+        //     this.autoCompleteOptions = data.map(v => v.name)
+        // },
         async ExecuteSearchQuery () {
             let ts = Date.now()
             if (AppData.Client == null) AppData.reloadClient()
