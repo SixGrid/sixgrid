@@ -39,7 +39,7 @@ let tarballDirectory = async (fullPath, self) => {
 
 let RegexMatrix = [
     {
-        filename_regex: new RegExp(`^${regexEscapeReplace(packageJSON.build.productName)} ${regexEscapeReplace(packageJSON.version)}\.AppImage$`),
+        filename_regex: new RegExp(`^${regexEscapeReplace(packageJSON.build.productName)}(| |-)${regexEscapeReplace(packageJSON.version)}\.AppImage$`),
         upload_name: `${packageJSON.name}-${commitHash}-linux-amd64.AppImage`,
         platform: 'linux'
     },

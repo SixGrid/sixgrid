@@ -69,13 +69,27 @@
             </md-list-item>
         </md-list>
         <md-list class="md-elevation-1">
-            <md-subheader>General</md-subheader>
+            <md-subheader>Search Settings</md-subheader>
             <md-list-item>
-                <div class="md-list-item">
-                    <md-button class="md-elevation-1 md-raised" @click="steamworks.ResetMetrics()">Reset Steam Achievement Progress</md-button>
-                </div>
+                <md-checkbox v-model="configFlags.highQualityPreview">High-quality Preview</md-checkbox>
+            </md-list-item>
+            <md-list-item>
+                <md-checkbox v-model="configFlags.sortByScore">Order by Score</md-checkbox>
+            </md-list-item>
+            <md-list-item>
+                <md-checkbox v-model="configFlags.sortByFavorite">Order by Favorite Count</md-checkbox>
             </md-list-item>
         </md-list>
+        <template v-if="steam">
+            <md-list class="md-elevation-1">
+                <md-subheader>General</md-subheader>
+                <md-list-item>
+                    <div class="md-list-item">
+                        <md-button class="md-elevation-1 md-raised" @click="steamworks.ResetMetrics()">Reset Steam Achievement Progress</md-button>
+                    </div>
+                </md-list-item>
+            </md-list>
+        </template>
         <md-list class="md-elevation-1">
             <md-subheader>Debug Settings</md-subheader>
             <md-list-item>
@@ -128,9 +142,10 @@ export default {
                     customEndpointEnable: false,
                     customEndpoint: null
                 },
-                configFlags: AppData.CloudConfig.UserConfiguration.get(),
+                configFlags: AppData.CloudConfig.User.get(),
                 clientParameters: AppData.FetchClientParameters(),
-                debugElementOutline: localStorage.debugElementOutline == 'true' ? true : false
+                debugElementOutline: localStorage.debugElementOutline == 'true' ? true : false,
+                steam: AppData.AllowSteamworks
             }
             if (returnValue.debugElementOutline == undefined) {
                 returnValue.debugElementOutline = false
@@ -159,8 +174,8 @@ export default {
             global.AppData.CloudConfig.Authentication.write()
             if (!fs.existsSync(this.$data.configFlags.downloadFolder))
                 fs.mkdirSync(this.$data.configFlags.downloadFolder, {recursive: true})
-            global.AppData.CloudConfig['UserConfiguration'].set(JSON.parse(JSON.stringify(this.$data.configFlags)))
-            global.AppData.CloudConfig['UserConfiguration'].write()
+            global.AppData.CloudConfig['User'].set(JSON.parse(JSON.stringify(this.$data.configFlags)))
+            global.AppData.CloudConfig['User'].write()
             vueJS.$toastr.success(`Took ${Date.now() - ts}ms`, 'Settings Saved')
             global.AppData.reloadClient()
             this.reloadEndpointOptions()

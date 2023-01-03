@@ -1,4 +1,4 @@
-import { app } from 'electron'
+import { app, dialog } from 'electron'
 const _ProductInformation = __PRODUCT_EXTENDED_INFORMATION
 export function isDevelopmentMode () {
     if (app.commandLine.hasSwitch('dev'))
@@ -7,7 +7,7 @@ export function isDevelopmentMode () {
 }
 export function fetchTitle () {
     let value = `SixGrid v${__SIXGRID_PRODUCT_BUILD_VERSION} (${_ProductInformation.commitHashShort})`
-    if (electronMainWindow != undefined && electronMainWindow.mainWindow != undefined)
+    if (electronMainWindow != undefined)
         electronMainWindow.webContents.send('title:update', value)
     return value
 }
@@ -26,7 +26,8 @@ export function relaunch () {
     app.quit()
 }
 export function relaunchConfirm () {
-    var btn = dialog.showMessageBoxSync(electronMainWindow, {
+    if (global.electronMainWindow == undefined) return
+    var btn = dialog.showMessageBoxSync(global.electronMainWindow, {
         message: 'Are you sure you would like to relaunch?',
         title: `SixGrid ${__SIXGRID_PRODUCT_BUILD_VERSION} - Confirm`,
         buttons: [
@@ -38,14 +39,14 @@ export function relaunchConfirm () {
         relaunch()
     }
 }
-export function stringArrayCharacterLength (input) {
+export function stringArrayCharacterLength (input: string[]) {
     let length = 0
     for (let thing of input) {
         length += thing.length
     }
     return length
 }
-export function paragraphSplit (input, maximumLineWidth) {
+export function paragraphSplit (input: string, maximumLineWidth: number) {
     let resultList = [] /* string[][] */
     let inputSplitted = input.split(' ')
     let buffer = [] /* input[] */

@@ -24,9 +24,20 @@ var AppData = {
     Client: null,
     reloadClient () {
         let currentAuthentication = global.AppData.FetchClientParameters()
+        if (global.AppData.Client != undefined)
+            global.AppData.Client.Gatekeeper.Destroy()
         global.AppData.Client = new esixapi.Client(currentAuthentication)
         global.AppData.Client.on('post:favorite', () => {
             AppData.Steamworks.Metrics.favorite_count.value++
+        })
+        global.AppData.Client.on('post:vote', (data) => {
+            if (data.state > 0)
+                AppData.Steamworks.Metrics.post_upvote_count++
+            else if (data.state < 0)
+                AppData.Steamworks.Metrics.post_downvote_count++
+        })
+        global.AppData.Client.on('post:search', () => {
+            AppData.Steamworks.Metrics.search_count++
         })
     },
 
@@ -73,7 +84,7 @@ var AppData = {
             method: 'GET',
             url: targetURL
         })
-        let out = fs.createWriteStream(path.join(AppData.CloudConfig.UserConfiguration.get().downloadFolder, `${postObject.ID}.${postObject.Image.File.md5}.${postObject.Image.File.ext}`))
+        let out = fs.createWriteStream(path.join(AppData.CloudConfig.User.get().downloadFolder, `${postObject.ID}.${postObject.Image.File.md5}.${postObject.Image.File.ext}`))
 
         let totalBytes = 0
         let recievedBytes = 0
@@ -90,8 +101,8 @@ var AppData = {
         out.on('finish', () => {
             AppData.CloudConfig.Statistics._data.downloadCount++
             AppData.CloudConfig.Statistics.write()
-            if (AppData.CloudConfig.UserConfiguration.saveMetadata) {
-                let loc = path.join(AppData.CloudConfig.UserConfiguration.get().downloadFolder, `${postObject.ID}.${postObject.Image.File.md5}.json`)
+            if (AppData.CloudConfig.User.saveMetadata) {
+                let loc = path.join(AppData.CloudConfig.User.get().downloadFolder, `${postObject.ID}.${postObject.Image.File.md5}.json`)
                 if (!fs.existsSync(loc)) {
                     fs.writeFileSync(loc, JSON.stringify(postObject.toJSON(), null, '    '))
                     console.log(`[AppData->PostDownload] Saved metadata for post ${postObject.ID}`)
@@ -108,16 +119,35 @@ var AppData = {
     },
 
     SteamCloudLocations: {
-        Config: path.join(process.cwd(), 'AppConfig')
+        get Config() {
+            let target = path.join(path.dirname(process.execPath), 'AppConfig')
+            if (path.basename(process.execPath).startsWith('electron')) {
+                target = path.join(process.cwd(), 'AppConfig')
+            }
+            return target
+        }
     },
 
-    CloudConfig: {}
+    CloudConfig: {},
+
+    get AllowSteamworks()
+    {
+        return require('electron').remote.process.argv.includes('--steam')
+    }
 }
 global.AppData = AppData
 global.AppData.Config = new ConfigManager()
 // global.AppData.Steamworks = new (require('@theace0296/steamworks'))(1992810)
-global.AppData.Steamworks = new Steamworks()
-setTimeout(() =>{global.AppData.Steamworks.Initalize()}, 1500)
+try {
+    if (!fs.existsSync('steam_appid.txt'))
+        fs.writeFileSync('steam_appid.txt', '1992810')
+    global.AppData.Steamworks = new Steamworks()
+} catch (e) {
+    if (AppData.AllowSteamworks)
+        alert('Failed to initialize Steamworks', e)
+    console.error(`Failed to initialize Steamworks`, e)
+}
+setTimeout(() =>{global.AppData.Steamworks.Initialize()}, 1500)
 
 for (let i = 0; i < Object.entries(AppData.SteamCloudLocations).length; i++) {
     let loc = Object.entries(AppData.SteamCloudLocations)[i]
@@ -126,52 +156,5 @@ for (let i = 0; i < Object.entries(AppData.SteamCloudLocations).length; i++) {
     }
 }
 
-let configStoreFiles = [
-    ['authProfile.json', 'Authentication', {
-        items: [
-            {
-                auth: {
-                    login: '',
-                    apikey: '',
-                    enabled: false
-                },
-                endpoint: 'https://e926.net'
-            },
-            {
-                auth: {
-                    login: '',
-                    apikey: '',
-                    enabled: false
-                },
-                endpoint: 'https://e621.net'
-            }
-        ],
-        _current: 0
-    }],
-    ['config.json', 'UserConfiguration', {
-        media: {
-            autoplay: true,
-            loop: true
-        },
-        downloadFolder: path.join(require('electron').remote.app.getPath('downloads'), 'sixgrid'),
-        saveMetadata: false,
-        tagBlacklist: [],
-        ratingFilter: 'none',
-        preloadPageCount: 1,
-        preloadStartIndex: 0
-    }],
-    ['stats.json', 'Statistics', {
-        downloads: 0
-    }]
-]
+require('./ConfigInit').Initialize()
 
-for (let i = 0; i < configStoreFiles.length; i++) {
-    let location = path.join(AppData.SteamCloudLocations.Config, configStoreFiles[i][0])
-
-    if (!fs.existsSync(location)) {
-        fs.writeFileSync(location, JSON.stringify(configStoreFiles[i][2]))
-    }
-    global.AppData.CloudConfig[configStoreFiles[i][1]] = new Configuration(location)
-    global.AppData.CloudConfig[configStoreFiles[i][1]].default(configStoreFiles[i][2])
-    global.AppData.CloudConfig[configStoreFiles[i][1]].write()
-}

@@ -1,6 +1,7 @@
 import * as helpers from './helpers'
+import {MenuItemConstructorOptions, MenuItem} from 'electron'
 const isMac = process.platform == 'darwin'
-export default [
+const menuTemplate: any = [
     ...(isMac ? [{ role: 'appMenu' }] : []),
     {
         label: 'File',
@@ -19,7 +20,8 @@ export default [
         label: 'Window',
         submenu: [
             { role: 'minimize' },
-            { role: 'zoom' }
+            { role: 'zoom' },
+            { role: 'togglefullscreen' }
         ]
     },
     {
@@ -35,10 +37,11 @@ export default [
                 label: 'Toggle Developer Tools',
                 accelerator: 'F12',
                 click: () => {
-                    if (electronMainWindow != undefined && electronMainWindow.mainWindow != undefined)
-                        electronMainWindow.webContents.openDevTools()
+                    if (global.electronMainWindow != undefined && global.electronMainWindow.webContents != undefined)
+                        global.electronMainWindow.webContents.toggleDevTools()
                 }
             }
         ]
     }
 ]
+export default menuTemplate

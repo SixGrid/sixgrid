@@ -5,7 +5,6 @@ process.env.BABEL_ENV = 'web'
 const path = require('path')
 const webpack = require('webpack')
 
-const MinifyPlugin = require("babel-minify-webpack-plugin")
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
@@ -32,9 +31,13 @@ let webConfig = {
       },
       {
         test: /\.js$/,
-        use: 'babel-loader',
+        use: 'esbuild-loader',
         include: [ path.resolve(__dirname, '../src/renderer') ],
         exclude: /node_modules/
+      },
+      {
+        test: /\.ts$/,
+        use: 'ts-loader'
       },
       {
         test: /\.vue$/,
@@ -112,7 +115,7 @@ let webConfig = {
       '@': path.join(__dirname, '../src/renderer'),
       'vue$': 'vue/dist/vue.esm.js'
     },
-    extensions: ['.js', '.vue', '.json', '.css']
+    extensions: ['.js', '.vue', '.json', '.css', '.ts']
   },
   target: 'web'
 }
@@ -124,7 +127,6 @@ if (process.env.NODE_ENV === 'production') {
   webConfig.devtool = ''
 
   webConfig.plugins.push(
-    new MinifyPlugin(),
     new CopyWebpackPlugin([
       {
         from: path.join(__dirname, '../static'),
