@@ -263,6 +263,10 @@ export default {
                 this.$refs.main.setAttribute('visible', 'yes')
             else
                 this.$refs.main.setAttribute('visible', 'no')
+
+            if (!target)
+                if (this.$refs.postfile != undefined)
+                    this.$refs.postfile.stop()
         },
         setPostIndex(index) {
             this.$set(this.$data, 'postIndex', index)

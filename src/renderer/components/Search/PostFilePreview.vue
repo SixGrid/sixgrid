@@ -78,6 +78,12 @@ export default {
         },
         onPostLoad (...args) {
             this.$parent.onPostLoad(...args)
+        },
+        stop () {
+            if (this.$refs.postImage.pause != undefined && typeof this.$refs.postImage.pause == 'function')
+            {
+                this.$refs.postImage.pause()
+            }
         }
     },
     computed: {
