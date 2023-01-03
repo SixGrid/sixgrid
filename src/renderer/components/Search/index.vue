@@ -90,7 +90,12 @@ export default {
                     this.$set(this.$data, 'searchQuery', newSearchQuery.join(' '))
                     break
             }
-            this.$set(this.$data, 'targetSearchQuery', AppData.CloudConfig.User.get().tagBlacklist.map(v => '-'+v).join(' ') + ` ${this.$data.searchQuery}`)
+            let value = AppData.CloudConfig.User.get().tagBlacklist.map(v => '-'+v).join(' ') + ` ${this.$data.searchQuery}`
+            if (AppData.CloudConfig.User.get().sortByScore)
+                value += ' order:score'
+            if (AppData.CloudConfig.User.get().sortByFavorite)
+                value += ' order:favcount'
+            this.$set(this.$data, 'targetSearchQuery', value)
             console.log(`[Search->ValidateSearch] Executing Query; '${this.$data.targetSearchQuery}'`)
             this.ExecuteSearchQuery()
         },
