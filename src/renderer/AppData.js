@@ -128,7 +128,12 @@ var AppData = {
         }
     },
 
-    CloudConfig: {}
+    CloudConfig: {},
+
+    get AllowSteamworks()
+    {
+        return require('electron').remote.process.argv.includes('--steam')
+    }
 }
 global.AppData = AppData
 global.AppData.Config = new ConfigManager()
@@ -138,7 +143,7 @@ try {
         fs.writeFileSync('steam_appid.txt', '1992810')
     global.AppData.Steamworks = new Steamworks()
 } catch (e) {
-    if (require('electron').remote.process.argv.includes('--steam'))
+    if (AppData.AllowSteamworks)
         alert('Failed to initialize Steamworks', e)
     console.error(`Failed to initialize Steamworks`, e)
 }

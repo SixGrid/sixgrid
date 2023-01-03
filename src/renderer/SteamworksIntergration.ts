@@ -32,6 +32,11 @@ export default class Steamworks extends EventEmitter {
         return new Error(`[Steamworks->${thing.id}] ${thing.message}`)
     }
     Initialize() {
+        if (!AppData.AllowSteamworks)
+        {
+            console.debug(`Steamworks is disabled.`)
+            return
+        }
         if (this.hasInitalized) return
         try {
             let response = this.Greenworks.init()

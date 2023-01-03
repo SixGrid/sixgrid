@@ -34,6 +34,7 @@ declare interface IAppData
         Config: string
     }
     CloudConfig: ICloudConfig & {[key: string]: Configuration}
+    AllowSteamworks: Boolean
 }
 declare global
 {
