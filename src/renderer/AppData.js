@@ -134,9 +134,13 @@ global.AppData = AppData
 global.AppData.Config = new ConfigManager()
 // global.AppData.Steamworks = new (require('@theace0296/steamworks'))(1992810)
 try {
+    if (!fs.existsSync('steam_appid.txt'))
+        fs.writeFileSync('steam_appid.txt', '1992810')
     global.AppData.Steamworks = new Steamworks()
 } catch (e) {
-    alert('Failed to initialize Steamworks')
+    if (require('electron').remote.process.argv.includes('--steam'))
+        alert('Failed to initialize Steamworks', e)
+    console.error(`Failed to initialize Steamworks`, e)
 }
 setTimeout(() =>{global.AppData.Steamworks.Initialize()}, 1500)
 

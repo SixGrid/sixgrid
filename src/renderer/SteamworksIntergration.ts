@@ -44,7 +44,9 @@ export default class Steamworks extends EventEmitter {
                 throw this.GenerateError(Steamworks.ERRORS.InitalizeFail)
             }
         } catch (e) {
-            alert('Failed to initalize Steamworks\n' + e)
+            if (require('electron').remote.process.argv.includes('--steam'))
+                alert('Failed to initalize Steamworks\n' + e)
+            console.error(`Failed to initialize Steamworks`, e)
         }
     }
     InitializeEvents() {
