@@ -15,6 +15,12 @@
                         </md-select>
                     </md-field>
                 </md-list-item>
+                <md-list-item>
+                    <md-checkbox v-model="userConfig.sortByScore">Order by Score</md-checkbox>
+                </md-list-item>
+                <md-list-item>
+                    <md-checkbox v-model="userConfig.sortByFavorite">Order by Favorite Count</md-checkbox>
+                </md-list-item>
                 <!-- <md-list-item>
                     <md-card>
                         <md-card-header>

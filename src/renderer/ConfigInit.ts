@@ -47,7 +47,9 @@ export const configStoreProfiles: IConfigTemplate<any>[] = [
             ratingFilter: 'none',
             preloadPageCount: 1,
             preloadStartIndex: 0,
-            highQualityPreview: false
+            highQualityPreview: false,
+            sortByScore: false,
+            sortByFavorite: false
         }
     },
     {

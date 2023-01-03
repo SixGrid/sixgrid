@@ -67,18 +67,29 @@
             <md-list-item>
                 <md-checkbox v-model="configFlags.media.loop">Loop Media</md-checkbox>
             </md-list-item>
+        </md-list>
+        <md-list class="md-elevation-1">
+            <md-subheader>Search Settings</md-subheader>
             <md-list-item>
                 <md-checkbox v-model="configFlags.highQualityPreview">High-quality Preview</md-checkbox>
             </md-list-item>
-        </md-list>
-        <md-list class="md-elevation-1">
-            <md-subheader>General</md-subheader>
             <md-list-item>
-                <div class="md-list-item">
-                    <md-button class="md-elevation-1 md-raised" @click="steamworks.ResetMetrics()">Reset Steam Achievement Progress</md-button>
-                </div>
+                <md-checkbox v-model="configFlags.sortByScore">Order by Score</md-checkbox>
+            </md-list-item>
+            <md-list-item>
+                <md-checkbox v-model="configFlags.sortByFavorite">Order by Favorite Count</md-checkbox>
             </md-list-item>
         </md-list>
+        <template v-if="steam">
+            <md-list class="md-elevation-1">
+                <md-subheader>General</md-subheader>
+                <md-list-item>
+                    <div class="md-list-item">
+                        <md-button class="md-elevation-1 md-raised" @click="steamworks.ResetMetrics()">Reset Steam Achievement Progress</md-button>
+                    </div>
+                </md-list-item>
+            </md-list>
+        </template>
         <md-list class="md-elevation-1">
             <md-subheader>Debug Settings</md-subheader>
             <md-list-item>
@@ -133,7 +144,8 @@ export default {
                 },
                 configFlags: AppData.CloudConfig.User.get(),
                 clientParameters: AppData.FetchClientParameters(),
-                debugElementOutline: localStorage.debugElementOutline == 'true' ? true : false
+                debugElementOutline: localStorage.debugElementOutline == 'true' ? true : false,
+                steam: AppData.AllowSteamworks
             }
             if (returnValue.debugElementOutline == undefined) {
                 returnValue.debugElementOutline = false

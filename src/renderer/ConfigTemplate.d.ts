@@ -25,6 +25,8 @@ export interface IConfig_User
     preloadPageCount: number
     preloadStartIndex: number
     highQualityPreview: boolean
+    sortByScore: boolean
+    sortByFavorite: boolean
 }
 
 export interface IConfig_Stats
