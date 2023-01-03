@@ -139,7 +139,8 @@ function startElectron () {
   var args = [
     '--inspect=5858',
     '--developer',
-    path.join(__dirname, '../dist/electron/main.js')
+    path.join(__dirname, '../dist/electron/main.js'),
+    '--in-process-gpu'
   ]
 
   // detect yarn or npm and process commandline args accordingly
