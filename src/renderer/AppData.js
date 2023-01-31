@@ -28,16 +28,23 @@ var AppData = {
             global.AppData.Client.Gatekeeper.Destroy()
         global.AppData.Client = new esixapi.Client(currentAuthentication)
         global.AppData.Client.on('post:favorite', () => {
-            AppData.Steamworks.Metrics.favorite_count.value++
+            if (AppData.Steamworks != undefined)
+            {
+                AppData.Steamworks.Metrics.favorite_count.value++
+            }
         })
         global.AppData.Client.on('post:vote', (data) => {
-            if (data.state > 0)
-                AppData.Steamworks.Metrics.post_upvote_count++
-            else if (data.state < 0)
-                AppData.Steamworks.Metrics.post_downvote_count++
+            if (AppData.Steamworks != undefined)
+            {
+                if (data.state > 0)
+                    AppData.Steamworks.Metrics.post_upvote_count++
+                else if (data.state < 0)
+                    AppData.Steamworks.Metrics.post_downvote_count++
+            }
         })
         global.AppData.Client.on('post:search', () => {
-            AppData.Steamworks.Metrics.search_count++
+            if (AppData.Steamworks != undefined)
+                AppData.Steamworks.Metrics.search_count++
         })
     },
 
@@ -109,7 +116,8 @@ var AppData = {
                 }
             }
             console.log(`[AppData->PostDownload] Completed ${postObject.ID}.${postObject.Image.File.ext} (${parseFloat(totalBytes/1000).toFixed(3)}kb)`)
-            AppData.Steamworks.Metrics.download_completeCount.value++
+            if (AppData.Steamworks != undefined)
+                AppData.Steamworks.Metrics.download_completeCount.value++
         })
     },
 
