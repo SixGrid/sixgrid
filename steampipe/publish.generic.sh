@@ -9,4 +9,5 @@ mv $1.vdf.temp $1.vdf
 
 cwd__=$(pwd)
 VDF="$cwd__/$1.vdf"
+echo "+login $USERNAME $PASSWORD +run_app_build \"$VDF\" +quit"
 /usr/games/steamcmd +login $USERNAME $PASSWORD +run_app_build "$VDF" +quit
