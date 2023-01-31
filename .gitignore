@@ -122,3 +122,4 @@ steampipe/*build*.vdf
 log.txt
 AppConfig
 
+steampipe/app_1992810.vdf
