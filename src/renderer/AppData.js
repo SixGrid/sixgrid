@@ -146,9 +146,14 @@ var AppData = {
 global.AppData = AppData
 global.AppData.Config = new ConfigManager()
 // global.AppData.Steamworks = new (require('@theace0296/steamworks'))(1992810)
+let appIdLocation = path.resolve('steam_appid.txt')
 try {
-    if (!fs.existsSync('steam_appid.txt'))
-        fs.writeFileSync('steam_appid.txt', '1992810')
+    if (!fs.existsSync(appIdLocation))
+        fs.writeFileSync(appIdLocation, '1992810')
+} catch (e) {
+    alert(`Failed to create file ${appIdLocation}`)
+}
+try {
     global.AppData.Steamworks = new Steamworks()
 } catch (e) {
     if (AppData.AllowSteamworks)
