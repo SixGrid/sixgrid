@@ -132,6 +132,13 @@ var AppData = {
     get AllowSteamworks()
     {
         return require('electron').remote.process.argv.includes('--steam')
+    },
+
+    isFloat(n) {
+        return Number(n) === n && n % 1 !== 0;
+    },
+    isInt(n) {
+        return Number(n) === n && n % 1 === 0;
     }
 }
 global.AppData = AppData
