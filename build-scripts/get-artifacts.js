@@ -50,6 +50,12 @@ let RegexMatrix = [
         platform: 'linux'
     },
     {
+        filename_regex: new RegExp(`^linux\-unpacked$`),
+        upload_name: `${packageJSON.name}-${commitHash}-linux-amd64.zip`,
+        onMatch: zipDirectory,
+        platform: 'linux'
+    },
+    {
         filename_regex: new RegExp(`^win\-unpacked$`),
         upload_name: `${packageJSON.name}-${commitHash}-win-amd64.zip`,
         onMatch: zipDirectory
