@@ -6,6 +6,7 @@ const esixapi = require('libsixgrid')
 const EventEmitter = require('events')
 const {default: Configuration} = require('./Configuration')
 const { default: Steamworks } = require('./SteamworksIntergration')
+const { default: MetricManager } = require('./MetricManager')
 const request = require('request')
 function isObject(item) {
     return (item && typeof item === 'object' && !Array.isArray(item));
@@ -28,23 +29,16 @@ var AppData = {
             global.AppData.Client.Gatekeeper.Destroy()
         global.AppData.Client = new esixapi.Client(currentAuthentication)
         global.AppData.Client.on('post:favorite', () => {
-            if (AppData.Steamworks != undefined)
-            {
-                AppData.Steamworks.Metrics.favorite_count.value++
-            }
+            AppData.MetricManager.Increment('favorite_count')
         })
         global.AppData.Client.on('post:vote', (data) => {
-            if (AppData.Steamworks != undefined)
-            {
-                if (data.state > 0)
-                    AppData.Steamworks.Metrics.post_upvote_count++
-                else if (data.state < 0)
-                    AppData.Steamworks.Metrics.post_downvote_count++
-            }
+            if (data.state > 0)
+                AppData.MetricManager.Increment('post_upvote_count')
+            else if (data.state < 0)
+                AppData.MetricManager.Increment('post_downvote_count')
         })
         global.AppData.Client.on('post:search', () => {
-            if (AppData.Steamworks != undefined)
-                AppData.Steamworks.Metrics.search_count++
+            AppData.MetricManager.Increment('search_count')
         })
     },
 
@@ -106,8 +100,6 @@ var AppData = {
             chunkCountSize.push(chunk.length)
         })
         out.on('finish', () => {
-            AppData.CloudConfig.Statistics._data.downloadCount++
-            AppData.CloudConfig.Statistics.write()
             if (AppData.CloudConfig.User.saveMetadata) {
                 let loc = path.join(AppData.CloudConfig.User.get().downloadFolder, `${postObject.ID}.${postObject.Image.File.md5}.json`)
                 if (!fs.existsSync(loc)) {
@@ -116,8 +108,7 @@ var AppData = {
                 }
             }
             console.log(`[AppData->PostDownload] Completed ${postObject.ID}.${postObject.Image.File.ext} (${parseFloat(totalBytes/1000).toFixed(3)}kb)`)
-            if (AppData.Steamworks != undefined)
-                AppData.Steamworks.Metrics.download_completeCount.value++
+            AppData.MetricManager.Increment('download_completeCount')
         })
     },
 
@@ -153,6 +144,7 @@ try {
 } catch (e) {
     alert(`Failed to create file ${appIdLocation}`)
 }
+global.AppData.MetricManager = new MetricManager()
 try {
     global.AppData.Steamworks = new Steamworks()
 } catch (e) {

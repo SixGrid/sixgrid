@@ -63,7 +63,7 @@ document.body.addEventListener('click', event => {
 
 function incrementUncaughtException() {
     if (AppData.Steamworks != undefined) {
-        AppData.Steamworks.Metrics.uncaughtException.value++
+        AppData.MetricManager.Increment('uncaughtException')
     }
 }
 process

@@ -59,7 +59,7 @@ export const configStoreProfiles: IConfigTemplate<any>[] = [
         filename: 'stats.json',
         key: 'Statistics',
         data: {
-            downloads: 0
+            metricStore: {}
         }
     }
 ]

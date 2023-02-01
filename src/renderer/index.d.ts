@@ -3,6 +3,8 @@ import type {EventEmitter} from 'events'
 import Post from 'libsixgrid/dist/src/Post'
 import {IProductInformation} from '../shared'
 import { IConfig_AuthProfile, IConfig_Stats, IConfig_User } from './ConfigTemplate'
+import MetricManager from './MetricManager'
+import Steamworks from './SteamworksIntergration'
 
 declare interface ICloudConfig 
 {
@@ -35,6 +37,12 @@ declare interface IAppData
     }
     CloudConfig: ICloudConfig & {[key: string]: Configuration}
     AllowSteamworks: Boolean
+
+    isInt(n: number): boolean
+    isFloat(n: number): boolean
+
+    MetricManager: MetricManager
+    Steamworks: Steamworks
 }
 declare global
 {

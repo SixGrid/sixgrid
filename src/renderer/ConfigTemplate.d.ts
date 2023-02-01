@@ -1,5 +1,6 @@
 import { IClientAuthOptions } from 'libsixgrid/dist/src/Client'
 import { PostRating } from 'libsixgrid'
+import { MetricManagerData } from './MetricManager'
 
 export interface AuthTemplate
 {
@@ -34,10 +35,5 @@ export interface IConfig_User
 
 export interface IConfig_Stats
 {
-    download_completeCount: number
-    uncaughtException: number
-    favorite_count: number
-    search_count: number
-    post_downvote_count: number
-    post_upvote_count: number
+    metricStore: MetricManagerData
 }
