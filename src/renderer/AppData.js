@@ -169,4 +169,5 @@ for (let i = 0; i < Object.entries(AppData.SteamCloudLocations).length; i++) {
 }
 
 require('./ConfigInit').Initialize()
+global.AppData.MetricManager.Read()
 

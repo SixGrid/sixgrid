@@ -187,6 +187,7 @@ export default class MetricManager extends EventEmitter
         {
             this.Write()
         }
+        this.MetricStore = configData
     }
     Reset(): void
     {
