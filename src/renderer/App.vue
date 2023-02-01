@@ -166,7 +166,6 @@ export default {
             this.menuVisible = !this.menuVisible
         },
         updateContentWidth () {
-                console.log(this)
                 let drawer = $(this.$refs['app-drawer'])
                 let getDrawerWidth = parseInt(this.$refs['app-drawer'].getDrawerWidth().replace("px", ""))
                 getDrawerWidth = getDrawerWidth + 35
@@ -177,7 +176,6 @@ export default {
         $route (to, from) {
             console.log(`[$route -> from]${from.path}\n[$route -> to  ]${to.path}`)
             this.$data.currentRoute = from
-            console.log(from)
             this.$set(this.$data, 'currentRoute', to)
         }
     }

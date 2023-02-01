@@ -129,7 +129,7 @@ export default {
         },
         setPostIndex(index) {
             this.$set(this.$data, 'postIndex', index)
-            console.log(this.$data.postIndex)
+            console.log(`[FullscreenResult->setPostIndex] ${this.$data.postIndex}`)
         },
         setPosts(arr) {
             this.$set(this.$data, 'postArr', arr)
@@ -148,7 +148,7 @@ export default {
             this.$set(this.$data, 'postIndex', this.$data.postIndex - 1)
         },
         async nextPost () {
-            console.log(this.$data.postIndex, this.$data.postArr.length, this.$parent.$data.reachedEnd)
+            console.debug(`[FullscreenResult->nextPost]\npostIndex=${this.$data.postIndex},\npostArrayLength=${this.postArr.length},\nreachedEnd=${this.reachedEnd}`)
             if (this.$data.postIndex + 2 >= this.$data.postArr.length)
             {
                 if (!this.$parent.$data.reachedEnd)

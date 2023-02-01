@@ -93,7 +93,7 @@ export default {
                 return ''
             }
             let post = this.postArray[this.postIndex]
-            console.log(post)
+            console.log(`[PostFilePreview->computed->targetSelector] Current Post`, post)
             let extension = post.Image.File.ext
             let entries = Object.entries(this.$data.selectorMap)
             for (let i = 0; i < entries.length; i++) {

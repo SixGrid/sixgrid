@@ -182,7 +182,7 @@ export default {
             this.$refs.Fullscreen.setPosts(this.$data.posts.posts)
             this.$refs.Fullscreen.setPostIndex(this.findPostIndex(post))
             this.$refs.Fullscreen.setVis(true)
-            console.log(post)
+            console.log(`[Search->postClick]`, post)
         },
 
         async fetchNextPage() {

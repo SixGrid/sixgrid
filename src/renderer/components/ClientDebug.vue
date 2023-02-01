@@ -55,7 +55,7 @@ export default {
             try
             {
                 let search = await AppData.Client.Search(JSON.parse(JSON.stringify(this.$data.search)))
-                console.log(search)
+                console.log(`[Search Query] ${search}`)
                 this.$set(this.$data.searchResponse, 'content', search.map(v => {
                     return {
                         ...v.data
@@ -65,7 +65,7 @@ export default {
             catch (e)
             {
                 this.$set(this.$data.searchResponse, 'error', e)
-                console.log(e)
+                console.error(e)
             }
         },
         clearSearch () {
