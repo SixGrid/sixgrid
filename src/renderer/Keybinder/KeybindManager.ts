@@ -106,7 +106,7 @@ export class KeybindManager extends EventEmitter {
         for (let i = 0; i < events_obj.length; i++) {
             let entry = events_obj[i]
             // console.log(targetEnum, keyEnum)
-            if (targetEnum == Keystate.Down) {
+            if (targetEnum == Keystate.Down && entry[1].length > 0) {
                 this.emit(...entry, targetEnum, event)
                 this.emit(`down:${entry[0]}`, entry[1], targetEnum, event)
             } else {
