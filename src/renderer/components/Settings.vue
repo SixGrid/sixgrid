@@ -60,6 +60,10 @@
             </md-list-item>
         </md-list>
         <md-list class="md-elevation-1">
+            <md-subheader>Keybind Settings</md-subheader>
+            <SettingsKeybind />
+        </md-list>
+        <md-list class="md-elevation-1">
             <md-subheader>Content Settings</md-subheader>
             <md-list-item>
                 <md-checkbox v-model="configFlags.media.autoplay">Media Autoplay</md-checkbox>
@@ -116,8 +120,10 @@
 </style>
 <script>
 const fs = require('fs')
+import SettingsKeybind from './Settings_Keybind.vue'
 export default {
     name: 'Settings',
+    components: {SettingsKeybind},
     data () {
         return this.initialData()
     },

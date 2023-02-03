@@ -61,6 +61,37 @@ export const configStoreProfiles: IConfigTemplate<any>[] = [
         data: {
             metricStore: {}
         }
+    },
+    {
+        filename: 'keybind.json',
+        key: 'Keybind',
+        data: {
+            currentProfile: 'default',
+            currentProfileData: {
+                Id: 'gvvqMEmj',
+                Name: 'Default',
+                Binds: [
+                    {
+                        Id: 'METs7gPv',
+                        Chords: [[39]],
+                        Enable: true,
+                        Channel: 'item:next'
+                    },
+                    {
+                        Id: 'g0FPjBOz',
+                        Chords: [[37]],
+                        Enable: true,
+                        Channel: 'item:previous'
+                    },
+                    {
+                        Id: '6mRXSbBE',
+                        Chords: [[27]],
+                        Enable: true,
+                        Channel: 'view:close'
+                    }
+                ]
+            }
+        }
     }
 ]
 
@@ -77,5 +108,16 @@ export function Initialize()
             global.AppData.CloudConfig[item.key] = new Configuration(location)
         global.AppData.CloudConfig[item.key].default(item.data)
         global.AppData.CloudConfig[item.key].write()
+    }
+}
+export function ResetItem(name: string)
+{
+    for (let item of configStoreProfiles)
+    {
+        if (item.key == name)
+        {
+            AppData.CloudConfig[item.key]._data = item.data
+            AppData.CloudConfig[item.key].write()
+        }
     }
 }

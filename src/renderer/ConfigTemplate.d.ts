@@ -1,6 +1,7 @@
 import { IClientAuthOptions } from 'libsixgrid/dist/src/Client'
 import { PostRating } from 'libsixgrid'
 import { MetricManagerData } from './MetricManager'
+import { KeybindProfile } from './Keybinder/KeybindProfile'
 
 export interface AuthTemplate
 {
@@ -36,4 +37,9 @@ export interface IConfig_User
 export interface IConfig_Stats
 {
     metricStore: MetricManagerData
+}
+export interface IConfig_Keybind
+{
+    currentProfile: string
+    currentProfileData: KeybindProfile
 }

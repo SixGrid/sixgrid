@@ -2,15 +2,17 @@ import Configuration, { IConfiguration } from './Configuration'
 import type {EventEmitter} from 'events'
 import Post from 'libsixgrid/dist/src/Post'
 import {IProductInformation} from '../shared'
-import { IConfig_AuthProfile, IConfig_Stats, IConfig_User } from './ConfigTemplate'
+import { IConfig_AuthProfile, IConfig_Stats, IConfig_User, IConfig_Keybind } from './ConfigTemplate'
 import MetricManager from './MetricManager'
 import Steamworks from './SteamworksIntergration'
+import { KeybindManager } from './Keybinder/KeybindManager'
 
 declare interface ICloudConfig 
 {
     Statistics: IConfiguration<IConfig_Stats>
     User: IConfiguration<IConfig_User>
     Authentication: IConfiguration<IConfig_AuthProfile>
+    Keybind: IConfiguration<IConfig_Keybind>
 }
 declare interface IAppData
 {
@@ -43,6 +45,9 @@ declare interface IAppData
 
     MetricManager: MetricManager
     Steamworks: Steamworks
+    Keybinder: KeybindManager
+
+    RootURI: string
 }
 declare global
 {

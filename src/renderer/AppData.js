@@ -7,6 +7,7 @@ const EventEmitter = require('events')
 const {default: Configuration} = require('./Configuration')
 const { default: Steamworks } = require('./SteamworksIntergration')
 const { default: MetricManager } = require('./MetricManager')
+const {KeybindManager} = require('./Keybinder/KeybindManager')
 const request = require('request')
 function isObject(item) {
     return (item && typeof item === 'object' && !Array.isArray(item));
@@ -139,7 +140,11 @@ var AppData = {
     },
     isInt(n) {
         return Number(n) === n && n % 1 === 0;
-    }
+    },
+    get RootURI () {
+        return (process.env.NODE_ENV === 'development' ? `http://dev.sixgrid.kate.pet:9080/` : `file://${process.platform == 'win32' ? '/' : ''}${__dirname.replaceAll('\\', '/')}/index.html`).split('?')[0]
+    },
+    set RootURI (value) {}
 }
 global.AppData = AppData
 global.AppData.Config = new ConfigManager()
@@ -151,6 +156,7 @@ try {
 } catch (e) {
     alert(`Failed to create file ${appIdLocation}`)
 }
+global.AppData.Keybinder = new KeybindManager()
 global.AppData.MetricManager = new MetricManager()
 try {
     global.AppData.Steamworks = new Steamworks()
@@ -170,4 +176,5 @@ for (let i = 0; i < Object.entries(AppData.SteamCloudLocations).length; i++) {
 
 require('./ConfigInit').Initialize()
 global.AppData.MetricManager.Read()
+global.AppData.Keybinder.Load()
 
