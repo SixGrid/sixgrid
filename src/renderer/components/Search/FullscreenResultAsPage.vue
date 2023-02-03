@@ -248,6 +248,17 @@ export default {
     data () {
         return this.initialData()
     },
+    created () {
+        var self = this
+        AppData.Keybinder.on('view:close', () => self.setVis(false))
+        AppData.Keybinder.on('item:next', () => self.nextPost())
+        AppData.Keybinder.on('item:previous', () => self.prevPost())
+    },
+    beforeDestroy () {
+        AppData.Keybinder.off('view:close', () => self.setVis(false))
+        AppData.Keybinder.off('item:next', () => self.nextPost())
+        AppData.Keybinder.off('item:previous', () => self.prevPost())
+    },
     methods: {
         initialData() {
             return {
@@ -282,12 +293,14 @@ export default {
         },
 
         prevPost () {
+            if (!this.visibility) return
             if (this.$data.postIndex - 1 < 0)
                 return
 
             this.$set(this.$data, 'postIndex', this.$data.postIndex - 1)
         },
         async nextPost () {
+            if (!this.visibility) return
             console.debug(`[FullscreenResult->nextPost]\npostIndex=${this.postIndex},\npostArrayLength=${this.postArr.length},\nreachedEnd=${this.reachedEnd}`)
             if (this.$data.postIndex + 1 >= this.$data.postArr.length)
             {
