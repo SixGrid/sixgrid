@@ -35,14 +35,7 @@ const winURL_dev = 'http://dev.sixgrid.kate.pet:9080'
 let winURL: string = ''
 if (global.debugMode && customURL_enable)
 {
-    if (customURL_enable)
-    {
-        winURL = customURL
-    }
-    else
-    {
-        winURL = winURL_dev
-    }   
+    winURL = customURL_enable ? customURL : winURL_dev
 }
 else
 {
