@@ -144,7 +144,11 @@ var AppData = {
     get RootURI () {
         return (process.env.NODE_ENV === 'development' ? `http://dev.sixgrid.kate.pet:9080/` : `file://${process.platform == 'win32' ? '/' : ''}${__dirname.replaceAll('\\', '/')}/index.html`).split('?')[0]
     },
-    set RootURI (value) {}
+    set RootURI (value) {},
+
+    get IsSteamDeck () {
+        return require('os').release().includes('valve')
+    }
 }
 global.AppData = AppData
 global.AppData.Config = new ConfigManager()

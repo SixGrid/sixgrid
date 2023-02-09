@@ -48,6 +48,8 @@ declare interface IAppData
     Keybinder: KeybindManager
 
     RootURI: string
+
+    IsSteamDeck: boolean
 }
 declare global
 {
