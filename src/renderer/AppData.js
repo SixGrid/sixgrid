@@ -14,6 +14,7 @@ function isObject(item) {
 }
 var AppData = {
     ApplicationIdentifier: 'sixgrid',
+    Event: new EventEmitter(),
     get UserDataPath () {
         let val = path.join(
             electron.remote.app.getPath('userData'),

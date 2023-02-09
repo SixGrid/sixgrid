@@ -49,6 +49,8 @@ declare interface IAppData
 
     RootURI: string
 
+    Event: EventEmitter
+
     IsSteamDeck: boolean
 }
 declare global
