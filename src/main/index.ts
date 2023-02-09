@@ -2,6 +2,13 @@ import { app, BrowserWindow, globalShortcut, ipcMain, Menu, protocol } from 'ele
 import '../renderer/store'
 import menu from './menu'
 import * as helpers from './helpers'
+import * as os from 'os'
+let isSteamDeck: boolean = os.release().toString().includes('valve')
+
+if (isSteamDeck) {
+    app.disableHardwareAcceleration()
+    console.log(`Running on Steam Deck. Hardware Acceleration has been disabled due to some linux issues.`)
+}
 
 /**
  * Set `__static` path to static files in production
