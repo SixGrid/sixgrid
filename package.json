@@ -8,6 +8,7 @@
     "scripts": {
         "build": "node .electron-vue/build.js && electron-builder",
         "build:wintux": "node .electron-vue/build.js && electron-builder -wl",
+        "build:tux": "node .electron-vue/build.js && electron-builder -l",
         "build:dir": "node .electron-vue/build.js && electron-builder --dir",
         "build:clean": "cross-env BUILD_TARGET=clean node .electron-vue/build.js",
         "build:web": "cross-env BUILD_TARGET=web node .electron-vue/build.js",
