@@ -22,6 +22,12 @@
                             </md-list-item>
                         </template>
                     </template>
+                    <template v-if="$appData.IsSteamDeck">
+                        <md-list-item @click="quitSixGrid" style="background-color: red;">
+                            <md-icon>logout</md-icon>
+                            <span class="md-list-item-text">Exit</span>
+                        </md-list-item>
+                    </template>
                 </md-list>
             </md-app-drawer>
         </md-app>
@@ -162,6 +168,9 @@ export default {
         document.styleSheets[0].insertRule(`:root{ --screen-width: ${window.innerWidth}px; --screen-height: ${window.innerHeight}px;`)
     },
     methods: {
+        quitSixGrid () {
+            require('electron').remote.app.quit()
+        },
         toggleMenu () {
             this.menuVisible = !this.menuVisible
         },
