@@ -84,6 +84,18 @@
                 <md-checkbox v-model="configFlags.sortByFavorite">Order by Favorite Count</md-checkbox>
             </md-list-item>
         </md-list>
+        <md-list class="md-elevation-1">
+            <md-subheader>Interface</md-subheader>
+            <md-list-item>
+                <div style="display: block; vertical-align: middle;">
+                    <md-icon style="display: inline-block; vertical-align: middle;">aspect_ratio</md-icon>
+                    <div style="display: inline-block; vertical-align: middle;">
+                        UI Scale ({{configFlags.zoomFactor}})<br>
+                        <input type="range" style="width: min(30vw, 200pt); vertical-align: middle;" v-model="configFlags.zoomFactor" max="3" min="0.5" step="0.25"/>
+                    </div>
+                </div>
+            </md-list-item>
+        </md-list>
         <template v-if="steam">
             <md-list class="md-elevation-1">
                 <md-subheader>General</md-subheader>
@@ -175,15 +187,16 @@ export default {
         save() {
             let ts = Date.now()
             let data = this.toJSON()
-            global.AppData.CloudConfig.Authentication._data.items[this.$data.pflags.endpointOptionsSelected] = JSON.parse(JSON.stringify(data.clientParameters))
-            global.AppData.CloudConfig.Authentication.set('_current', this.$data.pflags.endpointOptionsSelected)
-            global.AppData.CloudConfig.Authentication.write()
+            AppData.CloudConfig.Authentication._data.items[this.$data.pflags.endpointOptionsSelected] = JSON.parse(JSON.stringify(data.clientParameters))
+            AppData.CloudConfig.Authentication.set('_current', this.$data.pflags.endpointOptionsSelected)
+            AppData.CloudConfig.Authentication.write()
             if (!fs.existsSync(this.$data.configFlags.downloadFolder))
                 fs.mkdirSync(this.$data.configFlags.downloadFolder, {recursive: true})
-            global.AppData.CloudConfig['User'].set(JSON.parse(JSON.stringify(this.$data.configFlags)))
-            global.AppData.CloudConfig['User'].write()
+            AppData.CloudConfig['User'].set(JSON.parse(JSON.stringify(this.$data.configFlags)))
+            AppData.CloudConfig['User'].write()
+            AppData.Event.emit('zoomFactorUpdate')
             vueJS.$toastr.success(`Took ${Date.now() - ts}ms`, 'Settings Saved')
-            global.AppData.reloadClient()
+            AppData.reloadClient()
             this.reloadEndpointOptions()
             let initialDataEntries = Object.entries(this.initialData())
             for (let i = 0; i < initialDataEntries.length; i++) {

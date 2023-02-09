@@ -52,7 +52,8 @@ export const configStoreProfiles: IConfigTemplate<any>[] = [
             sortByFavorite: false,
             ratingSafe: false,
             ratingQuestionable: false,
-            ratingExplicit: false
+            ratingExplicit: false,
+            zoomFactor: 1.0
         }
     },
     {

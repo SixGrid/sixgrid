@@ -32,6 +32,7 @@ export interface IConfig_User
     ratingSafe: boolean
     ratingQuestionable: boolean
     ratingExplicit: boolean
+    zoomFactor: number // float
 }
 
 export interface IConfig_Stats

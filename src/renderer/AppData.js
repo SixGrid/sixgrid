@@ -179,7 +179,18 @@ for (let i = 0; i < Object.entries(AppData.SteamCloudLocations).length; i++) {
     }
 }
 
+global.AppData.Event.on('zoomFactorUpdate', () => {
+    var webContents = electron.remote.getCurrentWindow().webContents
+    let factor = global.AppData.CloudConfig.User.get('zoomFactor')
+    if (factor == undefined)
+        factor = 1.0
+    webContents.setZoomFactor(parseFloat(factor))
+})
+
 require('./ConfigInit').Initialize()
 global.AppData.MetricManager.Read()
 global.AppData.Keybinder.Load()
+
+global.AppData.Event.emit('zoomFactorUpdate')
+
 
