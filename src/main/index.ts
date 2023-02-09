@@ -66,7 +66,10 @@ function createWindow () {
             contextIsolation: false
         }
     })
-
+    if (isSteamDeck) {
+        global.electronMainWindow.webContents.setFrameRate(60)
+        console.log(`Set framerate to 60fps`)
+    }
     global.electronMainWindow.setMenu(null)
     Menu.setApplicationMenu(Menu.buildFromTemplate(menu))
     global.electronMainWindow.setTitle(helpers.fetchTitle())
