@@ -41,7 +41,9 @@ export const configStoreProfiles: IConfigTemplate<any>[] = [
                 autoplay: true,
                 loop: true
             },
-            downloadFolder: path.join(require('electron').remote.app.getPath('downloads'), 'sixgrid'),
+            get downloadFolder() {
+                return path.join(require('electron').remote.app.getPath('home'), 'Downloads', 'sixgrid')
+            },
             saveMetadata: false,
             tagBlacklist: [],
             ratingFilter: 'none',
