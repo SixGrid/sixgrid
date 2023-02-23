@@ -115,14 +115,12 @@ export default {
                 console.error(`[SteamNews->fetchAndUpdateAppHistory] Failed to get App News`, err)
                 this.$set(this.$data, 'error', err)
             }
-            // console.log(axiosCrap)
             if (axiosCrap == null) return
             this.$set(this.$data, 'content', axiosCrap.data)
             console.log(axiosCrap.data)
             setTimeout(() => {
             for (let item of this.$data.content.appnews.newsitems)
             {
-                // console.log(this.$refs[`content-${item.guid}`], codeparser.parse(item.contents))
                 if (this.$refs[`content-${item.gid}`].length > 0)
                     this.$refs[`content-${item.gid}`][0].innerHTML = codeparser.parse(item.contents)
             }

@@ -43,7 +43,7 @@
             <md-list-item>
                 <md-icon>key</md-icon>
                 <md-field>
-                    <label>API Key</label>
+                    <label>API Key (<a href="https://steamcommunity.com/sharedfiles/filedetails/?id=2841522348" openExternal>Tutorial</a>)</label>
                     <md-input type="password" v-model="clientParameters.auth.apikey" :disabled="!clientParameters.auth.enabled" />
                 </md-field>
             </md-list-item>
@@ -60,6 +60,10 @@
             </md-list-item>
         </md-list>
         <md-list class="md-elevation-1">
+            <md-subheader>Keybind Settings</md-subheader>
+            <SettingsKeybind />
+        </md-list>
+        <md-list class="md-elevation-1">
             <md-subheader>Content Settings</md-subheader>
             <md-list-item>
                 <md-checkbox v-model="configFlags.media.autoplay">Media Autoplay</md-checkbox>
@@ -69,10 +73,26 @@
             </md-list-item>
         </md-list>
         <md-list class="md-elevation-1">
-            <md-subheader>General</md-subheader>
+            <md-subheader>Search Settings</md-subheader>
             <md-list-item>
-                <div class="md-list-item">
-                    <md-button class="md-elevation-1 md-raised" @click="steamworks.ResetMetrics()">Reset Steam Achievement Progress</md-button>
+                <md-checkbox v-model="configFlags.highQualityPreview">High-quality Preview</md-checkbox>
+            </md-list-item>
+            <md-list-item>
+                <md-checkbox v-model="configFlags.sortByScore">Order by Score</md-checkbox>
+            </md-list-item>
+            <md-list-item>
+                <md-checkbox v-model="configFlags.sortByFavorite">Order by Favorite Count</md-checkbox>
+            </md-list-item>
+        </md-list>
+        <md-list class="md-elevation-1">
+            <md-subheader>Interface</md-subheader>
+            <md-list-item>
+                <div style="display: block; vertical-align: middle;">
+                    <md-icon style="display: inline-block; vertical-align: middle;">aspect_ratio</md-icon>
+                    <div style="display: inline-block; vertical-align: middle;">
+                        UI Scale ({{configFlags.zoomFactor}})<br>
+                        <input type="range" style="width: min(30vw, 200pt); vertical-align: middle;" v-model="configFlags.zoomFactor" max="3" min="0.5" step="0.25"/>
+                    </div>
                 </div>
             </md-list-item>
             <md-list-item>
@@ -81,6 +101,16 @@
                 </div>
             </md-list-item>
         </md-list>
+        <template v-if="steam">
+            <md-list class="md-elevation-1">
+                <md-subheader>General</md-subheader>
+                <md-list-item>
+                    <div class="md-list-item">
+                        <md-button class="md-elevation-1 md-raised" @click="steamworks.ResetMetrics()">Reset Steam Achievement Progress</md-button>
+                    </div>
+                </md-list-item>
+            </md-list>
+        </template>
         <md-list class="md-elevation-1">
             <md-subheader>Debug Settings</md-subheader>
             <md-list-item>
@@ -107,8 +137,10 @@
 </style>
 <script>
 const fs = require('fs')
+import SettingsKeybind from './Settings_Keybind.vue'
 export default {
     name: 'Settings',
+    components: {SettingsKeybind},
     data () {
         return this.initialData()
     },
@@ -133,9 +165,10 @@ export default {
                     customEndpointEnable: false,
                     customEndpoint: null
                 },
-                configFlags: AppData.CloudConfig.UserConfiguration.get(),
+                configFlags: AppData.CloudConfig.User.get(),
                 clientParameters: AppData.FetchClientParameters(),
-                debugElementOutline: localStorage.debugElementOutline == 'true' ? true : false
+                debugElementOutline: localStorage.debugElementOutline == 'true' ? true : false,
+                steam: AppData.AllowSteamworks
             }
             if (returnValue.debugElementOutline == undefined) {
                 returnValue.debugElementOutline = false
@@ -159,15 +192,16 @@ export default {
         save() {
             let ts = Date.now()
             let data = this.toJSON()
-            global.AppData.CloudConfig.Authentication._data.items[this.$data.pflags.endpointOptionsSelected] = JSON.parse(JSON.stringify(data.clientParameters))
-            global.AppData.CloudConfig.Authentication.set('_current', this.$data.pflags.endpointOptionsSelected)
-            global.AppData.CloudConfig.Authentication.write()
+            AppData.CloudConfig.Authentication._data.items[this.$data.pflags.endpointOptionsSelected] = JSON.parse(JSON.stringify(data.clientParameters))
+            AppData.CloudConfig.Authentication.set('_current', this.$data.pflags.endpointOptionsSelected)
+            AppData.CloudConfig.Authentication.write()
             if (!fs.existsSync(this.$data.configFlags.downloadFolder))
                 fs.mkdirSync(this.$data.configFlags.downloadFolder, {recursive: true})
-            global.AppData.CloudConfig['UserConfiguration'].set(JSON.parse(JSON.stringify(this.$data.configFlags)))
-            global.AppData.CloudConfig['UserConfiguration'].write()
+            AppData.CloudConfig['User'].set(JSON.parse(JSON.stringify(this.$data.configFlags)))
+            AppData.CloudConfig['User'].write()
+            AppData.Event.emit('zoomFactorUpdate')
             vueJS.$toastr.success(`Took ${Date.now() - ts}ms`, 'Settings Saved')
-            global.AppData.reloadClient()
+            AppData.reloadClient()
             this.reloadEndpointOptions()
             let initialDataEntries = Object.entries(this.initialData())
             for (let i = 0; i < initialDataEntries.length; i++) {

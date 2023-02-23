@@ -1,6 +1,6 @@
 {
     "name": "sixgrid",
-    "version": "0.3.4",
+    "version": "0.3.7-0",
     "author": "Kate Ward <kate@dariox.club>",
     "description": "Open-Source e621 Desktop App",
     "license": "apache-2.0",
@@ -8,10 +8,12 @@
     "scripts": {
         "build": "node .electron-vue/build.js && electron-builder",
         "build:wintux": "node .electron-vue/build.js && electron-builder -wl",
+        "build:tux": "node .electron-vue/build.js && electron-builder -l",
         "build:dir": "node .electron-vue/build.js && electron-builder --dir",
         "build:clean": "cross-env BUILD_TARGET=clean node .electron-vue/build.js",
         "build:web": "cross-env BUILD_TARGET=web node .electron-vue/build.js",
         "dev": "node .electron-vue/dev-runner.js",
+        "dev:steam": "node .electron-vue/dev-runner.js --steam",
         "pack": "npm run pack:main && npm run pack:renderer",
         "pack:main": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.main.config.js",
         "pack:renderer": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.renderer.config.js"
@@ -51,6 +53,12 @@
                     "arch": [
                         "x64"
                     ]
+                },
+                {
+                    "target": "msi",
+                    "arch": [
+                        "x64"
+                    ]
                 }
             ]
         },
@@ -58,7 +66,7 @@
             "icon": "build/icons",
             "target": [
                 {
-                    "target": "deb",
+                    "target": "AppImage",
                     "arch": [
                         "x64"
                     ]
@@ -73,11 +81,12 @@
         }
     },
     "dependencies": {
-        "axios": "^0.18.0",
+        "axios": "^0.27.2",
+        "dayjs": "^1.11.5",
         "greenworks": "file:greenworks",
         "jquery": "^3.6.0",
         "js-bbcode-parser": "^4.0.0",
-        "libsixgrid": "^1.0.4",
+        "libsixgrid": "^1.1.4",
         "remove-markdown": "^0.3.0",
         "sweetalert": "^2.1.2",
         "tinytoolbox": "^0.0.9",
@@ -91,27 +100,22 @@
         "vuex-electron": "^1.0.0"
     },
     "devDependencies": {
+        "@types/node": "^16.11.7",
         "ajv": "^6.5.0",
         "archiver": "^5.3.1",
-        "babel-core": "^6.26.3",
-        "babel-loader": "^7.1.4",
-        "babel-minify-webpack-plugin": "^0.3.1",
-        "babel-plugin-transform-runtime": "^6.23.0",
-        "babel-preset-env": "^1.7.0",
-        "babel-preset-stage-0": "^6.24.1",
-        "babel-register": "^6.26.0",
         "cfonts": "^2.1.2",
         "chalk": "^2.4.1",
         "copy-webpack-plugin": "^4.5.1",
         "cross-env": "^5.1.6",
-        "css-loader": "^0.28.11",
+        "css-loader": "^5.2.7",
         "del": "^3.0.0",
         "devtron": "^1.4.0",
         "electron": "^11.5.0",
-        "electron-builder": "^20.19.2",
+        "electron-builder": "^23.3.3",
         "electron-debug": "^1.5.0",
         "electron-devtools-installer": "^2.2.4",
         "electron-rebuild": "^3.2.7",
+        "esbuild-loader": "^2.19.0",
         "file-loader": "^1.1.11",
         "html-webpack-plugin": "^3.2.0",
         "listr": "^0.14.3",
@@ -132,7 +136,7 @@
         "vue-template-compiler": "^2.5.16",
         "webpack": "^4.46.0",
         "webpack-cli": "^3.0.8",
-        "webpack-dev-server": "^3.1.4",
+        "webpack-dev-server": "^3.11.3",
         "webpack-hot-middleware": "^2.22.2",
         "webpack-merge": "^4.1.3"
     }

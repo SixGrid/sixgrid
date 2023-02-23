@@ -18,8 +18,8 @@
             @loadedmetadata="onPostLoad"
             controls="controls"
             :poster="postArray[postIndex].Image.Preview.url || postArray[postIndex].Image.Sample.url"
-            :autoplay="AppData.CloudConfig.UserConfiguration.get().media.autoplay"
-            :loop="AppData.CloudConfig.UserConfiguration.get().media.loop"
+            :autoplay="AppData.CloudConfig.User.get().media.autoplay"
+            :loop="AppData.CloudConfig.User.get().media.loop"
             v-bind:visible="visible ? 'yes':'no'">
                     <source
                     :src="postArray[postIndex].Image.File.url"
@@ -78,6 +78,12 @@ export default {
         },
         onPostLoad (...args) {
             this.$parent.onPostLoad(...args)
+        },
+        stop () {
+            if (this.$refs.postImage.pause != undefined && typeof this.$refs.postImage.pause == 'function')
+            {
+                this.$refs.postImage.pause()
+            }
         }
     },
     computed: {
@@ -87,7 +93,7 @@ export default {
                 return ''
             }
             let post = this.postArray[this.postIndex]
-            console.log(post)
+            console.log(`[PostFilePreview->computed->targetSelector] Current Post`, post)
             let extension = post.Image.File.ext
             let entries = Object.entries(this.$data.selectorMap)
             for (let i = 0; i < entries.length; i++) {

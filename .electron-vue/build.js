@@ -10,6 +10,24 @@ const webpack = require('webpack')
 const Listr = require('listr')
 const Multispinner = require('multispinner')
 
+const fs = require('fs')
+const dayjs = require('dayjs')
+const packageJSON = require('../package.json')
+const buildTimestamp = (new Date(process.env['CI_COMMIT_TIMESTAMP'] ?? '')).getTime() || Date.now()
+
+
+let buildInfo = {
+  __SIXGRIDBUILDTIMESTAMP__: buildTimestamp,
+  __SIXGRID_PRODUCT_BUILD_TIMESTAMP: dayjs(buildTimestamp).format('YYYY/MM/DD hh:mm:ss A'),
+  __SIXGRID_PRODUCT_BUILD_VERSION: packageJSON.version
+}
+let extendedBuildInfo = require('./releaseInfo')(buildInfo)
+buildInfo.__PRODUCT_EXTENDED_INFORMATION = extendedBuildInfo
+
+fs.writeFileSync('./build/release-info.json', JSON.stringify(extendedBuildInfo))
+
+let productInfoPlugin = new webpack.DefinePlugin(Object.fromEntries(Object.entries(buildInfo).map(r => [r[0], JSON.stringify(r[1])])))
+
 
 const mainConfig = require('./webpack.main.config')
 const rendererConfig = require('./webpack.renderer.config')
@@ -91,6 +109,7 @@ async function build () {
 function pack (config) {
   return new Promise((resolve, reject) => {
     config.mode = 'production'
+    config.plugins.push(productInfoPlugin)
     webpack(config, (err, stats) => {
       if (err) reject(err.stack || err)
       else if (stats.hasErrors()) {

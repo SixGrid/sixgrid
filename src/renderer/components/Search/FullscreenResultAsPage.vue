@@ -1,6 +1,9 @@
 <template>
     <div class="fullscreen-result-page" ref="main" visible="no">
         <template v-if="postArr[postIndex] != undefined">
+            <div class="fullscreen-button close-btn" @click="setVis(false)">
+                <md-icon>close</md-icon>
+            </div>
             <table class="img-preview">
                 <tr action="img">
                     <td action="post_prev">
@@ -13,35 +16,6 @@
                     <template v-if="postArr[postIndex] != undefined">
                         <td action="postImage" :style="`--post-width: ${postArr[postIndex].Image.File.width}px; --post-height: ${postArr[postIndex].Image.File.height}px;`">
                             <post-file-preview ref="postfile" v-bind:postArray="postArr" v-bind:postIndex="postIndex" />
-                            <!-- <template v-if="postArr[postIndex].Image.File.ext == 'jpg' || postArr[postIndex].Image.File.ext == 'jpeg' || postArr[postIndex].Image.File.ext == 'png' || postArr[postIndex].Image.File.ext == 'gif'">
-                                <img
-                                ref="postImage"
-                                @load="onPostLoad"
-                                @loadeddata="onPostLoad"
-                                @loadedmetadata="onPostLoad"
-                                :src="postArr[postIndex].Image.File.url"
-                                visible="no" />
-                            </template>
-                            <template v-else-if="postArr[postIndex].Image.File.ext == 'mp4' || postArr[postIndex].Image.File.ext == 'webm'">
-                                <video 
-                                ref="postImage"
-                                @load="onPostLoad"
-                                @loadeddata="onPostLoad" 
-                                @loadedmetadata="onPostLoad"
-                                controls="controls"
-                                :poster="postArr[postIndex].Image.Preview.url || postArr[postIndex].Image.Sample.url"
-                                autoplay
-                                loop
-                                visible="no">
-                                    <source
-                                    :src="postArr[postIndex].Image.File.url"
-                                    :type="`video/${postArr[postIndex].Image.File.ext}`" />
-                                </video>
-                            </template>
-                            <template v-else>
-                                <h1>Unsupported file extension (<code>{{ postArr[postIndex].Image.File.ext }}</code>)</h1>
-                                <h3>Post: {{ postArr[postIndex].ID }}</h3>
-                            </template> -->
                             
                             <template v-if="!fileLoaded">
                                 <div class="fileLoadingOverlay">
@@ -71,16 +45,18 @@
                     </td>
                     <td align="center">
                         <ul class="fullscreen-button-list">
-                            <li @click="setVis(false)">
+                            <!-- <li @click="setVis(false)">
                                 <md-icon>close</md-icon>
-                            </li>
+                            </li> -->
                         </ul>
                     </td>
                     <td align="right">
                         <ul class="fullscreen-button-list">
-                            <li @click="$appData.Client.Favorite(postArr[postIndex].ID, !postArr[postIndex].Favorite)">
-                                <md-icon v-bind:style="`${postArr[postIndex].Favorite ? 'color: gold;' : ''}`">star</md-icon>
-                            </li>
+                            <template v-if="postArr[postIndex].Client.Auth.Enable">
+                                <li @click="$appData.Client.Favorite(postArr[postIndex].ID, !postArr[postIndex].IsFavorite)">
+                                    <md-icon v-bind:style="`${postArr[postIndex].IsFavorite ? 'color: gold;' : ''}`">star</md-icon>
+                                </li>
+                            </template>
                             <li @click="AppData.PostDownload(postArr[postIndex])">
                                 <md-icon>download</md-icon>
                             </li>
@@ -144,7 +120,7 @@
 [action=voteup][enablestyle=yes] i{
     color: var(--md-theme-default-primary);
 }
-
+.fullscreen-button,
 .fullscreen-button-list {
     --button-size: 40px;
 }
@@ -156,6 +132,7 @@
     padding: 0;
 }
 
+.fullscreen-button .md-icon,
 .fullscreen-button-list .md-icon {
     font-size: var(--button-size) !important;
     width: var(--button-size);
@@ -165,10 +142,21 @@
     position: relative;
     text-shadow: 0 0 8px #888888;
 }
+.fullscreen-button .md-icon:hover,
 .fullscreen-button-list .md-icon:hover {
     cursor:pointer;
     transform: scale(1.1);
     transition: 70ms;
+}
+
+.fullscreen-button.close-btn {
+    position: fixed;
+    top: 0.2rem;
+    right: 0;
+    transition: 300ms;
+}
+[visible=no] .fullscreen-button.close-btn {
+    display: none;
 }
 
 .img-preview {
@@ -260,6 +248,17 @@ export default {
     data () {
         return this.initialData()
     },
+    created () {
+        var self = this
+        AppData.Keybinder.on('view:close', () => self.setVis(false))
+        AppData.Keybinder.on('item:next', () => self.nextPost())
+        AppData.Keybinder.on('item:previous', () => self.prevPost())
+    },
+    beforeDestroy () {
+        AppData.Keybinder.off('view:close', () => self.setVis(false))
+        AppData.Keybinder.off('item:next', () => self.nextPost())
+        AppData.Keybinder.off('item:previous', () => self.prevPost())
+    },
     methods: {
         initialData() {
             return {
@@ -275,6 +274,10 @@ export default {
                 this.$refs.main.setAttribute('visible', 'yes')
             else
                 this.$refs.main.setAttribute('visible', 'no')
+
+            if (!target)
+                if (this.$refs.postfile != undefined)
+                    this.$refs.postfile.stop()
         },
         setPostIndex(index) {
             this.$set(this.$data, 'postIndex', index)
@@ -290,13 +293,15 @@ export default {
         },
 
         prevPost () {
+            if (!this.visibility) return
             if (this.$data.postIndex - 1 < 0)
                 return
 
             this.$set(this.$data, 'postIndex', this.$data.postIndex - 1)
         },
         async nextPost () {
-            console.log(this.$data.postIndex, this.$data.postArr.length, this.$parent.$data.reachedEnd)
+            if (!this.visibility) return
+            console.debug(`[FullscreenResult->nextPost]\npostIndex=${this.postIndex},\npostArrayLength=${this.postArr.length},\nreachedEnd=${this.reachedEnd}`)
             if (this.$data.postIndex + 1 >= this.$data.postArr.length)
             {
                 if (this.$parent.$data.reachedEnd)

@@ -6,7 +6,6 @@ const path = require('path')
 const { dependencies } = require('../package.json')
 const webpack = require('webpack')
 
-const MinifyPlugin = require("babel-minify-webpack-plugin")
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
@@ -46,12 +45,16 @@ let rendererConfig = {
       },
       {
         test: /\.js$/,
-        use: 'babel-loader',
+        use: 'esbuild-loader',
         exclude: /node_modules/
       },
       {
         test: /\.node$/,
         use: 'node-loader'
+      },
+      {
+        test: /\.ts$/,
+        use: 'ts-loader'
       },
       {
         test: /\.vue$/,
@@ -168,7 +171,6 @@ if (process.env.NODE_ENV === 'production') {
   rendererConfig.devtool = ''
 
   rendererConfig.plugins.push(
-    new MinifyPlugin(),
     new CopyWebpackPlugin([
       {
         from: path.join(__dirname, '../static'),

@@ -60,7 +60,19 @@ export default {
     },
     methods: {
         thumbnailImage() {
-            let entries = Object.entries(this.post.Image)
+            if (AppData.CloudConfig.User.get().highQualityPreview)
+            {
+                if (this.post.Image.Sample.url != undefined)
+                    return this.post.Image.Sample
+                let hq = this.post.Image.File
+                if (hq.url.toString().match(/\.(png|jpg|jpeg|gif)$/i) != null)
+                {
+                    return hq
+                }
+                if (this.post.Image.Preview.url != undefined)
+                    return this.post.Image.Preview
+            }
+            
             if (this.post.Image.Preview.url != undefined)
                 return this.post.Image.Preview
             else if (this.post.Image.Sample.url != undefined)
