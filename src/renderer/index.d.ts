@@ -6,6 +6,7 @@ import { IConfig_AuthProfile, IConfig_Stats, IConfig_User, IConfig_Keybind } fro
 import MetricManager from './MetricManager'
 import Steamworks from './SteamworksIntergration'
 import { KeybindManager } from './Keybinder/KeybindManager'
+import Vue from 'vue'
 
 declare interface ICloudConfig 
 {
@@ -58,5 +59,6 @@ declare global
     var AppData: IAppData
     var __SIXGRID_PRODUCT_BUILD_VERSION: string
     var __PRODUCT_EXTENDED_INFORMATION: IProductInformation
+    var vueJS: Vue
 }
 export {}

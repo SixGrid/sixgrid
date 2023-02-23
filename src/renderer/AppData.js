@@ -10,16 +10,10 @@ const { default: MetricManager } = require('./MetricManager')
 const {KeybindManager} = require('./Keybinder/KeybindManager')
 const request = require('request')
 const axios = require('axios')
+const { ipcRenderer } = require('electron')
+const { notifyProc }  = require('./notifyProc')
 function isObject(item) {
     return (item && typeof item === 'object' && !Array.isArray(item));
-}
-const notifyProc = (data) => {
-    if (AppData.CloudConfig.UserConfiguration.get('developerMetrics')) {
-        axios.post('http://localhost:5010/api/analytics', {
-            token: AppData.Steamworks.AuthorizationToken,
-            data
-        })
-    }
 }
 var AppData = {
     notifyProc,
@@ -60,7 +54,7 @@ var AppData = {
             else if (data.state < 0)
                 AppData.MetricManager.Increment('post_downvote_count')
         })
-        global.AppData.Client.on('post:search', () => {
+        global.AppData.Client.on('post:search', (query) => {
             notifyProc({
                 eventName: 'search',
                 data: query.split(' ')

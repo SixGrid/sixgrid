@@ -250,3 +250,17 @@ export interface FileNameDict
     size: number
 }
 export function getFileNameAndSize(index: number): FileNameDict
+
+//- Authorization
+export function cancelAuthTicket(ticket_handle: number): void
+export function getEncryptedAppTicket(
+    user_data: string,
+    success_callback: (encrypted_ticket: Buffer) => void,
+    error_callback: (err: any) => void): void
+export function decryptAppTicket(
+    encrypted_ticket: Buffer,
+    decryption_key: Buffer): void
+export function isTicketForApp(decrypted_ticket: Buffer, app_id: number): Boolean
+export function getTicketIssueTime(decrypted_ticket: Buffer): number
+export function getTicketSteamId(decrypted_ticket: Buffer): SteamID
+export function getTicketAppId(decrypted_ticket: Buffer): number

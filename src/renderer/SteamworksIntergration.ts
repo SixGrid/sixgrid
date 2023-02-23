@@ -2,6 +2,7 @@ import * as greenworks from 'greenworks'
 
 import {EventEmitter} from 'events'
 import { MetricManagerData } from './MetricManager'
+import { ipcRenderer } from 'electron'
 
 export type SteamMetricType = 'int'|'float'
 export interface ISteamMetric
@@ -41,12 +42,17 @@ export default class Steamworks extends EventEmitter {
         }
         if (this.hasInitalized) return
         try {
-            let response = this.Greenworks.init()
+            let gw = require('greenworks')
+            eval(`process.activateUvLoop()`)
+            let response = gw.init()
             if (response) {
+                this.InitalizeToken(gw)
+                this.Greenworks = gw
                 this.InitializeEvents()
             } else {
                 throw this.GenerateError(Steamworks.ERRORS.InitalizeFail)
             }
+            this.Greenworks = gw
         } catch (e) {
             if (require('electron').remote.process.argv.includes('--steam'))
                 alert('Failed to initalize Steamworks\n' + e)
@@ -73,11 +79,30 @@ export default class Steamworks extends EventEmitter {
         global.AppData.MetricManager.SetData(metricdata)
         global.AppData.MetricManager.Write()
 
+
         let greenworks = this.Greenworks
         global.AppData.MetricManager.on('update', function (data: ISteamMetric)
         {
             greenworks.setStat(data.name, data.value)
         })
+    }
+    public AuthorizationToken: string = ''
+    public InitalizeToken(gw: typeof greenworks): void
+    {
+        if (this.hasInitalized) return;
+        console.log(`[SteamworksIntergration->InitalizeToken] Fetching Token`)
+        var response = this.Greenworks.getEncryptedAppTicket('', (ticket) => {
+            console.log(`[SteamworksIntergration->InitalizeToken] We've got the token!!`)
+            this.AuthorizationToken = ticket.toString('hex');
+            ipcRenderer.send('telemetry:setToken', this.AuthorizationToken)
+        }, (err) => {
+            console.error(`[SteamworksIntergration->InitalizeToken] Failed!!\n`, err)
+            if (err.includes('Error on getting encrypted app ticket.')) {
+                console.log(`[SteamworksIntergration->InitalizeToken] Retrying in 60s`)
+                setTimeout(() => this.InitalizeToken(gw), 60000)
+            }
+        })
+        console.debug(`[SteamworksIntergration->InitalizeToken] response:`, response)
     }
     ResetMetrics() {
         global.AppData.MetricManager.Reset()

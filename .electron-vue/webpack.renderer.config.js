@@ -54,7 +54,8 @@ let rendererConfig = {
       },
       {
         test: /\.ts$/,
-        use: 'ts-loader'
+        use: 'ts-loader',
+        exclude: /node_modules/
       },
       {
         test: /\.vue$/,
@@ -97,11 +98,6 @@ let rendererConfig = {
             name: 'fonts/[name]--[folder].[ext]'
           }
         }
-      },
-      {
-        test: /\.ts$/,
-        use: 'ts-loader',
-        exclude: /node_modules/
       }
     ]
   },

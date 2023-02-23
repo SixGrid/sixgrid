@@ -9,6 +9,6 @@ export declare type KeybindChannel =
 
 export enum Keystate
 {
-    Up,
-    Down
+    Up = 0,
+    Down = 1
 }

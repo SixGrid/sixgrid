@@ -1,5 +1,6 @@
 import type { IProductInformation } from '../shared'
 import type { BrowserWindow } from 'electron'
+import { WriteStream } from 'fs'
 declare global
 {
     var electronMainWindow: BrowserWindow|undefined
@@ -7,5 +8,6 @@ declare global
     var __PRODUCT_EXTENDED_INFORMATION: IProductInformation
     var __static: string
     var debugMode: boolean
+    var logfile_FileStream: WriteStream
 }
 

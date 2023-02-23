@@ -7,13 +7,13 @@ export function isDevelopmentMode () {
 }
 export function fetchTitle () {
     let value = `SixGrid v${__SIXGRID_PRODUCT_BUILD_VERSION} (${_ProductInformation.commitHashShort})`
-    if (electronMainWindow != undefined)
-        electronMainWindow.webContents.send('title:update', value)
+    if (global.electronMainWindow != undefined)
+        global.electronMainWindow.webContents.send('title:update', value)
     return value
 }
 export function safeReload () {
-    if (electronMainWindow != undefined)
-        electronMainWindow.loadURL(winURL)
+    if (global.electronMainWindow != undefined)
+        global.electronMainWindow.loadURL(winURL)
 }
 export const winURL = (() => {
     var value = isDevelopmentMode()
@@ -40,7 +40,7 @@ export function relaunchConfirm () {
     }
 }
 export function stringArrayCharacterLength (input: string[]) {
-    let length = 0
+    let length: number = 0
     for (let thing of input) {
         length += thing.length
     }

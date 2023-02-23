@@ -1,21 +1,43 @@
+import axios from 'axios'
 import { BrowserWindow, ipcMain } from 'electron'
 import { EventEmitter } from 'events'
 
-import {ITelemetryData} from './ITelemetryData'
-
 export interface InterProtoData
 {
-    
+    token: string
+    data: ITelemetryData<any>
+}
+export interface ITelemetryData<T>
+{
+    eventName: string
+    data: T
 }
 
 export default class TelemetryManager extends EventEmitter {
-    public static readonly EndpointURL: string = 'https://sixgrid.dxcdn.net';
-    public Window: BrowserWindow = null
+    public Window: BrowserWindow
     public constructor(mainWindow: BrowserWindow)
     {
         super()
         this.Window = mainWindow
         console.debug(`[TelemetryManager->constructor] Instance Created`)
+        this.initializeWindowEvents()
+        this.initializeEvents()
+    }
+
+    public HeartbeatInterval: any
+    public Token: string = ''
+    public Endpoint: string = 'http://localhost:5010/api/analytics'
+
+    private initializeEvents(): void
+    {
+        this.initializeWindowEvents()
+
+        this.HeartbeatInterval = setInterval(() => {
+            this.submitData({
+                eventName: 'heartbeat',
+                data: null
+            })
+        })
     }
 
     private initializeWindowEvents(): void
@@ -23,16 +45,24 @@ export default class TelemetryManager extends EventEmitter {
         ipcMain.on('telemetry:hello', (event) => {
             event.returnValue = null
         })
-
         ipcMain.on('telemetry:postAction', (event, data: InterProtoData) => {
             if (data == undefined) return null
+            console.log(data)
+        })
 
-            
+        ipcMain.on('telemetry:setToken', (event, token: string) =>
+        {
+            this.Token = token
         })
     }
 
     public async submitData(data: ITelemetryData<any>): Promise<void>
     {
-        
+        if (this.Token.length < 1)
+            return;
+        await axios.post(this.Endpoint, {
+            token: this.Token,
+            data
+        })
     }
 }

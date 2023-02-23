@@ -4,12 +4,12 @@ import menu from './menu'
 import * as helpers from './helpers'
 import * as os from 'os'
 let isSteamDeck: boolean = os.release().toString().includes('valve')
+app.allowRendererProcessReuse = false
 
 if (isSteamDeck) {
     app.disableHardwareAcceleration()
     console.log(`Running on Steam Deck. Hardware Acceleration has been disabled due to some linux issues.`)
 }
-
 /**
  * Set `__static` path to static files in production
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
@@ -42,7 +42,6 @@ else
     winURL = process.env.NODE_ENV === 'development' ? winURL_dev : `file://${__dirname}/index.html`
 }
 function createWindow () {
-    app.allowRendererProcessReuse = false
     global.electronMainWindow = new BrowserWindow({
         useContentSize: true,
         width: 1280,

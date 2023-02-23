@@ -28,11 +28,6 @@ let mainConfig = {
       {
         test: /\.node$/,
         use: 'node-loader'
-      },
-      {
-        test: /\.ts$/,
-        use: 'ts-loader',
-        exclude: /node_modules/
       }
     ]
   },
