@@ -85,6 +85,7 @@ var AppData = {
     },
 
     PostDownload (postObject) {
+        let logScope = AppData.Log.scope('AppData.PostDownload')
         let targetURL = postObject.Image.File.url
 
         let req = request({
@@ -110,10 +111,10 @@ var AppData = {
                 let loc = path.join(AppData.CloudConfig.User.get().downloadFolder, `${postObject.ID}.${postObject.Image.File.md5}.json`)
                 if (!fs.existsSync(loc)) {
                     fs.writeFileSync(loc, JSON.stringify(postObject.toJSON(), null, '    '))
-                    console.log(`[AppData->PostDownload] Saved metadata for post ${postObject.ID}`)
+                    logScope.log(`Saved metadata for post ${postObject.ID}`)
                 }
             }
-            console.log(`[AppData->PostDownload] Completed ${postObject.ID}.${postObject.Image.File.ext} (${parseFloat(totalBytes/1000).toFixed(3)}kb)`)
+            logScope.log(`Completed ${postObject.ID}.${postObject.Image.File.ext} (${parseFloat(totalBytes/1000).toFixed(3)}kb)`)
             AppData.MetricManager.Increment('download_completeCount')
         })
     },
