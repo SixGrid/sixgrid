@@ -222,8 +222,13 @@ export default {
             if (abort)
             {
                 console.log(`\n\n\n\n\n\n\n\n================================ How on earth did this happen? ================================`, response)
-                console.log(`================ Response Content ================\n\n\n`, response.data, `\n\n\n================ End Response Content ================`)
-                console.log(`\n\n\n\n\n\n\n\n================================ How on earth did this happen? ================================`, response)
+                console.groupCollapsed('Response Content')
+                console.log(response.data)
+                console.groupEnd()
+                console.groupCollapsed('Response Headers')
+                console.table(response.headers)
+                console.groupEnd()
+                console.log('\n\n\n\n')
             }
             return abort
         },
