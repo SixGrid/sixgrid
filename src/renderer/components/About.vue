@@ -10,6 +10,12 @@
                 </md-avatar>
             </template>
         </div>
+        <h3>Credits</h3>
+        <md-list>
+            <md-list-item>
+                <div><a href="https://e621.net/users/Donovan_DMC" openExternal>Donovan_DMC</a> for the Status API (status.e621.ws)</div>
+            </md-list-item>
+        </md-list>
         <div class="packages">
             <h3>Dependencies</h3>
             <md-table>

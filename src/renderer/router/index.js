@@ -60,6 +60,11 @@ export default new Router({
             component: require('@/components/SteamNews').default
         },
         {
+            path: '/esixstatus',
+            name: 'Service Status',
+            component: require('@/components/ESixStatus').default
+        },
+        {
             path: '/:pathMatch(.*)*',
             name: '404',
             component: require('@/components/NotImplemented').default
