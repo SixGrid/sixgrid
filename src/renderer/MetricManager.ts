@@ -1,12 +1,14 @@
 import { EventEmitter } from "events"
 import { ISteamMetric } from "./SteamworksIntergration"
-
+import * as ElectronLog from 'electron-log'
+let log: ElectronLog.LogFunctions;
 export type MetricManagerData = {[key: string]: ISteamMetric}
 export default class MetricManager extends EventEmitter
 {
     public constructor()
     {
         super()
+        log = global.AppData.Log.scope('metricManager')
     }
     /**
      * @returns {boolean} Successfully increment item
@@ -20,7 +22,7 @@ export default class MetricManager extends EventEmitter
         {
             if (currentData.value + 1 > currentData.max)
             {
-                console.warn(`Did not increment ${key} since the next value is greater than the maximum value`)
+                log.warn(`Did not increment ${key} since the next value is greater than the maximum value`)
                 return false;
             }
         }
@@ -31,11 +33,10 @@ export default class MetricManager extends EventEmitter
         }
         catch (ex)
         {
-            console.error(`Failed to increment ${key}`)
-            console.error(ex);
+            log.error(`Failed to increment ${key}`, ex)
             return false;
         }
-        console.log(`[MetricManager] Incremented ${key} (${currentData} -> ${this.MetricStore[key].value})`)
+        log.log(`[MetricManager] Incremented ${key} (${currentData} -> ${this.MetricStore[key].value})`)
         this.emit('update', this.MetricStore[key])
         this.Write()
         return true;
@@ -80,8 +81,7 @@ export default class MetricManager extends EventEmitter
         }
         catch (ex)
         {
-            console.error(`Failed to increment ${key}`)
-            console.error(ex);
+            log.error(`Failed to increment ${key}`, ex)
             return false;
         }
         this.emit('update', this.MetricStore[key])
