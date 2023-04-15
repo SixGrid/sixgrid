@@ -14,6 +14,7 @@
                 </div>
             </div>
         </md-content>
+        <e-six-status />
         <hr>
         <steam-news />
     </div>
@@ -60,10 +61,11 @@
 }
 </style>
 <script>
+import ESixStatus from './ESixStatus.vue'
 import SteamNews from './SteamNews.vue'
 export default {
     name: 'home',
-    components: {SteamNews},
+    components: {SteamNews, ESixStatus},
     methods: {
         OpenExternal (url) {
             global.AppData.OpenExternal(url)
