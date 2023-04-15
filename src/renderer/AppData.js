@@ -174,7 +174,7 @@ try {
 } catch (e) {
     if (AppData.AllowSteamworks)
         alert('Failed to initialize Steamworks', e)
-    console.error(`Failed to initialize Steamworks`, e)
+    AppData.Log.error(`Failed to initialize Steamworks`, e)
 }
 setTimeout(() =>{global.AppData.Steamworks.Initialize()}, 1500)
 
