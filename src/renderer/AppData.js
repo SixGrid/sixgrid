@@ -29,6 +29,10 @@ var AppData = {
         let currentAuthentication = global.AppData.FetchClientParameters()
         if (global.AppData.Client != undefined)
             global.AppData.Client.Gatekeeper.Destroy()
+        currentAuthentication.product = {
+            name: 'SixGrid',
+            version: __SIXGRID_PRODUCT_BUILD_VERSION
+        }
         global.AppData.Client = new esixapi.Client(currentAuthentication)
         global.AppData.Client.on('post:favorite', () => {
             AppData.MetricManager.Increment('favorite_count')
