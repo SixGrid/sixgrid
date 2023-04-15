@@ -156,6 +156,7 @@ var AppData = {
     }
 }
 global.AppData = AppData
+global.AppData.Log = require('electron-log')
 global.AppData.Config = new ConfigManager()
 // global.AppData.Steamworks = new (require('@theace0296/steamworks'))(1992810)
 let appIdLocation = path.resolve('steam_appid.txt')

@@ -6,6 +6,7 @@ import { IConfig_AuthProfile, IConfig_Stats, IConfig_User, IConfig_Keybind } fro
 import MetricManager from './MetricManager'
 import Steamworks from './SteamworksIntergration'
 import { KeybindManager } from './Keybinder/KeybindManager'
+import { ElectronLog } from 'electron-log'
 
 declare interface ICloudConfig 
 {
@@ -52,6 +53,8 @@ declare interface IAppData
     Event: EventEmitter
 
     IsSteamDeck: boolean
+
+    Log: ElectronLog
 }
 declare global
 {
