@@ -3,6 +3,7 @@ import '../renderer/store'
 import menu from './menu'
 import * as helpers from './helpers'
 import * as os from 'os'
+import TelemetryManager from './telemetryManager/index'
 let isSteamDeck: boolean = os.release().toString().includes('valve')
 app.allowRendererProcessReuse = false
 
@@ -58,10 +59,15 @@ function createWindow () {
             contextIsolation: false
         }
     })
+    let telemetry: TelemetryManager|null = null
     if (isSteamDeck) {
         global.electronMainWindow.webContents.setFrameRate(60)
         console.log(`Set framerate to 60fps`)
     }
+    if (process.argv.includes('--steam')) {
+        telemetry = new TelemetryManager(global.electronMainWindow)
+    }
+
     global.electronMainWindow.setMenu(null)
     Menu.setApplicationMenu(Menu.buildFromTemplate(menu))
     global.electronMainWindow.setTitle(helpers.fetchTitle())
@@ -69,6 +75,10 @@ function createWindow () {
     global.electronMainWindow.loadURL(winURL)
 
     global.electronMainWindow.on('closed', () => {
+        if (telemetry != null)
+        {
+            telemetry.close()
+        }
         delete global.electronMainWindow
     })
 
