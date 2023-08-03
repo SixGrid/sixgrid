@@ -27,9 +27,15 @@ const errorLog = chalk.bgRed.white(' ERROR ') + ' '
 const okayLog = chalk.bgBlue.white(' OKAY ') + ' '
 const isCI = process.env.CI || false
 
-if (process.env.BUILD_TARGET === 'clean') clean()
-else if (process.env.BUILD_TARGET === 'web') web()
-else build()
+switch (process.env.BUILD_TARGET)
+{
+    case 'clean':
+        clean();
+    case 'web':
+        web();
+    default:
+        build()
+}
 
 function clean () {
     del.sync(['build/*', '!build/icons', '!build/icons/icon.*'])
