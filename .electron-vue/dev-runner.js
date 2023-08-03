@@ -13,19 +13,11 @@ const fs = require('fs')
 const dayjs = require('dayjs')
 const packageJSON = require('../package.json')
 const buildTimestamp = (new Date(process.env['CI_COMMIT_TIMESTAMP'] ?? '')).getTime() || Date.now()
+const buildInfo = require('./build-info.js')
 
+fs.writeFileSync('./build/release-info.json', JSON.stringify(buildInfo.extendedReleaseInfo))
 
-let buildInfo = {
-  __SIXGRIDBUILDTIMESTAMP__: buildTimestamp,
-  __SIXGRID_PRODUCT_BUILD_TIMESTAMP: dayjs(buildTimestamp).format('YYYY/MM/DD hh:mm:ss A'),
-  __SIXGRID_PRODUCT_BUILD_VERSION: packageJSON.version
-}
-let extendedBuildInfo = require('./releaseInfo')(buildInfo)
-buildInfo.__PRODUCT_EXTENDED_INFORMATION = extendedBuildInfo
-
-fs.writeFileSync('./build/release-info.json', JSON.stringify(extendedBuildInfo))
-
-let productInfoPlugin = new webpack.DefinePlugin(Object.fromEntries(Object.entries(buildInfo).map(r => [r[0], JSON.stringify(r[1])])))
+let productInfoPlugin = buildInfo.webpackPlugin()
 
 
 const mainConfig = require('./webpack.main.config')
