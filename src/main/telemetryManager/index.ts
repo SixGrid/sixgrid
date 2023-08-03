@@ -35,9 +35,16 @@ export default class TelemetryManager extends EventEmitter {
         this.HeartbeatInterval = setInterval(() => {
             this.submitData({
                 eventName: 'heartbeat',
-                data: null
+                data: Date.now()
             })
-        })
+        }, 5000)
+    }
+    public close(): void
+    {
+        if (this.HeartbeatInterval != null)
+        {
+            clearInterval(this.HeartbeatInterval)
+        }
     }
 
     private initializeWindowEvents(): void
