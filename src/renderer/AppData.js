@@ -148,7 +148,7 @@ var AppData = {
         return Number(n) === n && n % 1 === 0;
     },
     get RootURI () {
-        return (process.env.NODE_ENV === 'development' ? `http://dev.sixgrid.kate.pet:9080/` : `file://${process.platform == 'win32' ? '/' : ''}${__dirname.replaceAll('\\', '/')}/index.html`).split('?')[0]
+        return (process.env.NODE_ENV === 'development' ? `http://localhost:9080/` : `file://${process.platform == 'win32' ? '/' : ''}${__dirname.replaceAll('\\', '/')}/index.html`).split('?')[0]
     },
     set RootURI (value) {},
 

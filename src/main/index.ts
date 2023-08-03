@@ -31,7 +31,7 @@ app.commandLine.appendSwitch('in-process-gpu')
 let customURL_enable = app.commandLine.hasSwitch('url')
 let customURL = app.commandLine.getSwitchValue('url')
 
-const winURL_dev = 'http://dev.sixgrid.kate.pet:9080'
+const winURL_dev = 'http://localhost:9080'
 let winURL: string = ''
 if (global.debugMode && customURL_enable)
 {
