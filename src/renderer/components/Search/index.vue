@@ -57,6 +57,7 @@ import SearchResultGrid from './SearchResultGrid.vue'
 import FullscreenResult from './FullscreenResult.vue'
 import FullscreenResultAsPage from './FullscreenResultAsPage.vue'
 import SearchParameterModal from './SearchParameterModal.vue'
+import { IncomingMessage } from 'http'
 export default {
   components: { SearchResultGrid, FullscreenResult, FullscreenResultAsPage, SearchParameterModal },
     name: 'Search',
@@ -75,7 +76,8 @@ export default {
             postsLoading: false,
             postLoadingMessage: 'Fetching Query',
             reachedEnd: false,
-            autoCompleteOptions: []
+            autoCompleteOptions: [],
+            logger: global.AppData.Log.scope('Search')
         }
     },
     methods: {
@@ -117,19 +119,19 @@ export default {
             if (conf.sortByFavorite)
                 value += ' order:favcount'
             this.$set(this.$data, 'targetSearchQuery', value)
-            console.log(`[Search->ValidateSearch] Executing Query; '${this.$data.targetSearchQuery}'`)
+            this.logger.log(`[ValidateSearch] Executing Query; '${this.$data.targetSearchQuery}'`)
             this.ExecuteSearchQuery()
         },
         async UpdateAutocomplete () {
             if (AppData.Client == null) AppData.reloadClient()
-            console.log(this.$refs.autocomplete)
+            this.logger.log(`value: ${this.$refs.autocomplete}`)
             let data = await AppData.Client.FetchAutocomplete('name_matches', this.searchQuery)
             this.$set(this.$data, 'previousSearchQuery', this.searchQuery)
             this.$set(this.$data, 'autoCompleteOptions', data.map(v => v.name))
             return this.autoCompleteOptions
         },
         // async calculateAutocomplete () {
-        //     console.log('attempting autocomplete')
+        //     this.logger.log('[calculateAutocomplete] attempting autocomplete')
         //     if (AppData.Client == null) AppData.reloadClient()
         //     if (this.previousSearchQuery == this.searchQuery)
         //         return;
@@ -145,7 +147,7 @@ export default {
             if (AppData.Client == null) AppData.reloadClient()
             let options = Object.assign({}, this.$data.options,
                 {
-                    query: this.$data.targetSearchQuery
+                    query: this.$data.targetSearchQuery.toString().trim()
                 })
             this.$data.postsLoading = true
             this.$set(this.$data, 'postLoadingMessage', 'Fetching Query')
@@ -156,19 +158,79 @@ export default {
             }
             catch (err)
             {
-                console.error(`[Search->ExecuteSearchQuery] Failed to run AppData.Client.Search(${JSON.stringify(options)})\n`, err)
+                this.logger.log('[ExecuteSearchQuery] Caught Error', err)
+                if (err instanceof IncomingMessage)
+                {
+                    let doBreak = this.ExecuteSearchQuery_Catch_IncomingMessage(err, options)
+                    if (doBreak)
+                        return
+                }
+                this.logger.error(`[ExecuteSearchQuery] Failed to run AppData.Client.Search(${JSON.stringify(options)})\n`, err)
                 if (err.message != undefined)
                 {
                     this.$set(this.$data, 'postLoadingMessage', err.message)
+                    return
+                }
+                let previousPostLoadingMessage = this.postLoadingMessage.toString()
+                if (err.response != undefined && err.response instanceof IncomingMessage)
+                {
+                    if (this.ExecuteSearchQuery_Catch_IncomingMessage(err.response, options))
+                        return
+                }
+                if (err.error != undefined && err.error.message != undefined)
+                {
+                    let postLoadingMessageContent = err.error.message
+                    if (this.previousPostLoadingMessage != previousPostLoadingMessage)
+                    {
+                        postLoadingMessageContent = `${this.postLoadingMessage}<br>${postLoadingMessageContent}`
+                    }
+                    this.$set(this.$data, 'postLoadingMessage', postLoadingMessageContent)
                     return
                 }
             }
             this.$set(this.$data, 'posts', {
                 posts
             })
-            console.log(`[Search->ExecuteSearchQuery] Took ${Date.now() - ts}ms (${options.query})`, posts)
+            this.logger.log(`[ExecuteSearchQuery] Took ${Date.now() - ts}ms (${options.query})`, posts)
             this.$data.postsLoading = false
             this.$set(this.$data, 'reachedEnd', false)
+        },
+        ExecuteSearchQuery_Catch_IncomingMessage(response, searchOptions)
+        {
+            let abort = false
+            if (response.data.toString().includes('window._cf_chl_opt'))
+            {
+                this.postLoadingMessage = 'Currently being blocked by CloudFlare (detected challenge)'
+                abort = true
+            }
+            // User-related error
+            else if (response.statusCode >= 400 && response.statusCode < 500)
+            {
+                this.postLoadingMessage = `Response is ${response.statusMessage} (${response.statusCode}). See console for more info`
+                abort = true
+            }
+            else if (response.statusCode >= 500 && response.statusCode < 600)
+            {
+                this.postLoadingMessage = `Server Error ${response.statusMessage} (${response.statusCode})`
+                abort = true
+            }
+            else
+            {
+                this.postLoadingMessage = `Invalid Status Code? ${response.statusMessage} ${response.statusCode}`
+                abort = true
+            }
+            if (abort)
+            {
+                console.log(`\n\n\n\n\n\n\n\n================================ How on earth did this happen? ================================`, response)
+                console.groupCollapsed('Response Content')
+                console.log(response.data)
+                console.groupEnd()
+                console.groupCollapsed('Response Headers')
+                console.table(response.headers)
+                console.groupEnd()
+                console.log('\n\n\n\n')
+            }
+            return abort
         },
         findPostIndex(post) {
             for (let i = 0; i < this.$data.posts.posts.length; i++) {
@@ -182,7 +244,7 @@ export default {
             this.$refs.Fullscreen.setPosts(this.$data.posts.posts)
             this.$refs.Fullscreen.setPostIndex(this.findPostIndex(post))
             this.$refs.Fullscreen.setVis(true)
-            console.log(`[Search->postClick]`, post)
+            this.logger.log(`[postClick]`, post)
         },
 
         async fetchNextPage() {
@@ -198,13 +260,13 @@ export default {
             this.$set(this.$data, 'postLoadingMessage', 'Fetching Query')
             let posts = await AppData.Client.Search(options)
             if (posts.length < 1) {
-                console.log(`[Search->fetchNextPage] 0 posts left, looks like we've reached the end!`)
+                this.logger.log(`[fetchNextPage] 0 posts left, looks like we've reached the end!`)
                 this.$set(this.$data, 'reachedEnd', true)
             }
             this.$set(this.$data.posts, 'posts', this.$data.posts.posts.concat(posts))
             this.$refs.Fullscreen.setPosts(this.$data.posts.posts)
             this.$set(this.$data, 'postsLoading', false)
-            console.log(`[Search->fetchNextPage] Took ${Date.now() - ts}ms (${targetQuery})`)
+            this.logger.log(`[fetchNextPage] Took ${Date.now() - ts}ms (${targetQuery})`)
         }
     }
 }

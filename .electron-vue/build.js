@@ -10,23 +10,12 @@ const webpack = require('webpack')
 const Listr = require('listr')
 const Multispinner = require('multispinner')
 
+const buildInfo = require('./build-info')
 const fs = require('fs')
-const dayjs = require('dayjs')
-const packageJSON = require('../package.json')
-const buildTimestamp = (new Date(process.env['CI_COMMIT_TIMESTAMP'] ?? '')).getTime() || Date.now()
 
+fs.writeFileSync('./build/release-info.json', JSON.stringify(buildInfo.extendedReleaseInfo))
 
-let buildInfo = {
-  __SIXGRIDBUILDTIMESTAMP__: buildTimestamp,
-  __SIXGRID_PRODUCT_BUILD_TIMESTAMP: dayjs(buildTimestamp).format('YYYY/MM/DD hh:mm:ss A'),
-  __SIXGRID_PRODUCT_BUILD_VERSION: packageJSON.version
-}
-let extendedBuildInfo = require('./releaseInfo')(buildInfo)
-buildInfo.__PRODUCT_EXTENDED_INFORMATION = extendedBuildInfo
-
-fs.writeFileSync('./build/release-info.json', JSON.stringify(extendedBuildInfo))
-
-let productInfoPlugin = new webpack.DefinePlugin(Object.fromEntries(Object.entries(buildInfo).map(r => [r[0], JSON.stringify(r[1])])))
+let productInfoPlugin = buildInfo.webpackPlugin()
 
 
 const mainConfig = require('./webpack.main.config')
@@ -38,132 +27,138 @@ const errorLog = chalk.bgRed.white(' ERROR ') + ' '
 const okayLog = chalk.bgBlue.white(' OKAY ') + ' '
 const isCI = process.env.CI || false
 
-if (process.env.BUILD_TARGET === 'clean') clean()
-else if (process.env.BUILD_TARGET === 'web') web()
-else build()
+switch (process.env.BUILD_TARGET)
+{
+    case 'clean':
+        clean();
+    case 'web':
+        web();
+    default:
+        build()
+}
 
 function clean () {
-  del.sync(['build/*', '!build/icons', '!build/icons/icon.*'])
-  console.log(`\n${doneLog}\n`)
-  process.exit()
+    del.sync(['build/*', '!build/icons', '!build/icons/icon.*'])
+    console.log(`\n${doneLog}\n`)
+    process.exit()
 }
 
 async function build () {
-  greeting()
+    greeting()
 
-  del.sync(['dist/electron/*', '!.gitkeep'])
+    del.sync(['dist/electron/*', '!.gitkeep'])
 
-  let mstasks = ['main', 'renderer']
-  const m = new Multispinner(mstasks, {
-    preText: 'building',
-    postText: 'process'
-  })
-
-  let results = ''
-  
-  const tasks = new Listr(
-    [
-      {
-        title: 'building master process',
-        task: async () => {
-          await pack(mainConfig)
-            .then(result => {
-              results += result + '\n\n'
-            })
-            .catch(err => {
-              console.log(`\n  ${errorLog}failed to build main process`)
-              console.error(`\n${err}\n`)
-            })
-        }
-      },
-      {
-        title: 'building renderer process',
-        task: async () => {
-          await pack(rendererConfig)
-            .then(result => {
-              results += result + '\n\n'
-            })
-            .catch(err => {
-              console.log(`\n  ${errorLog}failed to build renderer process`)
-              console.error(`\n${err}\n`)
-            })
-        }
-      }
-    ],
-    { concurrent: 2 }
-  )
-
-  await tasks
-    .run()
-    .then(() => {
-      process.stdout.write('\x1B[2J\x1B[0f')
-      console.log(`\n\n${results}`)
-      console.log(`${okayLog}take it away ${chalk.yellow('`electron-builder`')}\n`)
-      process.exit()
+    let mstasks = ['main', 'renderer']
+    const m = new Multispinner(mstasks, {
+        preText: 'building',
+        postText: 'process'
     })
-    .catch(err => {
-      process.exit(1)
-    })
+
+    let results = ''
+    
+    const tasks = new Listr(
+        [
+            {
+                title: 'building master process',
+                task: async () => {
+                    await pack(mainConfig)
+                        .then(result => {
+                            results += result + '\n\n'
+                        })
+                        .catch(err => {
+                            console.log(`\n  ${errorLog}failed to build main process`)
+                            console.error(`\n${err}\n`)
+                        })
+                }
+            },
+            {
+                title: 'building renderer process',
+                task: async () => {
+                    await pack(rendererConfig)
+                        .then(result => {
+                            results += result + '\n\n'
+                        })
+                        .catch(err => {
+                            console.log(`\n  ${errorLog}failed to build renderer process`)
+                            console.error(`\n${err}\n`)
+                        })
+                }
+            }
+        ],
+        { concurrent: 2 }
+    )
+
+    await tasks
+        .run()
+        .then(() => {
+            process.stdout.write('\x1B[2J\x1B[0f')
+            console.log(`\n\n${results}`)
+            console.log(`${okayLog}take it away ${chalk.yellow('`electron-builder`')}\n`)
+            process.exit()
+        })
+        .catch(err => {
+            process.exit(1)
+        })
 }
 
 function pack (config) {
-  return new Promise((resolve, reject) => {
-    config.mode = 'production'
-    config.plugins.push(productInfoPlugin)
-    webpack(config, (err, stats) => {
-      if (err) reject(err.stack || err)
-      else if (stats.hasErrors()) {
-        let err = ''
+    return new Promise((resolve, reject) => {
+        config.mode = 'production'
+        config.plugins.push(productInfoPlugin)
+        webpack(config, (err, stats) => {
+            if (err) reject(err.stack || err)
+            else if (stats.hasErrors()) {
+                let err = ''
 
-        stats.toString({
-          chunks: false,
-          colors: true
-        })
-        .split(/\r?\n/)
-        .forEach(line => {
-          err += `    ${line}\n`
-        })
+                stats.toString({
+                    chunks: false,
+                    colors: true
+                })
+                .split(/\r?\n/)
+                .forEach(line => {
+                    err += `    ${line}\n`
+                })
 
-        reject(err)
-      } else {
-        resolve(stats.toString({
-          chunks: false,
-          colors: true
-        }))
-      }
+                reject(err)
+            } else {
+                resolve(stats.toString({
+                    chunks: false,
+                    colors: true
+                }))
+            }
+        })
     })
-  })
 }
 
 function web () {
-  del.sync(['dist/web/*', '!.gitkeep'])
-  webConfig.mode = 'production'
-  webpack(webConfig, (err, stats) => {
-    if (err || stats.hasErrors()) console.log(err)
+    del.sync(['dist/web/*', '!.gitkeep'])
+    webConfig.mode = 'production'
+    webpack(webConfig, (err, stats) => {
+        if (err || stats.hasErrors()) console.log(err)
 
-    console.log(stats.toString({
-      chunks: false,
-      colors: true
-    }))
+        console.log(stats.toString({
+            chunks: false,
+            colors: true
+        }))
 
-    process.exit()
-  })
+        process.exit()
+    })
 }
 
 function greeting () {
-  const cols = process.stdout.columns
-  let text = ''
+    const cols = process.stdout.columns
+    let text = ''
 
-  if (cols > 85) text = 'lets-build'
-  else if (cols > 60) text = 'lets-|build'
-  else text = false
+    if (cols > 85) text = 'lets-build'
+    else if (cols > 60) text = 'lets-|build'
+    else text = false
 
-  if (text && !isCI) {
-    say(text, {
-      colors: ['yellow'],
-      font: 'simple3d',
-      space: false
-    })
-  } else console.log(chalk.yellow.bold('\n  lets-build'))
-  console.log()
+    if (text && !isCI) {
+        say(text, {
+            colors: ['yellow'],
+            font: 'simple3d',
+            space: false
+        })
+    } else console.log(chalk.yellow.bold('\n  lets-build'))
+    console.log()
 }

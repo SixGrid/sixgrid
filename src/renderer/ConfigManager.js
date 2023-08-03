@@ -2,6 +2,7 @@ const EventEmitter = require('events')
 const fs = require('fs')
 const path = require('path')
 const electron = require('electron')
+let log;
 /**
  * @class
  * @extends node:events
@@ -9,6 +10,7 @@ const electron = require('electron')
 class ConfigManager extends EventEmitter {
     constructor() {
         super()
+        log = global.AppData.Log.scope('configManager')
         this.read()
     }
 
@@ -24,7 +26,7 @@ class ConfigManager extends EventEmitter {
 
     _unsavedChanges = false
     get unsavedChanges () { return this._unsavedChanges }
-    set unsavedChanges (value) { console.log(`[configManager->unsavedChanges] ${this._unsavedChanges} -> ${value}`); this._unsavedChanges = value}
+    set unsavedChanges (value) { log.log(`[configManager->unsavedChanges] ${this._unsavedChanges} -> ${value}`); this._unsavedChanges = value}
 
     unsavedChanges = false
 

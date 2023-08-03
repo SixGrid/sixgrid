@@ -83,10 +83,12 @@
     "dependencies": {
         "axios": "^0.27.2",
         "dayjs": "^1.11.5",
+        "electron-log": "^4.4.8",
         "greenworks": "file:greenworks",
         "jquery": "^3.6.0",
         "js-bbcode-parser": "^4.0.0",
-        "libsixgrid": "^1.1.4",
+        "libsixgrid": "^1.1.5",
+        "moment": "^2.29.4",
         "remove-markdown": "^0.3.0",
         "sweetalert": "^2.1.2",
         "tinytoolbox": "^0.0.9",

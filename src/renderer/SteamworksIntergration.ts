@@ -4,6 +4,8 @@ import {EventEmitter} from 'events'
 import { MetricManagerData } from './MetricManager'
 import { ipcRenderer } from 'electron'
 
+import * as ElectronLog from 'electron-log'
+let log: ElectronLog.LogFunctions;
 export type SteamMetricType = 'int'|'float'
 export interface ISteamMetric
 {
@@ -26,6 +28,7 @@ export default class Steamworks extends EventEmitter {
     public constantInterval?: NodeJS.Timeout
     constructor() {
         super(); this.setMaxListeners(8192)
+        log = global.AppData.Log.scope('steamworks')
         this.Greenworks = require('greenworks')
     }
     hasInitalized = false
@@ -37,7 +40,7 @@ export default class Steamworks extends EventEmitter {
     Initialize() {
         if (!AppData.AllowSteamworks)
         {
-            console.debug(`Steamworks is disabled.`)
+            log.debug('Disabled')
             return
         }
         if (this.hasInitalized) return
@@ -56,7 +59,7 @@ export default class Steamworks extends EventEmitter {
         } catch (e) {
             if (require('electron').remote.process.argv.includes('--steam'))
                 alert('Failed to initalize Steamworks\n' + e)
-            console.error(`Failed to initialize Steamworks`, e)
+            log.error(`Failed to initialize Steamworks`, e)
         }
     }
     InitializeEvents() {

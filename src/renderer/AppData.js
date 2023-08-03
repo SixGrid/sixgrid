@@ -33,6 +33,10 @@ var AppData = {
         let currentAuthentication = global.AppData.FetchClientParameters()
         if (global.AppData.Client != undefined)
             global.AppData.Client.Gatekeeper.Destroy()
+        currentAuthentication.product = {
+            name: 'SixGrid',
+            version: __SIXGRID_PRODUCT_BUILD_VERSION
+        }
         global.AppData.Client = new esixapi.Client(currentAuthentication)
         notifyProc({
             eventName: 'connect',
@@ -100,6 +104,7 @@ var AppData = {
     },
 
     PostDownload (postObject) {
+        let logScope = AppData.Log.scope('AppData.PostDownload')
         let targetURL = postObject.Image.File.url
 
         let req = request({
@@ -129,10 +134,10 @@ var AppData = {
                 let loc = path.join(AppData.CloudConfig.User.get().downloadFolder, `${postObject.ID}.${postObject.Image.File.md5}.json`)
                 if (!fs.existsSync(loc)) {
                     fs.writeFileSync(loc, JSON.stringify(postObject.toJSON(), null, '    '))
-                    console.log(`[AppData->PostDownload] Saved metadata for post ${postObject.ID}`)
+                    logScope.log(`Saved metadata for post ${postObject.ID}`)
                 }
             }
-            console.log(`[AppData->PostDownload] Completed ${postObject.ID}.${postObject.Image.File.ext} (${parseFloat(totalBytes/1000).toFixed(3)}kb)`)
+            logScope.log(`Completed ${postObject.ID}.${postObject.Image.File.ext} (${parseFloat(totalBytes/1000).toFixed(3)}kb)`)
             AppData.MetricManager.Increment('download_completeCount')
         })
     },
@@ -166,7 +171,7 @@ var AppData = {
         return Number(n) === n && n % 1 === 0;
     },
     get RootURI () {
-        return (process.env.NODE_ENV === 'development' ? `http://dev.sixgrid.kate.pet:9080/` : `file://${process.platform == 'win32' ? '/' : ''}${__dirname.replaceAll('\\', '/')}/index.html`).split('?')[0]
+        return (process.env.NODE_ENV === 'development' ? `http://localhost:9080/` : `file://${process.platform == 'win32' ? '/' : ''}${__dirname.replaceAll('\\', '/')}/index.html`).split('?')[0]
     },
     set RootURI (value) {},
 
@@ -175,6 +180,7 @@ var AppData = {
     }
 }
 global.AppData = AppData
+global.AppData.Log = require('electron-log')
 global.AppData.Config = new ConfigManager()
 // global.AppData.Steamworks = new (require('@theace0296/steamworks'))(1992810)
 let appIdLocation = path.resolve('steam_appid.txt')
@@ -191,7 +197,7 @@ try {
 } catch (e) {
     if (AppData.AllowSteamworks)
         alert('Failed to initialize Steamworks', e)
-    console.error(`Failed to initialize Steamworks`, e)
+    AppData.Log.error(`Failed to initialize Steamworks`, e)
 }
 setTimeout(() =>{global.AppData.Steamworks.Initialize()}, 1500)
 
