@@ -222,4 +222,9 @@ global.AppData.Keybinder.Load()
 
 global.AppData.Event.emit('zoomFactorUpdate')
 
+global.AppData.notifyProc({
+    eventName: 'awake',
+    data: Date.now()
+})
+
 
