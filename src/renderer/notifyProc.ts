@@ -1,6 +1,8 @@
 import axios, { AxiosError } from 'axios'
 const { ipcRenderer } = require('electron')
+import * as ElectronLog from 'electron-log'
 export function notifyProc(data: any) {
+    let log: ElectronLog.LogFunctions = global.AppData.Log.scope('notifyProc')
     if (AppData.CloudConfig.User.get('developerMetrics') && AppData.AllowSteamworks) {
         ipcRenderer.send('telemetry:setToken', AppData.Steamworks.AuthorizationToken)
         let pushData = {
@@ -8,7 +10,7 @@ export function notifyProc(data: any) {
             data
         }
         axios.post('http://localhost:5010/api/analytics', pushData).then((d) => {
-            console.debug('[notifyProc->then] data', d.data)
+            log.debug('data: ', d.data)
         }).catch((e) => {
             if (e instanceof AxiosError == false)
                 return;
@@ -16,6 +18,7 @@ export function notifyProc(data: any) {
             let content = `${error.code}`;
             if (error.response != undefined || error.response != null)
             {
+                log.error(`${error.response.status}`, error.response.data)
                 content += ` ${error.response.status}`
                 switch (error.response.status)
                 {
@@ -31,7 +34,7 @@ export function notifyProc(data: any) {
                 }
             }
             (global.vueJS as any).$toastr.error(content, 'Telemetry Failed')
-            console.error('Failed to send analytics', e)
+            log.error('Failed to send analytics', e)
         })
         // ipcRenderer.send('telemetry:postAction', pushData)
     }
