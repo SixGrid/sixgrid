@@ -187,6 +187,7 @@ export default {
         save() {
             let ts = Date.now()
             let data = this.toJSON()
+            this.clientParameters.auth.login = encodeURIComponent(this.clientParameters.auth.login)
             AppData.CloudConfig.Authentication._data.items[this.$data.pflags.endpointOptionsSelected] = JSON.parse(JSON.stringify(data.clientParameters))
             AppData.CloudConfig.Authentication.set('_current', this.$data.pflags.endpointOptionsSelected)
             AppData.CloudConfig.Authentication.write()
