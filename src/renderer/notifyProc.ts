@@ -1,7 +1,13 @@
 import axios, { AxiosError } from 'axios'
 const { ipcRenderer } = require('electron')
 import * as ElectronLog from 'electron-log'
-export function notifyProc(data: any) {
+
+export interface ITelemetryData<T>
+{
+    eventName: string
+    data: T
+}
+export function notifyProc(data: ITelemetryData<any>) {
     let log: ElectronLog.LogFunctions = global.AppData.Log.scope('notifyProc')
     if (AppData.CloudConfig.User.get('developerMetrics') && AppData.AllowSteamworks) {
         log.debug('setting telemtry token')

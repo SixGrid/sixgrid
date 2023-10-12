@@ -55,6 +55,7 @@ export default class TelemetryManager extends EventEmitter {
         ipcMain.on('telemetry:postAction', (event, data: InterProtoData) => {
             if (data == undefined) return null
             console.log(data)
+            this.submitData(data.data)
         })
 
         ipcMain.on('telemetry:setToken', (event, token: string) =>

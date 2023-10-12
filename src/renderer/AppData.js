@@ -61,7 +61,7 @@ var AppData = {
         global.AppData.Client.on('post:search', (query) => {
             notifyProc({
                 eventName: 'search',
-                data: query.split(' ')
+                data: query
             })
             AppData.MetricManager.Increment('search_count')
         })
@@ -128,7 +128,11 @@ var AppData = {
         out.on('finish', () => {
             notifyProc({
                 eventName: 'download',
-                data: postObject.ID
+                data: {
+                    post_id: postObject.ID,
+                    download_url: targetURL,
+                    url: `${postObject.Client.Endpoint}/post/${postObject.ID}`
+                }
             })
             if (AppData.CloudConfig.User.saveMetadata) {
                 let loc = path.join(AppData.CloudConfig.User.get().downloadFolder, `${postObject.ID}.${postObject.Image.File.md5}.json`)
