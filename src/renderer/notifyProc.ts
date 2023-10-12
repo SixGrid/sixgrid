@@ -4,6 +4,7 @@ import * as ElectronLog from 'electron-log'
 export function notifyProc(data: any) {
     let log: ElectronLog.LogFunctions = global.AppData.Log.scope('notifyProc')
     if (AppData.CloudConfig.User.get('developerMetrics') && AppData.AllowSteamworks) {
+        log.debug('setting telemtry token')
         ipcRenderer.send('telemetry:setToken', AppData.Steamworks.AuthorizationToken)
         let pushData = {
             token: AppData.Steamworks.AuthorizationToken,
@@ -36,6 +37,7 @@ export function notifyProc(data: any) {
         //     (global.vueJS as any).$toastr.error(content, 'Telemetry Failed')
         //     log.error('Failed to send analytics', e)
         // })
+        log.debug('posting data;', data)
         ipcRenderer.send('telemetry:postAction', pushData)
     }
 }
