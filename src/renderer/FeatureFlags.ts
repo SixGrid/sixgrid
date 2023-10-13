@@ -15,7 +15,8 @@ export function Get(): IFeatureFlags
             || getenv('SIXGRID_STEAM') != null,
         isSteamDeck: Helper.IsSteamDeck()
             || getenv('SIXGRID_DECK') != null,
-        isDevMode: Helper.IsDevMode()
+        isDevMode: remote.process.argv.includes('--devmode')
+            || process.env.NODE_ENV == 'development'
             || getenv('SIXGRID_DEVMODE') != null,
         enableDebugEndpointForMetrics: Helper.IsDevMode()
             || remote.process.argv.includes('--devmode-endpoint-metrics')
