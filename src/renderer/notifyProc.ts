@@ -1,7 +1,7 @@
 import axios, { AxiosError } from 'axios'
 const { ipcRenderer } = require('electron')
 import * as ElectronLog from 'electron-log'
-import * as FeatureFlags from './FeatureFlags'
+import * as Helper from './SGHelper'
 
 export interface ITelemetryData<T>
 {
@@ -10,7 +10,7 @@ export interface ITelemetryData<T>
 }
 export function notifyProc(data: ITelemetryData<any>) {
     let log: ElectronLog.LogFunctions = global.AppData.Log.scope('notifyProc')
-    if (!FeatureFlags.Get().enableMetrics)
+    if (!Helper.AllowDevEndpointForMetrics())
     {
         log.debug('Ignoring notifyProc since it\'s disabled in this build')
         return;
