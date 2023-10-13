@@ -72,10 +72,16 @@ export default class TelemetryManager extends EventEmitter {
         })
     }
 
+    public MachineId: string = ''
+
     public async submitData(data: ITelemetryData<any>): Promise<void>
     {
         if (this.Token.length < 1)
             return;
+        if (this.MachineId.length < 1)
+        {
+            this.MachineId = await machineId();
+        }
         await axios.post(this.Endpoint, {
             token: this.Token,
             data
