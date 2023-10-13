@@ -12,6 +12,8 @@ const request = require('request')
 const axios = require('axios')
 const { ipcRenderer } = require('electron')
 const { notifyProc }  = require('./notifyProc')
+
+const SGHelper = require('./SGHelper')
 function isObject(item) {
     return (item && typeof item === 'object' && !Array.isArray(item));
 }
@@ -19,13 +21,9 @@ var AppData = {
     notifyProc,
     ApplicationIdentifier: 'sixgrid',
     Event: new EventEmitter(),
+    Helper: SGHelper,
     get UserDataPath () {
-        let val = path.join(
-            electron.remote.app.getPath('userData'),
-            this.ApplicationIdentifier)
-        if (!fs.existsSync(val))
-            fs.mkdirSync(val, {recursive: true})
-        return val
+        return this.Helper.GetUserDataPath()
     },
     Config: null,
     Client: null,
@@ -83,24 +81,11 @@ var AppData = {
     },
 
     DeepAssign(target, source) {
-        let output = Object.assign({}, target);
-        if (isObject(target) && isObject(source)) {
-            Object.keys(source).forEach(key => {
-                if (isObject(source[key])) {
-                    if (!(key in target))
-                        Object.assign(output, { [key]: source[key] });
-                    else
-                        output[key] = AppData.DeepAssign(target[key], source[key]);
-                } else {
-                    Object.assign(output, { [key]: source[key] });
-                }
-            });
-        }
-        return output;
+        return this.Helper.DeepAssign(target, source)
     },
 
     OpenExternal (url) {
-        require('electron').shell.openExternal(url)
+        return this.Helper.OpenExternal(url)
     },
 
     PostDownload (postObject) {
@@ -165,52 +150,61 @@ var AppData = {
 
     get AllowSteamworks()
     {
-        return require('electron').remote.process.argv.includes('--steam')
+        return this.Helper.AllowSteamworks()
     },
 
+
     isFloat(n) {
-        return Number(n) === n && n % 1 !== 0;
+        return this.Helper.isFloat(n)
     },
     isInt(n) {
-        return Number(n) === n && n % 1 === 0;
+        return this.Helper.isInteger(n)
     },
     get RootURI () {
-        return (process.env.NODE_ENV === 'development' ? `http://localhost:9080/` : `file://${process.platform == 'win32' ? '/' : ''}${__dirname.replaceAll('\\', '/')}/index.html`).split('?')[0]
+        return this.Helper.RootURI()
     },
     set RootURI (value) {},
 
     get IsSteamDeck () {
-        return require('os').release().includes('valve')
+        return this.Helper.IsSteamDeck()
     }
 }
 global.AppData = AppData
 global.AppData.Log = require('electron-log')
 global.AppData.Config = new ConfigManager()
-// global.AppData.Steamworks = new (require('@theace0296/steamworks'))(1992810)
-let appIdLocation = path.resolve('steam_appid.txt')
-try {
-    if (!fs.existsSync(appIdLocation))
-        fs.writeFileSync(appIdLocation, '1992810')
-} catch (e) {
-    alert(`Failed to create file ${appIdLocation}`)
+
+function initSteamworks()
+{
+    let appIdLocation = path.resolve('steam_appid.txt')
+    try {
+        if (!fs.existsSync(appIdLocation))
+            fs.writeFileSync(appIdLocation, '1992810')
+    } catch (e) {
+        alert(`[initSteamworks] Failed to create file ${appIdLocation}`)
+    }
+    try {
+        global.AppData.Steamworks = new Steamworks()
+    } catch (e) {
+        if (AppData.AllowSteamworks)
+            alert('[initSteamworks] Failed to initialize Steamworks', e)
+        AppData.Log.error(`[initSteamworks] Failed to initialize Steamworks`, e)
+    }
+    setTimeout(() =>{global.AppData.Steamworks.Initialize()}, 1500)
+}
+function initConfigLocation()
+{
+    for (let i = 0; i < Object.entries(AppData.SteamCloudLocations).length; i++) {
+        let loc = Object.entries(AppData.SteamCloudLocations)[i]
+        if (!fs.existsSync(loc[1])) {
+            fs.mkdirSync(loc[1], { recursive: true })
+        }
+    }
 }
 global.AppData.Keybinder = new KeybindManager()
 global.AppData.MetricManager = new MetricManager()
-try {
-    global.AppData.Steamworks = new Steamworks()
-} catch (e) {
-    if (AppData.AllowSteamworks)
-        alert('Failed to initialize Steamworks', e)
-    AppData.Log.error(`Failed to initialize Steamworks`, e)
-}
-setTimeout(() =>{global.AppData.Steamworks.Initialize()}, 1500)
+initSteamworks()
+initConfigLocation()
 
-for (let i = 0; i < Object.entries(AppData.SteamCloudLocations).length; i++) {
-    let loc = Object.entries(AppData.SteamCloudLocations)[i]
-    if (!fs.existsSync(loc[1])) {
-        fs.mkdirSync(loc[1], { recursive: true })
-    }
-}
 
 global.AppData.Event.on('zoomFactorUpdate', () => {
     var webContents = electron.remote.getCurrentWindow().webContents
