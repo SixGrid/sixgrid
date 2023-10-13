@@ -1,6 +1,7 @@
 import axios, { AxiosError } from 'axios'
 const { ipcRenderer } = require('electron')
 import * as ElectronLog from 'electron-log'
+import * as FeatureFlags from './FeatureFlags'
 
 export interface ITelemetryData<T>
 {
@@ -9,6 +10,11 @@ export interface ITelemetryData<T>
 }
 export function notifyProc(data: ITelemetryData<any>) {
     let log: ElectronLog.LogFunctions = global.AppData.Log.scope('notifyProc')
+    if (!FeatureFlags.Get().enableMetrics)
+    {
+        log.debug('Ignoring notifyProc since it\'s disabled in this build')
+        return;
+    }
     if (AppData.CloudConfig.User.get('developerMetrics') && AppData.AllowSteamworks) {
         log.debug('setting telemtry token')
         ipcRenderer.send('telemetry:setToken', AppData.Steamworks.AuthorizationToken)
