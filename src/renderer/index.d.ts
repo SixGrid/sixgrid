@@ -8,6 +8,9 @@ import Steamworks from './SteamworksIntergration'
 import { KeybindManager } from './Keybinder/KeybindManager'
 import { ElectronLog } from 'electron-log'
 
+import type {FeatureFlagsInterface} from './FeatureFlags'
+import type {SGHelperInterface} from './SGHelper'
+
 declare interface ICloudConfig 
 {
     Statistics: IConfiguration<IConfig_Stats>
@@ -18,6 +21,9 @@ declare interface ICloudConfig
 declare interface IAppData
 {
     ApplicationIdentifier: string
+
+    Helper: SGHelperInterface
+    FeatureFlags: FeatureFlagsInterface
 
     get UserDataPath(): string
 
