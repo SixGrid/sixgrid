@@ -6,11 +6,12 @@ import * as os from 'os'
 export interface SGHelperInterface
 {
     RootURI(): string
-    IsDevMode(): boolean
     isFloat(): boolean
     isInteger(): boolean
     AllowSteamworks(): boolean
     IsSteamDeck(): boolean
+    IsDevMode(): boolean
+    AllowDevEndpointForMetrics(): boolean
     OpenExternal(url: string): void
     isObject(item: any): boolean
     DeepAssign(target: any, source: any): any
@@ -32,11 +33,6 @@ export function RootURI()
         target = inner
     }
     return target.split('?')[0]
-}
-export function IsDevMode(): boolean
-{
-    return remote.process.argv.includes('--devmode')
-    || process.env.NODE_ENV == 'development'
 }
 
 export function isFloat(n: any): boolean
@@ -64,6 +60,12 @@ export function IsSteamDeck(): boolean
     let osRelease = os.release()
     let releaseMatch = osRelease.includes('valve') && AllowSteamworks()
     return releaseMatch || remote.process.argv.includes('--steam-deck')
+}
+
+export function IsDevMode(): boolean
+{
+    return remote.process.argv.includes('--devmode')
+    || process.env.NODE_ENV == 'development'
 }
 
 export function AllowDevEndpointForMetrics(): boolean
