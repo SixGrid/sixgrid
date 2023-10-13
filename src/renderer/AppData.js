@@ -15,9 +15,7 @@ const { notifyProc }  = require('./notifyProc')
 
 const SGHelper = require('./SGHelper')
 const FeatureFlags = require('./FeatureFlags')
-function isObject(item) {
-    return (item && typeof item === 'object' && !Array.isArray(item));
-}
+
 var AppData = {
     notifyProc,
     ApplicationIdentifier: 'sixgrid',
