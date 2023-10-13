@@ -12,6 +12,7 @@ export interface IFeatureFlags
     isSteamDeck: boolean;
     isDevMode: boolean;
     enableDebugEndpointForMetrics: boolean;
+    enableMetrics: boolean;
 }
 export function Get(): IFeatureFlags
 {
@@ -25,7 +26,8 @@ export function Get(): IFeatureFlags
             || getenv('SIXGRID_DEVMODE') != null,
         enableDebugEndpointForMetrics: Helper.IsDevMode()
             || remote.process.argv.includes('--devmode-endpoint-metrics')
-            || getenv('SIXGRID_DEVMODE_ENDPOINT_METRICS') != null
+            || getenv('SIXGRID_DEVMODE_ENDPOINT_METRICS') != null,
+        enableMetrics: false
     }
 }
 
