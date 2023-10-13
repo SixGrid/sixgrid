@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { BrowserWindow, ipcMain } from 'electron'
 import { EventEmitter } from 'events'
+import { machineId } from 'node-machine-id';
 
 export interface InterProtoData
 {
@@ -26,7 +27,14 @@ export default class TelemetryManager extends EventEmitter {
 
     public HeartbeatInterval: any
     public Token: string = ''
-    public Endpoint: string = 'http://localhost:5010/api/analytics'
+    public get Endpoint(): string
+    {
+        if (process.env.NODE_END === 'development' || process.argv.includes('--devmode-endpoint-metrics'))
+        {
+            return 'http://localhost:5010/api/analytics';
+        }
+        return 'https://metric-server.sixgrid.kate.pet/api/analytics';
+    }
 
     private initializeEvents(): void
     {
