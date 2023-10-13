@@ -35,7 +35,8 @@ export function RootURI()
 }
 export function IsDevMode(): boolean
 {
-    return FeatureFlags.Get().isDevMode
+    return remote.process.argv.includes('--devmode')
+    || process.env.NODE_ENV == 'development'
 }
 
 export function isFloat(n: any): boolean
