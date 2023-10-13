@@ -14,14 +14,12 @@ const { ipcRenderer } = require('electron')
 const { notifyProc }  = require('./notifyProc')
 
 const SGHelper = require('./SGHelper')
-const FeatureFlags = require('./FeatureFlags')
 
 var AppData = {
     notifyProc,
     ApplicationIdentifier: 'sixgrid',
     Event: new EventEmitter(),
     Helper: SGHelper,
-    FeatureFlags,
     get UserDataPath () {
         return this.Helper.GetUserDataPath()
     },

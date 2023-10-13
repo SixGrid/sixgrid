@@ -2,7 +2,6 @@ import {remote, shell} from 'electron'
 import * as fs from 'fs'
 import * as path from 'path'
 import * as os from 'os'
-import * as FeatureFlags from './FeatureFlags'
 
 export interface SGHelperInterface
 {
