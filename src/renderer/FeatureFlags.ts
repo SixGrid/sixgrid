@@ -1,6 +1,11 @@
 import * as Helper from './SGHelper'
 import {remote} from 'electron'
 
+export interface FeatureFlagsInterface
+{
+    Get(): IFeatureFlags
+}
+
 export interface IFeatureFlags
 {
     isSteam: boolean;

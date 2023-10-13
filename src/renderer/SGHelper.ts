@@ -4,6 +4,20 @@ import * as path from 'path'
 import * as os from 'os'
 import * as FeatureFlags from './FeatureFlags'
 
+export interface SGHelperInterface
+{
+    RootURI(): string
+    IsDevMode(): boolean
+    isFloat(): boolean
+    isInteger(): boolean
+    AllowSteamworks(): boolean
+    IsSteamDeck(): boolean
+    OpenExternal(url: string): void
+    isObject(item: any): boolean
+    DeepAssign(target: any, source: any): any
+    GetUserDataPath() : string
+}
+
 export function RootURI()
 {
     let target = `http://localhost:9080/`
