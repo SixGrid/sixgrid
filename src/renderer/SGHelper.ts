@@ -2,6 +2,7 @@ import {remote, shell} from 'electron'
 import * as fs from 'fs'
 import * as path from 'path'
 import * as os from 'os'
+import * as FeatureFlags from './FeatureFlags'
 
 export function RootURI()
 {
@@ -18,6 +19,10 @@ export function RootURI()
         target = inner
     }
     return target.split('?')[0]
+}
+export function IsDevMode(): boolean
+{
+    return FeatureFlags.Get().isDevMode
 }
 
 export function isFloat(n: any): boolean
