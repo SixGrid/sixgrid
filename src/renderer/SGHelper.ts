@@ -65,6 +65,11 @@ export function IsSteamDeck(): boolean
     return releaseMatch || remote.process.argv.includes('--steam-deck')
 }
 
+export function AllowDevEndpointForMetrics(): boolean
+{
+    return remote.process.argv.includes('--devmode-endpoint-metrics')
+}
+
 export function OpenExternal(url: string): void
 {
     shell.openExternal(url)
