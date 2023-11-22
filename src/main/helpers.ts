@@ -1,4 +1,5 @@
 import { app, dialog } from 'electron'
+import * as path from 'path'
 const _ProductInformation = __PRODUCT_EXTENDED_INFORMATION
 export function isDevelopmentMode () {
     if (app.commandLine.hasSwitch('dev'))
@@ -71,4 +72,12 @@ export function paragraphSplit (input: string, maximumLineWidth: number) {
         resultArray.push(tmpString)
     }
     return resultArray.join('\n')
+}
+
+export function steamCloudConfigDirectory() {
+    let target = path.join(path.dirname(process.execPath), 'AppConfig')
+    if (path.basename(process.execPath).startsWith('electron')) {
+        target = path.join(process.cwd(), 'AppConfig')
+    }
+    return target
 }

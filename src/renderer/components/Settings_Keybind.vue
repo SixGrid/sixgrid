@@ -30,6 +30,49 @@
                     </template>
                 </table>
             </template>
+            <h3 style="margin-top: 3rem; text-align: center;">Window Keybinds</h3>
+            <table>
+                <tr>
+                    <th>Name</th>
+                    <th>Key</th>
+                </tr>
+                <tr>
+                    <td>Relaunch Application</td>
+                    <td>
+                        <select ref="selectRelaunchApplication">
+                            <option
+                                v-for="item in availableMainProcItems"
+                                :value="item"
+                                :key="item.length < 1 ? 'None' : item"
+                                :selected="mainProcShortcuts.relaunch == item">{{item.length < 1 ? 'None' : item}}</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Toggle Debug Outline</td>
+                    <td>
+                        <select ref="selectDebugOutline">
+                            <option
+                                v-for="item in availableMainProcItems"
+                                :value="item"
+                                :key="item.length < 1 ? 'None' : item"
+                                :selected="mainProcShortcuts.debugOutline == item">{{item.length < 1 ? 'None' : item}}</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Force Reload</td>
+                    <td>
+                        <select ref="selectSafeReload">
+                            <option
+                                v-for="item in availableMainProcItems"
+                                :value="item"
+                                :key="item.length < 1 ? 'None' : item"
+                                :selected="mainProcShortcuts.safeReload == item">{{item.length < 1 ? 'None' : item}}</option>
+                        </select>
+                    </td>
+                </tr>
+            </table>
 
             <md-dialog-actions>
                 <md-button @click="resetToDefault()">Reset</md-button>
@@ -49,6 +92,7 @@ import * as _kb_codes from '../Keybinder/enum.Keycode'
 import { KeybindItem } from '../Keybinder/KeybindItem'
 import SettingsKeybindOverlay from './SettingsKeybindOverlay.vue'
 import * as ConfigInit from '../ConfigInit'
+import { ipcRenderer } from 'electron'
 export default {
     name: 'SettingsKeybind',
     components: {SettingsKeybindOverlay},
@@ -63,12 +107,33 @@ export default {
                 targetChannel: null
             },
             validTargetChannels: Object.entries(Channels.Data),
-            activeBinds: []
+            activeBinds: [],
+            mainProcShortcuts: {
+                relaunch: 'F10',
+                debugOutline: 'F9',
+                safeReload: 'F8'
+            },
+            availableMainProcItems: [
+                '',
+                'F1',
+                'F2',
+                'F3',
+                'F4',
+                'F5',
+                'F6',
+                'F7',
+                'F8',
+                'F9',
+                'F10',
+                'F11',
+                'F12'
+            ]
         }
     },
     created () {
         this.validChords = _kb_codes
         this.activeBinds = this.getKeybinds()
+        this.mainProcShortcuts = AppData.CloudConfig.User.get().mainProcShortcuts
     },
     methods: {
         resetToDefault() {
@@ -168,6 +233,27 @@ export default {
             console.log(kb)
             this.refreshBinds()
             AppData.Keybinder.Save()
+
+            let relaunchValue = this.$refs.selectRelaunchApplication.options[this.$refs.selectRelaunchApplication.selectedIndex].value
+            let debugOutlineValue = this.$refs.selectDebugOutline.options[this.$refs.selectDebugOutline.selectedIndex].value
+            let safeReloadValue = this.$refs.selectSafeReload.options[this.$refs.selectSafeReload.selectedIndex].value
+
+            let p = {
+                relaunch: relaunchValue,
+                debugOutline: debugOutlineValue,
+                safeReload: safeReloadValue
+            }
+
+            for (let pair of Object.entries(p))
+            {
+                if (pair[1].length < 1)
+                    p[pair[0]] = null
+            }
+            this.mainProcShortcuts = p
+            AppData.CloudConfig.User.set('mainProcShortcuts', this.mainProcShortcuts)
+            AppData.CloudConfig.User.write()
+
+            ipcRenderer.send('reloadGlobalShortcuts')
             vueJS.$toastr.success(``, 'Keybinds Saved')
         },
         getKeybinds(){

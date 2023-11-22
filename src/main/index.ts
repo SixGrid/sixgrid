@@ -3,6 +3,7 @@ import '../renderer/store'
 import menu from './menu'
 import * as helpers from './helpers'
 import * as os from 'os'
+import * as globalShortcuts from './globalShortcuts'
 let isSteamDeck: boolean = os.release().toString().includes('valve')
 
 if (isSteamDeck) {
@@ -59,6 +60,7 @@ function createWindow () {
             contextIsolation: false
         }
     })
+    globalShortcuts.init()
     if (isSteamDeck) {
         global.electronMainWindow.webContents.setFrameRate(60)
         console.log(`Set framerate to 60fps`)
@@ -73,16 +75,6 @@ function createWindow () {
         delete global.electronMainWindow
     })
 
-    global.electronMainWindow.webContents.on('before-input-event', (event, input) => {
-        if (global.electronMainWindow == undefined) return
-        switch (input.key.toLowerCase()) {
-            case 'f8':
-                event.preventDefault()
-                global.electronMainWindow.loadURL(winURL)
-                break
-        }
-    })
-
     // Send uncaught exceptions to renderer
     process.on('uncaughtException', (error) => {
         if (global.electronMainWindow == undefined) return
@@ -95,25 +87,6 @@ function createWindow () {
 
 app.on('ready', createWindow)
 
-app.on('ready', () => {
-    const SHORTCUTDICT = {
-        'F10': () => {
-            helpers.relaunchConfirm()
-        },
-        'F9': () => {
-            if (global.electronMainWindow == undefined) return
-            global.electronMainWindow.webContents.send('debug:elementOutline')
-        },
-        'F8': () => {
-            helpers.safeReload()
-        }
-    }
-
-    let entries = Object.entries(SHORTCUTDICT)
-    for (let i = 0; i < entries.length; i++) {
-        globalShortcut.register(...entries[i])
-    }
-})
 
 // Register 'file://' URL's
 app.on('ready', () => {

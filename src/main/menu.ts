@@ -29,7 +29,6 @@ const menuTemplate: any = [
         submenu: [
             {
                 label: 'Safe Reload',
-                accelerator: 'F8',
                 click: helpers.safeReload
             },
             { type: 'separator' },

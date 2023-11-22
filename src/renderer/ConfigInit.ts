@@ -55,7 +55,12 @@ export const configStoreProfiles: IConfigTemplate<any>[] = [
             ratingSafe: false,
             ratingQuestionable: false,
             ratingExplicit: false,
-            zoomFactor: 1.0
+            zoomFactor: 1.0,
+            mainProcShortcuts: {
+                relaunch: 'F10',
+                debugOutline: 'F9',
+                safeReload: 'F8'
+            }
         }
     },
     {
