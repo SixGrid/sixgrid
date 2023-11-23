@@ -3,12 +3,23 @@ import { PostRating } from 'libsixgrid'
 import { MetricManagerData } from './metricManager'
 import { KeybindProfile } from '../renderer/Keybinder/KeybindProfile'
 
-
 export interface ConfigTypeMap {
     'Authentication': IConfig_AuthProfile
     'User': IConfig_User
     'Statistics': IConfig_Stats
     'Keybind': IConfig_Keybind
+}
+export declare type ConfigKeys = 
+    'Authentication' |
+    'User' |
+    'Statistics' |
+    'Keybind'
+
+export const ConfigFileMap: {[key in ConfigKeys]: string} = {
+    'Authentication': 'authProfile.json',
+    'User': 'config.json',
+    'Statistics': 'stats.json',
+    'Keybind': 'keybind.json'
 }
 
 export interface AuthTemplate
