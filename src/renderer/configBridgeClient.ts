@@ -1,4 +1,5 @@
 import { ipcRenderer } from 'electron'
+import { ConfigKeys, IConfig_AuthProfile } from '../shared/config'
 
 interface IGetResponse<T>
 {
@@ -78,6 +79,10 @@ function CreateResponse<T>(
 
 export class configBridgeClient
 {
+    getConfig<IConfig_AuthProfile>(key: 'Authentication', timeout: number): Promise<IGetResponse<IConfig_AuthProfile>>
+    getConfig<IConfig_User>(key: 'User', timeout: number): Promise<IGetResponse<IConfig_User>>
+    getConfig<IConfig_Stats>(key: 'Statistics', timeout: number): Promise<IGetResponse<IConfig_Stats>>
+    getConfig<IConfig_Keybind>(key: 'Keybind', timeout: number): Promise<IGetResponse<IConfig_Keybind>>
     /**
      * @description
      * Fetch config data from Main Thread
@@ -85,7 +90,7 @@ export class configBridgeClient
      * @param timeout Timeout, measured in milliseconds (default to 5s)
      * @returns @see IGetResponse
      */
-    get<T>(key: String, timeout: number = 5000): Promise<IGetResponse<T>>
+    getConfig<T>(key: ConfigKeys, timeout: number = 5000): Promise<IGetResponse<T>>
     {
         return new Promise((resolve, reject) =>
         {
@@ -153,6 +158,11 @@ export class configBridgeClient
         })
     }
 
+
+    set<IConfig_AuthProfile>(key: 'Authentication', data: IConfig_AuthProfile, timeout: number): Promise<ISetResponse>
+    set<IConfig_User>(key: 'User', data: IConfig_User, timeout: number): Promise<ISetResponse>
+    set<IConfig_Stats>(key: 'Statistics', data: IConfig_Stats, timeout: number): Promise<ISetResponse>
+    set<IConfig_Keybind>(key: 'Keybind', data: IConfig_Keybind, timeout: number): Promise<ISetResponse>
     /**
      * @description
      * Set the data of a specific config.
@@ -161,7 +171,7 @@ export class configBridgeClient
      * @param timeout Timeout, measured in milliseconds (default to 5s)
      * @returns @see ISetResponse
      */
-    set<T>(key: String, data: T, timeout: number = 5000): Promise<ISetResponse>
+    set<T>(key: ConfigKeys, data: T, timeout: number = 5000): Promise<ISetResponse>
     {
         return new Promise((resolve, reject) =>
         {
