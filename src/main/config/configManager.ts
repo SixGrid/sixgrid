@@ -45,6 +45,10 @@ export class ConfigManager {
         this.loadData()
 
         this.initIPC()
+        
+        this.saveLoop = setInterval(() => {
+            this.saveAll(true)
+        }, 5000)
     }
 
     saveLoop: NodeJS.Timer
