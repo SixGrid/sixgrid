@@ -47,6 +47,36 @@ export class ConfigManager {
         this.initIPC()
     }
 
+    saveLoop: NodeJS.Timer
+    window: BrowserWindow
+    cache: ConfigTypeMap
+    /**
+     * @description
+     * Stores when a config was last modified via `ConfigManager.set()`
+     */
+    lastModify: {[key in ConfigKeys]: number} = {
+        'Authentication': 0,
+        'User': 0,
+        'Statistics': 0,
+        'Keybind': 0
+    }
+    /**
+     * @description
+     * Stores when a config was last saved via `ConfigManager.save()`
+     */
+    lastSave: {[key in ConfigKeys]: number} = {
+        'Authentication': 0,
+        'User': 0,
+        'Statistics': 0,
+        'Keybind': 0
+    }
+    pendingSave: {[key in ConfigKeys]: boolean} = {
+        'Authentication': false,
+        'User': false,
+        'Statistics': false,
+        'Keybind': false
+    }
+
     private loadData()
     {
         if (!existsSync(ConfigManager.baseDirectory))
@@ -90,35 +120,10 @@ export class ConfigManager {
             this.save(key)
         })
     }
-
-    private initSaveLoop() {
-
-    }
     saveAll() {
         for (let pair of Object.entries(this.cache)) {
             this.save(pair[0] as ConfigKeys)
         }
-    }
-
-    window: BrowserWindow
-    cache: ConfigTypeMap
-    lastModify: {[key in ConfigKeys]: number} = {
-        'Authentication': 0,
-        'User': 0,
-        'Statistics': 0,
-        'Keybind': 0
-    }
-    lastSave: {[key in ConfigKeys]: number} = {
-        'Authentication': 0,
-        'User': 0,
-        'Statistics': 0,
-        'Keybind': 0
-    }
-    pendingSave: {[key in ConfigKeys]: boolean} = {
-        'Authentication': false,
-        'User': false,
-        'Statistics': false,
-        'Keybind': false
     }
 
     save(key: ConfigKeys) {
