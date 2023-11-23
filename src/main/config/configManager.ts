@@ -120,8 +120,17 @@ export class ConfigManager {
             this.save(key)
         })
     }
-    saveAll() {
+    /**
+     * @description
+     * Save all cached configs.
+     * @param onlyPending Only save item if `pendingSave[key]` is true
+     */
+    saveAll(onlyPending: boolean = false) {
         for (let pair of Object.entries(this.cache)) {
+            if (onlyPending) {
+                if (!this.pendingSave[pair[0] as ConfigKeys])
+                    continue;
+            }
             this.save(pair[0] as ConfigKeys)
         }
     }
