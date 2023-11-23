@@ -6,8 +6,6 @@ import { DefaultData as DefaultConfigData } from '../../shared/configDefault'
 import path from 'path'
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs'
 
-import { IConfig_User, IConfig_AuthProfile, IConfig_Keybind, IConfig_Stats } from '../../shared/config'
-
 export class ConfigManager {
     static get instance() {
         if (global.configManager == undefined)
