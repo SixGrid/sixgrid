@@ -45,6 +45,13 @@ export function Initialize()
         global.AppData.CloudConfig[item.key].default(item.data)
         global.AppData.CloudConfig[item.key].write()
     }
+
+    if (global.AppData.CloudConfig.User.get('downloadFolder').length < 1)
+    {
+        global.AppData.CloudConfig.User.set('downloadFolder', path.join(require('electron').remote.app.getPath('home'), 'Downloads', 'sixgrid'))
+        global.AppData.CloudConfig.User.write()
+    }
+
 }
 export function ResetItem(name: string)
 {
