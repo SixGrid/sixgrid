@@ -121,6 +121,37 @@ export class configBridgeClient
         })
     }
 
+    getValue(configKey: ConfigKeys, dataKey: any, timeout: number = 5000): Promise<IGetResponse<any>>
+    {
+        return new Promise((resolve, reject) =>
+        {
+            var hasResolved = false
+            ipcRenderer.invoke('config.getValue', configKey, dataKey)
+                .then((data) =>
+                {
+                    hasResolved = true
+
+                    let response = new GetResponse(data, true)
+                    resolve(response)
+                })
+                .catch((reason) =>
+                {
+                    hasResolved = true
+
+                    let response = new GetResponse(null, false, "Caught on ipcRenderer.invoke('config.getValue')", reason)
+                    reject(response)
+                })
+
+            setTimeout(() => {
+                if (!hasResolved)
+                {
+                    let response = new GetResponse(null, false, `Timeout (${timeout}ms) on ipcRenderer.invoke('config.Value', '${configKey}', '${dataKey}')`)
+                    reject(response)
+                }
+            }, timeout)
+        })
+    }
+
     /**
      * @description
      * Get available config keys

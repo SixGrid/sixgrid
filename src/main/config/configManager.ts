@@ -119,7 +119,10 @@ export class ConfigManager {
             return this.saveAll()
         })
         ipcMain.handle('config.save', (event, key: ConfigKeys) => {
-            this.save(key)
+            return this.save(key)
+        })
+        ipcMain.handle('config.getValue', (event, configKey: ConfigKeys, dataKey: any) => {
+            return this.getValue(configKey, dataKey)
         })
     }
     /**
@@ -163,6 +166,12 @@ export class ConfigManager {
         if (this.cache[key] == undefined)
             throw new Error(`Key '${key}' does not exist in cache`)
         return sharedHelper.clone(this.cache[key])
+    }
+    getValue(configKey: ConfigKeys, dataKey: any): any {
+        if (this.cache[configKey] == undefined)
+            throw new Error(`Key '${configKey}' does not exist in cache`)
+        let d = this.cache[configKey] as any
+        return d[dataKey]
     }
 
     update(key: ConfigKeys): void
