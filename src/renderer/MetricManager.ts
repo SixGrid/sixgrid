@@ -1,8 +1,7 @@
 import { EventEmitter } from "events"
-import { ISteamMetric } from "./SteamworksIntergration"
+import { MetricManagerData } from "../shared/metricManager"
 import * as ElectronLog from 'electron-log'
 let log: ElectronLog.LogFunctions;
-export type MetricManagerData = {[key: string]: ISteamMetric}
 export default class MetricManager extends EventEmitter
 {
     public constructor()

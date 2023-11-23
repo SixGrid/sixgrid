@@ -3,12 +3,8 @@ import * as fs from 'fs'
 import * as helpers from './helpers'
 import { globalShortcut, app, ipcMain } from 'electron'
 
-export interface GlobalShortcutData
-{
-    relaunch: Electron.Accelerator|null
-    debugOutline: Electron.Accelerator|null
-    safeReload: Electron.Accelerator|null
-}
+import { GlobalShortcutData } from '../shared/config'
+
 interface GlobalShortcutActions
 {
     relaunch(): void
