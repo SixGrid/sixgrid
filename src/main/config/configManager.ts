@@ -112,11 +112,11 @@ export class ConfigManager {
         })
         ipcMain.handle('config.set', (event, data: PostDataSetConfig) =>
         {
-            this.set(data.key, data.data)
+            return this.set(data.key, data.data)
         })
 
         ipcMain.handle('config.saveAll', (event) => {
-            this.saveAll()
+            return this.saveAll()
         })
         ipcMain.handle('config.save', (event, key: ConfigKeys) => {
             this.save(key)
