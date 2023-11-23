@@ -4,6 +4,7 @@ import menu from './menu'
 import * as helpers from './helpers'
 import * as os from 'os'
 import * as globalShortcuts from './globalShortcuts'
+import { ConfigManager } from './config/configManager'
 let isSteamDeck: boolean = os.release().toString().includes('valve')
 
 if (isSteamDeck) {
@@ -60,6 +61,9 @@ function createWindow () {
             contextIsolation: false
         }
     })
+
+    global.configManager = new ConfigManager()
+
     globalShortcuts.init()
     if (isSteamDeck) {
         global.electronMainWindow.webContents.setFrameRate(60)
@@ -73,6 +77,7 @@ function createWindow () {
 
     global.electronMainWindow.on('closed', () => {
         delete global.electronMainWindow
+        ConfigManager.instance.saveAll(false)
     })
 
     // Send uncaught exceptions to renderer
