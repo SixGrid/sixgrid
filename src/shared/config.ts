@@ -3,6 +3,12 @@ import { PostRating } from 'libsixgrid'
 import { MetricManagerData } from './metricManager'
 import { KeybindProfile } from '../renderer/Keybinder/KeybindProfile'
 
+export interface PostDataSetConfig
+{
+    key: ConfigKeys,
+    data: any
+}
+
 export interface ConfigTypeMap {
     'Authentication': IConfig_AuthProfile
     'User': IConfig_User
