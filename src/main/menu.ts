@@ -9,6 +9,7 @@ const menuTemplate: any = [
             { type: 'separator' },
             {
                 label: 'Relaunch',
+                accelerator: global.globalShortcut_data.relaunch,
                 click: () => {
                     helpers.relaunch()
                 }
