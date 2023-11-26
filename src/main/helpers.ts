@@ -2,11 +2,7 @@ import { app, dialog } from 'electron'
 import * as path from 'path'
 import flags from './flags'
 const _ProductInformation = __PRODUCT_EXTENDED_INFORMATION
-export function isDevelopmentMode () {
-    if (app.commandLine.hasSwitch('dev'))
-        return true
-    return process.env.NODE_ENV === 'development'
-}
+
 export function fetchTitle () {
     let value = `SixGrid v${__SIXGRID_PRODUCT_BUILD_VERSION} (${_ProductInformation.commitHashShort})`
     if (electronMainWindow != undefined)
