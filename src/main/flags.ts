@@ -17,7 +17,13 @@ export default {
         }
     },
 
-    debugMode: app.commandLine.hasSwitch('developer'),
+    get debugMode() {
+        return app.commandLine.hasSwitch('developer')
+            || app.commandLine.hasSwitch('dev')
+            || process.env.NODE_ENV == 'development'
+    },
+
+
     get steamworks() {
         return app.commandLine.hasSwitch('steam')
     },
