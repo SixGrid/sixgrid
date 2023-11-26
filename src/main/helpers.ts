@@ -1,5 +1,6 @@
 import { app, dialog } from 'electron'
 import * as path from 'path'
+import flags from './flags'
 const _ProductInformation = __PRODUCT_EXTENDED_INFORMATION
 export function isDevelopmentMode () {
     if (app.commandLine.hasSwitch('dev'))
@@ -14,14 +15,8 @@ export function fetchTitle () {
 }
 export function safeReload () {
     if (electronMainWindow != undefined)
-        electronMainWindow.loadURL(winURL)
+        electronMainWindow.loadURL(flags.winUrl)
 }
-export const winURL = (() => {
-    var value = isDevelopmentMode()
-        ? `http://localhost:9080`
-        : `file://${process.platform == 'win32' ? '/' : ''}${__dirname.replaceAll('\\', '/')}/index.html`
-    return value
-})()
 export function relaunch () {
     app.relaunch()
     app.quit()
@@ -36,6 +31,7 @@ export function relaunchConfirm () {
             `Relaunch`
         ]
     })
+    
     if (btn == 1) {
         relaunch()
     }
