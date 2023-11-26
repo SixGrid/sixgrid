@@ -18,6 +18,9 @@ export default {
     },
 
     debugMode: app.commandLine.hasSwitch('developer'),
+    get steamworks() {
+        return app.commandLine.hasSwitch('steam')
+    },
 
     get isSteamDeck() {
         return os.release().toString().includes('valve') || app.commandLine.hasSwitch('deck')
