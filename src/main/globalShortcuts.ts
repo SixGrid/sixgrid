@@ -62,6 +62,8 @@ function registerShortcuts(shortcuts: GlobalShortcutData) {
 function updateGlobalShortcuts()
 {
     let configLocation = path.join(helpers.steamCloudConfigDirectory(), 'config.json')
+    if (!fs.existsSync(configLocation))
+        return;
     let configFile = fs.readFileSync(configLocation).toString()
     let parsed = JSON.parse(configFile)
 
