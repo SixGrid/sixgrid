@@ -109,6 +109,10 @@ export function Initialize()
     {
         let location = path.join(AppData.SteamCloudLocations.Config, item.filename)
 
+        if (!fs.existsSync(AppData.SteamCloudLocations.Config)) {
+            fs.mkdirSync(AppData.SteamCloudLocations.Config, { recursive: true })
+        }
+
         if (!fs.existsSync(location))
             fs.writeFileSync(location, JSON.stringify(item.data, null, '    '))
 
