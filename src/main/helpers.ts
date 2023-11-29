@@ -1,11 +1,8 @@
 import { app, dialog } from 'electron'
 import * as path from 'path'
+import flags from './flags'
 const _ProductInformation = __PRODUCT_EXTENDED_INFORMATION
-export function isDevelopmentMode () {
-    if (app.commandLine.hasSwitch('dev'))
-        return true
-    return process.env.NODE_ENV === 'development'
-}
+
 export function fetchTitle () {
     let value = `SixGrid v${__SIXGRID_PRODUCT_BUILD_VERSION} (${_ProductInformation.commitHashShort})`
     if (electronMainWindow != undefined)
@@ -14,14 +11,8 @@ export function fetchTitle () {
 }
 export function safeReload () {
     if (electronMainWindow != undefined)
-        electronMainWindow.loadURL(winURL)
+        electronMainWindow.loadURL(flags.winUrl)
 }
-export const winURL = (() => {
-    var value = isDevelopmentMode()
-        ? `http://localhost:9080`
-        : `file://${process.platform == 'win32' ? '/' : ''}${__dirname.replaceAll('\\', '/')}/index.html`
-    return value
-})()
 export function relaunch () {
     app.relaunch()
     app.quit()
@@ -36,42 +27,10 @@ export function relaunchConfirm () {
             `Relaunch`
         ]
     })
+    
     if (btn == 1) {
         relaunch()
     }
-}
-export function stringArrayCharacterLength (input: string[]) {
-    let length = 0
-    for (let thing of input) {
-        length += thing.length
-    }
-    return length
-}
-export function paragraphSplit (input: string, maximumLineWidth: number) {
-    let resultList = [] /* string[][] */
-    let inputSplitted = input.split(' ')
-    let buffer = [] /* input[] */
-    for (let i = 0; i < inputSplitted.length; i++) {
-        let bufferCharLen = stringArrayCharacterLength(buffer) + buffer.length
-        if (bufferCharLen + inputSplitted[i].length + 1 > maximumLineWidth) {
-            resultList.push(buffer)
-            buffer = []
-        }
-        buffer.push(inputSplitted[i])
-    }
-
-    resultList.push(buffer)
-
-    let resultArray = []
-    for (let i = 0; i < resultList.length; i++) {
-        let tmp = [] /* string[] */
-        for (let x = 0; x < resultList[i].length; x++) {
-            tmp.push(resultList[i][x])
-        }
-        let tmpString = tmp.join(' ')
-        resultArray.push(tmpString)
-    }
-    return resultArray.join('\n')
 }
 
 export function steamCloudConfigDirectory() {

@@ -1,6 +1,7 @@
 import * as path from 'path'
 import * as fs from 'fs'
 import Configuration from './Configuration'
+import { DefaultData } from '../shared/configDefault'
 export interface IConfigTemplate<T>
 {
     filename: string
@@ -11,95 +12,22 @@ export const configStoreProfiles: IConfigTemplate<any>[] = [
     {
         filename: 'authProfile.json',
         key: 'Authentication',
-        data: {
-            items: [
-                {
-                    auth: {
-                        login: '',
-                        apikey: '',
-                        enabled: false
-                    },
-                    endpoint: 'https://e926.net'
-                },
-                {
-                    auth: {
-                        login: '',
-                        apikey: '',
-                        enabled: false
-                    },
-                    endpoint: 'https://e621.net'
-                }
-            ],
-            _current: 0
-        }
+        data: DefaultData.Authentication
     },
     {
         filename: 'config.json',
         key: 'User',
-        data: {
-            media: {
-                autoplay: true,
-                loop: true
-            },
-            get downloadFolder() {
-                return path.join(require('electron').remote.app.getPath('home'), 'Downloads', 'sixgrid')
-            },
-            saveMetadata: false,
-            tagBlacklist: [],
-            ratingFilter: 'none',
-            preloadPageCount: 1,
-            preloadStartIndex: 0,
-            highQualityPreview: false,
-            sortByScore: false,
-            sortByFavorite: false,
-            ratingSafe: false,
-            ratingQuestionable: false,
-            ratingExplicit: false,
-            zoomFactor: 1.0,
-            mainProcShortcuts: {
-                relaunch: 'F10',
-                debugOutline: 'F9',
-                safeReload: 'F8'
-            }
-        }
+        data: DefaultData.User
     },
     {
         filename: 'stats.json',
         key: 'Statistics',
-        data: {
-            metricStore: {}
-        }
+        data: DefaultData.Statistics
     },
     {
         filename: 'keybind.json',
         key: 'Keybind',
-        data: {
-            currentProfile: 'default',
-            currentProfileData: {
-                Id: 'gvvqMEmj',
-                Name: 'Default',
-                Binds: [
-                    {
-                        Id: 'METs7gPv',
-                        Chords: [[39]],
-                        Enable: true,
-                        Channel: 'item:next'
-                    },
-                    {
-                        Id: 'g0FPjBOz',
-                        Chords: [[37]],
-                        Enable: true,
-                        Channel: 'item:previous'
-                    },
-                    {
-                        Id: '6mRXSbBE',
-                        Chords: [[27]],
-                        Enable: true,
-                        Channel: 'view:close'
-                    }
-                ]
-            }
-        }
+        data: DefaultData.Keybind
     }
 ]
 
@@ -109,6 +37,10 @@ export function Initialize()
     {
         let location = path.join(AppData.SteamCloudLocations.Config, item.filename)
 
+        if (!fs.existsSync(AppData.SteamCloudLocations.Config)) {
+            fs.mkdirSync(AppData.SteamCloudLocations.Config, { recursive: true })
+        }
+
         if (!fs.existsSync(location))
             fs.writeFileSync(location, JSON.stringify(item.data, null, '    '))
 
@@ -117,6 +49,13 @@ export function Initialize()
         global.AppData.CloudConfig[item.key].default(item.data)
         global.AppData.CloudConfig[item.key].write()
     }
+
+    if (global.AppData.CloudConfig.User.get('downloadFolder').length < 1)
+    {
+        global.AppData.CloudConfig.User.set('downloadFolder', path.join(require('electron').remote.app.getPath('home'), 'Downloads', 'sixgrid'))
+        global.AppData.CloudConfig.User.write()
+    }
+
 }
 export function ResetItem(name: string)
 {

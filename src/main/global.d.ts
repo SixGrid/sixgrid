@@ -1,6 +1,8 @@
 import type { IProductInformation } from '../shared'
 import type { BrowserWindow } from 'electron'
-import type { GlobalShortcutData } from './globalShortcuts'
+import type { GlobalShortcutData } from '../shared/config'
+import type { ConfigManager } from './config/configManager'
+
 declare global
 {
     var electronMainWindow: BrowserWindow|undefined
@@ -9,5 +11,6 @@ declare global
     var __static: string
     var debugMode: boolean
     var globalShortcut_data: GlobalShortcutData
+    var configManager: ConfigManager
 }
 

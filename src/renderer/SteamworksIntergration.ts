@@ -1,23 +1,9 @@
 import * as greenworks from 'greenworks'
 
 import {EventEmitter} from 'events'
-import { MetricManagerData } from './MetricManager'
+import { ISteamMetric } from '../shared/steamworks'
 import * as ElectronLog from 'electron-log'
 let log: ElectronLog.LogFunctions;
-export type SteamMetricType = 'int'|'float'
-export interface ISteamMetric
-{
-    min: number,
-    max: number,
-    default: number,
-    value: number,
-    incrementOnly: boolean,
-    name: string,
-    increment: boolean,
-    type: SteamMetricType
-    process?: SteamMetricProcess
-}
-export type SteamMetricProcess = (steamworks: typeof greenworks, scope: any, key: string) => any
 
 export default class Steamworks extends EventEmitter {
     public static AppID = 1992810
@@ -36,12 +22,15 @@ export default class Steamworks extends EventEmitter {
         return new Error(`[Steamworks->${thing.id}] ${thing.message}`)
     }
     Initialize() {
+        // ignore init when steamworks is disabled
         if (!AppData.AllowSteamworks)
         {
             log.debug('Disabled')
             return
         }
         if (this.hasInitalized) return
+
+        // attempt to initialize greenworks and safely exit if failed
         try {
             let response = this.Greenworks.init()
             if (response) {

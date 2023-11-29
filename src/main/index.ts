@@ -4,9 +4,11 @@ import menu from './menu'
 import * as helpers from './helpers'
 import * as os from 'os'
 import * as globalShortcuts from './globalShortcuts'
-let isSteamDeck: boolean = os.release().toString().includes('valve')
+import { ConfigManager } from './config/configManager'
 
-if (isSteamDeck) {
+import flags from './flags'
+
+if (flags.isSteamDeck) {
     app.disableHardwareAcceleration()
     console.log(`Running on Steam Deck. Hardware Acceleration has been disabled due to some linux issues.`)
 }
@@ -20,28 +22,21 @@ if (process.env.NODE_ENV !== 'development') {
 }
 
 ipcMain.handle('updateTitle', (event, data) => {
-    if (global.electronMainWindow == undefined) return
-    if (data.length < 1)
-        global.electronMainWindow.setTitle(helpers.fetchTitle())
-    else
-        global.electronMainWindow.setTitle(helpers.fetchTitle() + ` - ${data}`)
+    setTitle(data)
 })
 
-global.debugMode = app.commandLine.hasSwitch('developer')
-app.commandLine.appendSwitch('in-process-gpu')
-let customURL_enable = app.commandLine.hasSwitch('url')
-let customURL = app.commandLine.getSwitchValue('url')
+export function setTitle(append: string='') {
+    if (global.electronMainWindow == undefined) return
 
-const winURL_dev = 'http://localhost:9080'
-let winURL: string = ''
-if (global.debugMode && customURL_enable)
-{
-    winURL = customURL_enable ? customURL : winURL_dev
+    if (append.length < 1)
+        global.electronMainWindow.setTitle(helpers.fetchTitle())
+    else
+        global.electronMainWindow.setTitle(helpers.fetchTitle() + ` - ${append}`)
 }
-else
-{
-    winURL = process.env.NODE_ENV === 'development' ? winURL_dev : `file://${__dirname}/index.html`
-}
+
+global.debugMode = flags.debugMode
+app.commandLine.appendSwitch('in-process-gpu')
+
 function createWindow () {
     app.allowRendererProcessReuse = false
     global.electronMainWindow = new BrowserWindow({
@@ -60,19 +55,26 @@ function createWindow () {
             contextIsolation: false
         }
     })
+
+    global.configManager = new ConfigManager()
+
     globalShortcuts.init()
-    if (isSteamDeck) {
+    if (flags.isSteamDeck) {
         global.electronMainWindow.webContents.setFrameRate(60)
         console.log(`Set framerate to 60fps`)
     }
+
+    // set title
     global.electronMainWindow.setMenu(null)
     Menu.setApplicationMenu(Menu.buildFromTemplate(menu))
     global.electronMainWindow.setTitle(helpers.fetchTitle())
 
-    global.electronMainWindow.loadURL(winURL)
+    global.electronMainWindow.loadURL(flags.winUrl)
 
+    // save config on close
     global.electronMainWindow.on('closed', () => {
         delete global.electronMainWindow
+        ConfigManager.instance.saveAll(false)
     })
 
     // Send uncaught exceptions to renderer
@@ -81,6 +83,7 @@ function createWindow () {
         global.electronMainWindow.webContents.send('uncaughtException', JSON.stringify(error))
     })
     ipcMain.on('restart', () => {
+        ConfigManager.instance.saveAll(false)
         helpers.relaunch()
     })
 }

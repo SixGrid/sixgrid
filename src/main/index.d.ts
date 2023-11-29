@@ -1,5 +1,8 @@
 import type { IProductInformation } from '../shared'
 import type { BrowserWindow } from 'electron'
+import type { GlobalShortcutData } from '../shared/config'
+import type { ConfigManager } from './config/configManager'
+
 declare global {
     namespace NodeJS {
         interface Global {
@@ -8,6 +11,8 @@ declare global {
             __PRODUCT_EXTENDED_INFORMATION: IProductInformation
             __static: string
             debugMode: boolean
+            globalShortcut_data: GlobalShortcutData
+            configManager: ConfigManager
         }
     }
 }

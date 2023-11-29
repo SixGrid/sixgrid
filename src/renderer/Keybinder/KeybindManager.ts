@@ -1,5 +1,5 @@
 import { EventEmitter } from 'events'
-import { KeybindChord, Keystate } from './index'
+import { KeybindChord, Keystate } from '../../shared/keybind'
 import { KeybindItem } from './KeybindItem'
 import { KeybindProfile } from './KeybindProfile'
 const enumKeycode: {[key: string]: number} = require('./enum.Keycode.js')

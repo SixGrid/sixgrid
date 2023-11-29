@@ -1,7 +1,7 @@
-import type {KeybindChord, KeybindChannel} from './index'
+import { IKeybindItem, KeybindChord } from '../../shared/keybind'
 const toolbox = require('tinytoolbox')
 
-export class KeybindItem
+export class KeybindItem implements IKeybindItem
 {
     public Id: string = toolbox.stringGen(8)
     public Chords: KeybindChord[] = []
