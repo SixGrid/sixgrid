@@ -1,0 +1,42 @@
+@media (prefers-color-scheme: light) {
+    :root {
+        --bg-color: #ffffff;
+        
+        --text-color: #000000;
+
+        --dark: #262626;
+        --dark-50p_opac: rgba(38, 38, 38, 0.5);
+
+        --md-theme-default-text-primary-on-background: var(--text-color);
+    }
+
+    .billboard-link-text {
+        color: var(--text-color) !important;
+    }
+
+    .md-icon,
+    .md-icon-font {
+        color: rgba(0,0,0, 0.7) !important;
+    }
+
+    .fullscreen-result-page {
+        background-color: #fafafa;
+    }
+    
+    .md-drawer.md-left {
+        border-right-color: var(--dark-50p_opac) !important;
+    }
+
+    .lightmode-invert {
+        filter: brightness(75%) invert(100%);
+    }
+
+    .fileLoadingOverlay {
+        background-color: #fff;
+        color: var(--text-color);
+    }
+
+    .md-button.md-primary .md-button-content:not([disabled]) .md-icon {
+        color: #fff !important;
+    }
+}
