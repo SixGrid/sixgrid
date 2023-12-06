@@ -3,13 +3,13 @@
         <md-content style="margin: 1rem; padding: 2rem;" class="md-elevation-1">
             <div class="md-layout md-gutter md-alignment-top-center md-elevation-2 clickable-bigbutton" style="width: 40vw;">
                 <div class="md-layout-item md-alignment-top-center" @click="OpenExternal('https://sixgrid.kate.pet/discord')">
-                    <img src="@/assets/Discord-Logo-White.svg" style="width: 3rem;"/>
+                    <img class="lightmode-invert" src="@/assets/Discord-Logo-White.svg" style="width: 3rem;"/>
                     <span class="billboard-link-text">Join the SixGrid Discord</span>
                 </div>
             </div>
             <div class="md-layout md-gutter md-alignment-top-center md-elevation-2 clickable-bigbutton" style="width: 40vw; margin-top: 3rem;">
                 <div class="md-layout-item md-alignment-top-center" @click="OpenExternal('https://github.com/sixgrid')">
-                    <img src="@/assets/GitHub-Mark-Light-120px-plus.png" style="width: 3rem;"/>
+                    <img class="lightmode-invert" src="@/assets/GitHub-Mark-Light-120px-plus.png" style="width: 3rem;"/>
                     <span class="billboard-link-text">View on Github</span>
                 </div>
             </div>
