@@ -83,6 +83,10 @@ function createWindow () {
     ipcMain.on('restart', () => {
         helpers.relaunch()
     })
+    ipcMain.handle('safeReload', () => {
+        if (global.electronMainWindow != undefined)
+            global.electronMainWindow.loadURL(winURL)
+    })
 }
 
 app.on('ready', createWindow)
