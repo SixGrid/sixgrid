@@ -95,6 +95,11 @@
                     </div>
                 </div>
             </md-list-item>
+            <md-list-item>
+                <div class="md-list-item-text">
+                    <md-checkbox v-model="configFlags.darkMode">Dark Mode</md-checkbox>
+                </div>
+            </md-list-item>
         </md-list>
         <template v-if="steam">
             <md-list class="md-elevation-1">
@@ -133,6 +138,7 @@
 <script>
 const fs = require('fs')
 import SettingsKeybind from './Settings_Keybind.vue'
+import {ipcRenderer} from 'electron'
 export default {
     name: 'Settings',
     components: {SettingsKeybind},
@@ -193,6 +199,12 @@ export default {
             AppData.CloudConfig.Authentication.write()
             if (!fs.existsSync(this.$data.configFlags.downloadFolder))
                 fs.mkdirSync(this.$data.configFlags.downloadFolder, {recursive: true})
+            let safeReload = false
+            if (AppData.CloudConfig['User'].get('darkMode') != this.configFlags.darkMode) {
+                safeReload = true
+                require('electron').remote.nativeTheme.themeSource = this.configFlags.darkMode ? 'dark' : 'light'
+            }
+
             AppData.CloudConfig['User'].set(JSON.parse(JSON.stringify(this.$data.configFlags)))
             AppData.CloudConfig['User'].write()
             AppData.Event.emit('zoomFactorUpdate')
@@ -202,6 +214,10 @@ export default {
             let initialDataEntries = Object.entries(this.initialData())
             for (let i = 0; i < initialDataEntries.length; i++) {
                 this.$set(this.$data, initialDataEntries[i][0], initialDataEntries[i][1])
+            }
+            console.log(`safeReload = ${safeReload}`)
+            if (safeReload) {
+                ipcRenderer.invoke('safeReload')
             }
         },
         toJSON () {
