@@ -60,7 +60,8 @@ export const configStoreProfiles: IConfigTemplate<any>[] = [
                 relaunch: 'F10',
                 debugOutline: 'F9',
                 safeReload: 'F8'
-            }
+            },
+            darkMode: true
         }
     },
     {
