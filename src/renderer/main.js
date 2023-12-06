@@ -15,11 +15,17 @@ import VueMaterial  from 'vue-material'
 import * as packageJSON from '../../package.json'
 
 import 'vue-material/dist/vue-material.min.css'
-import 'vue-material/dist/theme/default-dark.css'
 import { ipcRenderer } from 'electron'
 
 window.toastr = require('toastr')
 
+// import dark mode css when enabled
+if (require('electron').remote.nativeTheme.shouldUseDarkColors) {
+    require('vue-material/dist/theme/default-dark.css')
+} else {
+    require('vue-material/dist/theme/default.css')
+}
+require('./theme.css')
 
 Vue.use(VueMaterial)
 Vue.use(VueToastr2)
