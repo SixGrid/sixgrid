@@ -18,7 +18,7 @@
                             <post-file-preview ref="postfile" v-bind:postArray="postArr" v-bind:postIndex="postIndex" />
                             
                             <template v-if="!fileLoaded">
-                                <div class="fileLoadingOverlay">
+                                <div class="fileLoadingOverlay md-elevation-1">
                                     <h1>Loading Media</h1>
                                     <h3>{{ postArr[postIndex].ID }}</h3>
                                 </div>
