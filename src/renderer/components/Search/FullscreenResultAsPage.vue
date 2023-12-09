@@ -14,8 +14,12 @@
                         </template>
                     </td>
                     <template v-if="postArr[postIndex] != undefined">
-                        <td action="postImage" :style="`--post-width: ${postArr[postIndex].Image.File.width}px; --post-height: ${postArr[postIndex].Image.File.height}px;`">
-                            <post-file-preview ref="postfile" v-bind:postArray="postArr" v-bind:postIndex="postIndex" />
+                        <td action="postImage"
+                            :style="`--post-width: ${postArr[postIndex].Image.File.width}px; --post-height: ${postArr[postIndex].Image.File.height}px;`">
+                            <post-file-preview
+                                ref="postfile"
+                                v-bind:postArray="postArr"
+                                v-bind:postIndex="postIndex" />
                             
                             <template v-if="!fileLoaded">
                                 <div class="fileLoadingOverlay md-elevation-1">
