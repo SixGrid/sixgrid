@@ -188,7 +188,12 @@ greenworks.init = function() {
     throw new Error("Steam initialization failed. Steam is not running.");
   var appId;
   try {
-    appId = fs.readFileSync('steam_appid.txt', 'utf8');
+    let p = path.resolve('./steam_appid.txt');
+    if (p.endsWith('Windows\\System32\\steam_appid.txt')) {
+      p = path.join(require('path').dirname(require('electron').remote.app.getPath('exe')),
+      'steam_appid.txt')
+    }
+    appId = fs.readFileSync(p, 'utf8');
   } catch (e) {
     throw new Error("Steam initialization failed. Steam is running," +
                     "but steam_appid.txt is missing. Expected to find it in: " +

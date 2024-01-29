@@ -160,7 +160,12 @@ global.AppData = AppData
 global.AppData.Log = require('electron-log')
 global.AppData.Config = new ConfigManager()
 // global.AppData.Steamworks = new (require('@theace0296/steamworks'))(1992810)
-let appIdLocation = path.resolve('steam_appid.txt')
+let appIdLocation = path.resolve('./steam_appid.txt');
+if (appIdLocation.endsWith('Windows\\System32\\steam_appid.txt')) {
+    appIdLocation = path.join(require('path').dirname(
+        require('electron').remote.app.getPath('exe')),
+        'steam_appid.txt');
+}
 try {
     if (!fs.existsSync(appIdLocation))
         fs.writeFileSync(appIdLocation, '1992810')
