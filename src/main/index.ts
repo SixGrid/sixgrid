@@ -14,6 +14,11 @@ if (isSteamDeck) {
     console.log(`Running on Steam Deck. Hardware Acceleration has been disabled due to some linux issues.`)
 }
 
+if (os.release().toString().toLowerCase().includes('wsl')) {
+    app.disableHardwareAcceleration()
+    console.log('Disabling hardware acceleration since this is running under WSL and it causes some issues.')
+}
+
 /**
  * Set `__static` path to static files in production
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
