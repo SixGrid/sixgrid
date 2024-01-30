@@ -125,20 +125,23 @@ var AppData = {
     },
 
     get WorkingDirectory() {
-        if (process.cwd().toLowerCase().includes('windows\\system32')) {
+        let env = require('@electron/remote').process.env
+        if (env.APPIMAGE != undefined) {
+            return path.dirname(env.APPIMAGE)
+        }
+        let c = require('@electron/remote').process.cwd()
+        if (c.toLowerCase().includes('windows\\system32')) {
             return path.dirname(require('@electron/remote').app.getPath('exe'))
         }
-        if (process.cwd().startsWith('/tmp/.mount_sixgr')) {
-            return require('@electron/remote').process.env.PWD
-        }
-        return process.cwd()
+        return c
     },
 
     SteamCloudLocations: {
         get Config() {
             let target = path.join(AppData.WorkingDirectory, 'AppConfig')
-            if (path.basename(process.cwd()).startsWith('electron')) {
-                target = path.join(process.cwd(), 'AppConfig')
+            let c = require('@electron/remote').process.cwd()
+            if (path.basename(c).startsWith('electron')) {
+                target = path.join(c, 'AppConfig')
             }
             return target
         }
