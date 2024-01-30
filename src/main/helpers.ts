@@ -73,11 +73,16 @@ export function paragraphSplit (input: string, maximumLineWidth: number) {
     }
     return resultArray.join('\n')
 }
-
+export function getWorkingDirectory() {
+    if (process.cwd().startsWith('/tmp/.mount_sixgr')) {
+        return require('@electron/remote').process.env.PWD
+    }
+    return process.cwd()
+}
 export function steamCloudConfigDirectory() {
-    let target = path.join(path.dirname(process.execPath), 'AppConfig')
-    if (path.basename(process.execPath).startsWith('electron')) {
-        target = path.join(process.cwd(), 'AppConfig')
+    let target = path.join(path.dirname(getWorkingDirectory()), 'AppConfig')
+    if (path.basename(getWorkingDirectory()).startsWith('electron')) {
+        target = path.join(getWorkingDirectory(), 'AppConfig')
     }
     return target
 }

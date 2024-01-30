@@ -124,11 +124,18 @@ var AppData = {
         return global.AppData.CloudConfig.Authentication.get().items[currentAuthentication]
     },
 
+    get WorkingDirectory() {
+        if (process.cwd().startsWith('/tmp/.mount_sixgr')) {
+            return require('@electron/remote').process.env.PWD
+        }
+        return process.cwd()
+    },
+
     SteamCloudLocations: {
         get Config() {
-            let target = path.join(path.dirname(process.execPath), 'AppConfig')
-            if (path.basename(process.execPath).startsWith('electron')) {
-                target = path.join(process.cwd(), 'AppConfig')
+            let target = path.join(path.dirname(AppData.WorkingDirectory), 'AppConfig')
+            if (path.basename(AppData.WorkingDirectory).startsWith('electron')) {
+                target = path.join(AppData.WorkingDirectory, 'AppConfig')
             }
             return target
         }
@@ -154,6 +161,14 @@ var AppData = {
 
     get IsSteamDeck () {
         return require('os').release().includes('valve')
+    },
+
+    get IsAppImage() {
+        let env = require('@electron/remote').process.env;
+        if (env.ARGV0 != undefined) {
+            return env.ARGV0.toLowerCase().endsWith('.appimage');
+        }
+        return false;
     }
 }
 global.AppData = AppData
