@@ -1,4 +1,5 @@
-import * as greenworks from 'greenworks'
+import * as greenworks from 'steamworks.js'
+import type gwt from 'steamworks.js'
 
 import {EventEmitter} from 'events'
 import { MetricManagerData } from './MetricManager'
@@ -22,12 +23,12 @@ export type SteamMetricProcess = (steamworks: typeof greenworks, scope: any, key
 export default class Steamworks extends EventEmitter {
     public static AppID = 1992810
     public static MetricUpdateInterval = 15000
-    public Greenworks: typeof greenworks
+    public Greenworks: gwt.Client
     public constantInterval?: NodeJS.Timeout
     constructor() {
         super(); this.setMaxListeners(8192)
         log = global.AppData.Log.scope('steamworks')
-        this.Greenworks = require('greenworks')
+        this.Greenworks = require('steamworks.js')
     }
     hasInitalized = false
     GenerateError(thing: any) {
@@ -43,17 +44,15 @@ export default class Steamworks extends EventEmitter {
         }
         if (this.hasInitalized) return
         try {
-            let response = this.Greenworks.init()
-            if (response) {
-                this.InitializeEvents()
-            } else {
-                throw this.GenerateError(Steamworks.ERRORS.InitalizeFail)
-            }
+            let tmp = greenworks.init(1992810)
+            this.Greenworks = tmp as any
         } catch (e) {
-            if (require('electron').remote.process.argv.includes('--steam'))
+            if (require('@electron/remote').process.argv.includes('--steam'))
                 alert('Failed to initalize Steamworks\n' + e)
             log.error(`Failed to initialize Steamworks`, e)
+            return;
         }
+        this.InitializeEvents()
     }
     InitializeEvents() {
         if (this.hasInitalized) return
@@ -64,10 +63,10 @@ export default class Steamworks extends EventEmitter {
         {
             let newValue: number|null = null
             if (pair[1].type == 'int') {
-                newValue = this.Greenworks.getStatInt(pair[1].name)
+                newValue = this.Greenworks.stats.getInt(pair[1].name)
             }
             else if (pair[1].type == 'float') {
-                newValue = this.Greenworks.getStatFloat(pair[1].name)
+                newValue = this.Greenworks.stats.getInt(pair[1].name)
             }
             if (newValue != null)
                 metricdata[pair[0]].value = newValue
@@ -75,10 +74,10 @@ export default class Steamworks extends EventEmitter {
         global.AppData.MetricManager.SetData(metricdata)
         global.AppData.MetricManager.Write()
 
-        let greenworks = this.Greenworks
+        var scope = this
         global.AppData.MetricManager.on('update', function (data: ISteamMetric)
         {
-            greenworks.setStat(data.name, data.value)
+            scope.Greenworks.stats.setInt(data.name, data.value)
         })
     }
     ResetMetrics() {
