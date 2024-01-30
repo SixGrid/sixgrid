@@ -1,3 +1,4 @@
+import './remoteFix'
 import { app, BrowserWindow, globalShortcut, ipcMain, Menu, protocol } from 'electron'
 import '../renderer/store'
 import menu from './menu'
@@ -43,7 +44,6 @@ else
     winURL = process.env.NODE_ENV === 'development' ? winURL_dev : `file://${__dirname}/index.html`
 }
 function createWindow () {
-    app.allowRendererProcessReuse = false
     global.electronMainWindow = new BrowserWindow({
         useContentSize: true,
         width: 1280,
@@ -52,7 +52,6 @@ function createWindow () {
         minHeight: 720,
         webPreferences: {
             nodeIntegration: true,
-            enableRemoteModule: true,
             webSecurity: false,
             allowRunningInsecureContent: false,
             devTools: true,
@@ -60,6 +59,7 @@ function createWindow () {
             contextIsolation: false
         }
     })
+    require('@electron/remote/main').enable(global.electronMainWindow.webContents)
     globalShortcuts.init()
     if (isSteamDeck) {
         global.electronMainWindow.webContents.setFrameRate(60)

@@ -138,7 +138,7 @@ var AppData = {
 
     get AllowSteamworks()
     {
-        return require('electron').remote.process.argv.includes('--steam')
+        return require('@electron/remote').process.argv.includes('--steam')
     },
 
     isFloat(n) {
@@ -163,7 +163,7 @@ global.AppData.Config = new ConfigManager()
 let appIdLocation = path.resolve('./steam_appid.txt');
 if (appIdLocation.endsWith('Windows\\System32\\steam_appid.txt')) {
     appIdLocation = path.join(require('path').dirname(
-        require('electron').remote.app.getPath('exe')),
+        require('electron').app.getPath('exe')),
         'steam_appid.txt');
 }
 try {
@@ -191,7 +191,7 @@ for (let i = 0; i < Object.entries(AppData.SteamCloudLocations).length; i++) {
 }
 
 global.AppData.Event.on('zoomFactorUpdate', () => {
-    var webContents = electron.remote.getCurrentWindow().webContents
+    var webContents = require('@electron/remote').getCurrentWindow().webContents
     let factor = global.AppData.CloudConfig.User.get('zoomFactor')
     if (factor == undefined)
         factor = 1.0
@@ -203,5 +203,3 @@ global.AppData.MetricManager.Read()
 global.AppData.Keybinder.Load()
 
 global.AppData.Event.emit('zoomFactorUpdate')
-
-

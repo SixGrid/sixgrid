@@ -5,3 +5,10 @@ if (!createHashContent.includes(injectContent)) {
     createHashContent = `${injectContent}${require('os').EOL}${createHashContent}`
     fs.writeFileSync('./node_modules/webpack/lib/util/createHash.js', createHashContent)
 }
+
+var electronStoreFile = './node_modules/electron-store/index.js';
+var electronStoreReplace = `(electron.app || electron.remote.app).getPath('userData');`
+var electronStoreReplaceTarget = `(electron.app || require('@electron/remote').app).getPath('userData');`
+if (fs.readFileSync(electronStoreFile).toString().includes(electronStoreReplace)) {
+    fs.writeFileSync(electronStoreFile, fs.readFileSync(electronStoreFile).toString().replaceAll(electronStoreReplace, electronStoreReplaceTarget))
+}

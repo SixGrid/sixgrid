@@ -202,7 +202,7 @@ export default {
             let safeReload = false
             if (AppData.CloudConfig['User'].get('darkMode') != this.configFlags.darkMode) {
                 safeReload = true
-                require('electron').remote.nativeTheme.themeSource = this.configFlags.darkMode ? 'dark' : 'light'
+                require('@electron/remote').nativeTheme.themeSource = this.configFlags.darkMode ? 'dark' : 'light'
             }
 
             AppData.CloudConfig['User'].set(JSON.parse(JSON.stringify(this.$data.configFlags)))
@@ -237,7 +237,7 @@ export default {
             return val
         },
         async browseDownloadFolder () {
-            let dialog = await require('electron').remote.dialog.showOpenDialog({
+            let dialog = await require('@electron/remote').dialog.showOpenDialog({
                 defaultPath: this.$data.configFlags.downloadFolder,
                 properties: ['openDirectory']
             })
