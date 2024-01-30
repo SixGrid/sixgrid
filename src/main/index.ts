@@ -5,6 +5,8 @@ import menu from './menu'
 import * as helpers from './helpers'
 import * as os from 'os'
 import * as globalShortcuts from './globalShortcuts'
+import * as path from 'path'
+import * as url from 'url'
 let isSteamDeck: boolean = os.release().toString().includes('valve')
 
 if (isSteamDeck) {
@@ -41,7 +43,11 @@ if (global.debugMode && customURL_enable)
 }
 else
 {
-    winURL = process.env.NODE_ENV === 'development' ? winURL_dev : `file://${__dirname}/index.html`
+    winURL = process.env.NODE_ENV === 'development' ? winURL_dev : url.format({
+        pathname: path.join(__dirname, 'index.html'),
+        protocol: 'file:',
+        slashes: true
+    })
 }
 function createWindow () {
     global.electronMainWindow = new BrowserWindow({
