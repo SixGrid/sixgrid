@@ -43,8 +43,7 @@ if (global.debugMode && customURL_enable)
 }
 else
 {
-    console.log(path.join(__dirname, 'index.html'))
-    console.log(require('fs').existsSync(path.join(__dirname, 'index.html')))
+    console.log(process.env)
     winURL = process.env.NODE_ENV === 'development' ? winURL_dev : url.format({
         pathname: path.join(__dirname, 'index.html'),
         protocol: 'file:',
