@@ -1,14 +1,22 @@
+import './remoteFix'
 import { app, BrowserWindow, globalShortcut, ipcMain, Menu, protocol } from 'electron'
 import '../renderer/store'
 import menu from './menu'
 import * as helpers from './helpers'
 import * as os from 'os'
 import * as globalShortcuts from './globalShortcuts'
+import * as path from 'path'
+import * as url from 'url'
 let isSteamDeck: boolean = os.release().toString().includes('valve')
 
 if (isSteamDeck) {
     app.disableHardwareAcceleration()
     console.log(`Running on Steam Deck. Hardware Acceleration has been disabled due to some linux issues.`)
+}
+
+if (os.release().toString().toLowerCase().includes('wsl')) {
+    app.disableHardwareAcceleration()
+    console.log('Disabling hardware acceleration since this is running under WSL and it causes some issues.')
 }
 
 /**
@@ -40,10 +48,15 @@ if (global.debugMode && customURL_enable)
 }
 else
 {
-    winURL = process.env.NODE_ENV === 'development' ? winURL_dev : `file://${__dirname}/index.html`
+    console.log(process.env)
+    console.log(process.execPath)
+    winURL = process.env.NODE_ENV === 'development' ? winURL_dev : url.format({
+        pathname: path.join(__dirname, 'index.html'),
+        protocol: 'file:',
+        slashes: true
+    })
 }
 function createWindow () {
-    app.allowRendererProcessReuse = false
     global.electronMainWindow = new BrowserWindow({
         useContentSize: true,
         width: 1280,
@@ -52,7 +65,6 @@ function createWindow () {
         minHeight: 720,
         webPreferences: {
             nodeIntegration: true,
-            enableRemoteModule: true,
             webSecurity: false,
             allowRunningInsecureContent: false,
             devTools: true,
@@ -60,6 +72,7 @@ function createWindow () {
             contextIsolation: false
         }
     })
+    require('@electron/remote/main').enable(global.electronMainWindow.webContents)
     globalShortcuts.init()
     if (isSteamDeck) {
         global.electronMainWindow.webContents.setFrameRate(60)

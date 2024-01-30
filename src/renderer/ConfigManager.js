@@ -15,7 +15,7 @@ class ConfigManager extends EventEmitter {
     }
 
     get Directory () {
-        let value = path.join(electron.remote.app.getPath('userData'), AppData.ApplicationIdentifier, 'config')
+        let value = path.join(require('@electron/remote').app.getPath('userData'), AppData.ApplicationIdentifier, 'config')
         if (!fs.existsSync(value))
             fs.mkdirSync(value, {recursive: true})
         return value

@@ -1,5 +1,5 @@
-import { remote as electronRemote } from 'electron'
-const nativeTheme = electronRemote.nativeTheme
+import * as electron from '@electron/remote'
+const nativeTheme = electron.nativeTheme
 
 nativeTheme.themeSource = AppData.CloudConfig['User'].get('darkMode', true) ? 'dark' : 'light'
 

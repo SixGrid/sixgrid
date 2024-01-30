@@ -53,6 +53,7 @@ declare interface IAppData
     Event: EventEmitter
 
     IsSteamDeck: boolean
+    IsAppImage: boolean
 
     Log: ElectronLog
 }

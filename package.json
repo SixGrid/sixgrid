@@ -82,15 +82,16 @@
         }
     },
     "dependencies": {
+        "@electron/remote": "^2.1.2",
         "axios": "^0.27.2",
         "dayjs": "^1.11.5",
         "electron-log": "^4.4.8",
-        "greenworks": "file:greenworks",
         "jquery": "^3.6.0",
         "js-bbcode-parser": "^4.0.0",
         "libsixgrid": "^1.1.5",
         "moment": "^2.29.4",
         "remove-markdown": "^0.3.0",
+        "steamworks.js": "^0.3.1",
         "sweetalert": "^2.1.2",
         "tinytoolbox": "^0.0.9",
         "toastr": "^2.1.4",
@@ -103,7 +104,7 @@
         "vuex-electron": "^1.0.0"
     },
     "devDependencies": {
-        "@types/node": "^16.11.7",
+        "@types/node": "^16.18.76",
         "ajv": "^6.5.0",
         "archiver": "^5.3.1",
         "cfonts": "^2.1.2",
@@ -113,7 +114,7 @@
         "css-loader": "^5.2.7",
         "del": "^3.0.0",
         "devtron": "^1.4.0",
-        "electron": "^11.5.0",
+        "electron": "^28.2.0",
         "electron-builder": "^23.3.3",
         "electron-debug": "^1.5.0",
         "electron-devtools-installer": "^2.2.4",

@@ -42,7 +42,7 @@ export const configStoreProfiles: IConfigTemplate<any>[] = [
                 loop: true
             },
             get downloadFolder() {
-                return path.join(require('electron').remote.app.getPath('home'), 'Downloads', 'sixgrid')
+                return path.join(require('@electron/remote').app.getPath('home'), 'Downloads', 'sixgrid')
             },
             saveMetadata: false,
             tagBlacklist: [],
