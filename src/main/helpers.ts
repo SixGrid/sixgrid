@@ -74,8 +74,11 @@ export function paragraphSplit (input: string, maximumLineWidth: number) {
     return resultArray.join('\n')
 }
 export function getWorkingDirectory() {
+    if (process.cwd().toLowerCase().includes('windows\\system32')) {
+        return path.dirname(require('electron').app.getPath('exe'))
+    }
     if (process.cwd().startsWith('/tmp/.mount_sixgr')) {
-        return require('@electron/remote').process.env.PWD
+        return process.env.PWD as string
     }
     return process.cwd()
 }

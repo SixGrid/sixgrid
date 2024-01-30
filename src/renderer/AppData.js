@@ -125,6 +125,9 @@ var AppData = {
     },
 
     get WorkingDirectory() {
+        if (process.cwd().toLowerCase().includes('windows\\system32')) {
+            return path.dirname(require('@electron/remote').app.getPath('exe'))
+        }
         if (process.cwd().startsWith('/tmp/.mount_sixgr')) {
             return require('@electron/remote').process.env.PWD
         }
