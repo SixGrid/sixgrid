@@ -44,6 +44,7 @@ if (global.debugMode && customURL_enable)
 else
 {
     console.log(process.env)
+    console.log(process.execPath)
     winURL = process.env.NODE_ENV === 'development' ? winURL_dev : url.format({
         pathname: path.join(__dirname, 'index.html'),
         protocol: 'file:',
