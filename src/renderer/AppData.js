@@ -17,7 +17,7 @@ var AppData = {
     Event: new EventEmitter(),
     get UserDataPath () {
         let val = path.join(
-            electron.remote.app.getPath('userData'),
+            require('@electron/remote').app.getPath('userData'),
             this.ApplicationIdentifier)
         if (!fs.existsSync(val))
             fs.mkdirSync(val, {recursive: true})

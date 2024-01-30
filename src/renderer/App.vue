@@ -169,7 +169,7 @@ export default {
     },
     methods: {
         quitSixGrid () {
-            require('electron').remote.app.quit()
+            require('@electron/remote').app.quit()
         },
         toggleMenu () {
             this.menuVisible = !this.menuVisible
