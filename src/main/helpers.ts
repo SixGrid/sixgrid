@@ -80,9 +80,9 @@ export function getWorkingDirectory() {
     return process.cwd()
 }
 export function steamCloudConfigDirectory() {
-    let target = path.join(path.dirname(getWorkingDirectory()), 'AppConfig')
-    if (path.basename(getWorkingDirectory()).startsWith('electron')) {
-        target = path.join(getWorkingDirectory(), 'AppConfig')
+    let target = path.join(getWorkingDirectory(), 'AppConfig')
+    if (path.basename(process.cwd()).startsWith('electron')) {
+        target = path.join(process.cwd(), 'AppConfig')
     }
     return target
 }
