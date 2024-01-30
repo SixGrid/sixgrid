@@ -145,7 +145,7 @@ export default {
                     label: 'Debug',
                     location: '/debug',
                     enable () {
-                        return (localStorage.Debug != undefined && localStorage.Debug) || require('electron').remote.app.commandLine.hasSwitch('developer')
+                        return (localStorage.Debug != undefined && localStorage.Debug) || require('@electron/remote').app.commandLine.hasSwitch('developer')
                     }
                 },
                 {
