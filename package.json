@@ -22,7 +22,8 @@
         "productName": "sixgrid",
         "appId": "pet.kate.sixgrid",
         "directories": {
-            "output": "build"
+            "output": "build",
+            "buildResources": "dist"
         },
         "files": [
             "dist/electron/**/*"
@@ -91,6 +92,7 @@
         "libsixgrid": "^1.1.5",
         "moment": "^2.29.4",
         "remove-markdown": "^0.3.0",
+        "request": "^2.88.2",
         "steamworks.js": "^0.3.1",
         "sweetalert": "^2.1.2",
         "tinytoolbox": "^0.0.9",
