@@ -1,6 +1,6 @@
 {
     "name": "sixgrid",
-    "version": "0.3.7-2",
+    "version": "0.3.7-3",
     "author": "Kate Ward <kate@dariox.club>",
     "description": "Open-Source e621 Desktop App",
     "license": "apache-2.0",
@@ -100,7 +100,7 @@
                 "--socket=x11",
                 "--socket=wayland",
                 "--socket=pulseaudio",
-                "--filesystem=home", 
+                "--filesystem=home",
                 "--share=network",
                 "--device=dri"
             ]
