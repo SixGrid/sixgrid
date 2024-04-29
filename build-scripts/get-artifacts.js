@@ -40,38 +40,38 @@ let tarballDirectory = async (fullPath, self) => {
 let RegexMatrix = [
     {
         filename_regex: new RegExp(`^${regexEscapeReplace(packageJSON.build.productName)}(| |-)${regexEscapeReplace(packageJSON.version)}\.AppImage$`),
-        upload_name: `${packageJSON.name}-${commitHash}-linux-amd64.AppImage`,
+        upload_name: `${packageJSON.name}-linux-amd64.AppImage`,
         platform: 'linux'
     },
     {
         filename_regex: new RegExp(`^${regexEscapeReplace(packageJSON.build.productName)}(| |-)${regexEscapeReplace(packageJSON.version)}-x86_64\.flatpak$`),
-        upload_name: `${packageJSON.name}-${commitHash}-amd64.flatpak`,
+        upload_name: `${packageJSON.name}-amd64.flatpak`,
         platform: 'linux'
     },
     {
         filename_regex: new RegExp(`^linux\-unpacked$`),
-        upload_name: `${packageJSON.name}-${commitHash}-linux-amd64.tar.gz`,
+        upload_name: `${packageJSON.name}-linux-amd64.tar.gz`,
         onMatch: tarballDirectory,
         platform: 'linux'
     },
     {
         filename_regex: new RegExp(`^linux\-unpacked$`),
-        upload_name: `${packageJSON.name}-${commitHash}-linux-amd64.zip`,
+        upload_name: `${packageJSON.name}-linux-amd64.zip`,
         onMatch: zipDirectory,
         platform: 'linux'
     },
     {
         filename_regex: new RegExp(`^win\-unpacked$`),
-        upload_name: `${packageJSON.name}-${commitHash}-win-amd64.zip`,
+        upload_name: `${packageJSON.name}-win-amd64.zip`,
         onMatch: zipDirectory
     },
     {
         filename_regex: new RegExp(`^${regexEscapeReplace(packageJSON.build.productName)} Setup ${regexEscapeReplace(packageJSON.version)}\.exe$`),
-        upload_name: `${packageJSON.name}-${commitHash}-win-amd64-setup.exe`
+        upload_name: `${packageJSON.name}-win-amd64-setup.exe`
     },
     {
         filename_regex: new RegExp(`^${regexEscapeReplace(packageJSON.build.productName)} ${regexEscapeReplace(packageJSON.version)}\.msi$`),
-        upload_name: `${packageJSON.name}-${commitHash}-win-amd64-setup.msi`
+        upload_name: `${packageJSON.name}-win-amd64-setup.msi`
     }
 ]
 
