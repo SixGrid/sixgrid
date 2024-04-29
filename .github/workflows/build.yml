@@ -58,7 +58,7 @@ jobs:
         with:
           node-version: 16
           
-      - run: npm i -g npm@latest-9
+      - run: npm i -g npm@latest-7
       - run: npm install --legacy-peer-deps
       - run: npm install --include=dev
       - run: node ./build-scripts/prebuild.js
