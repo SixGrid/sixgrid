@@ -63,7 +63,7 @@ jobs:
       - run: npm install --include=dev
       - run: node ./build-scripts/prebuild.js
       - name: Install flatpak dependencies
-        if: ${{ matrix.artifact_name == 'sixgrid-amd64.flatpak' }}
+        if: ${{ matrix.os == 'ubuntu-latest' }}
         run: |
           sudo apt install flatpak flatpak-builder -y
           flatpak install flathub org.freedesktop.Sdk/x86_64/23.08 org.freedesktop.Platform/x86_64/23.08 app/org.electronjs.Electron2.BaseApp/x86_64/23.08 -y
