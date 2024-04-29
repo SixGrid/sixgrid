@@ -44,6 +44,11 @@ let RegexMatrix = [
         platform: 'linux'
     },
     {
+        filename_regex: new RegExp(`^${regexEscapeReplace(packageJSON.build.productName)}(| |-)${regexEscapeReplace(packageJSON.version)}-x86_64\.flatpak$`),
+        upload_name: `${packageJSON.name}-${commitHash}-amd64.flatpak`,
+        platform: 'linux'
+    },
+    {
         filename_regex: new RegExp(`^linux\-unpacked$`),
         upload_name: `${packageJSON.name}-${commitHash}-linux-amd64.tar.gz`,
         onMatch: tarballDirectory,

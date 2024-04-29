@@ -32,19 +32,22 @@ jobs:
         include:
           - os: ubuntu-latest
             artifact_name: sixgrid-linux-amd64.tar.gz
-            asset_name: "sixgrid-${{ github.sha }}-linux-amd64.tar.gz"
+            asset_name: "sixgrid-linux-amd64.tar.gz"
           - os: ubuntu-latest
             artifact_name: sixgrid-linux-amd64.zip
-            asset_name: "sixgrid-${{ github.sha }}-linux-amd64.zip"
+            asset_name: "sixgrid-linux-amd64.zip"
+          - os: ubuntu-latest
+            artifact_name: sixgrid-amd64.flatpak
+            asset_name: "sixgrid-amd64.flatpak"
           - os: ubuntu-latest
             artifact_name: "sixgrid-linux-amd64.AppImage"
-            asset_name: "sixgrid-${{ github.sha }}-linux-amd64.AppImage"
+            asset_name: "sixgrid-linux-amd64.AppImage"
           - os: windows-latest
             artifact_name: sixgrid-windows-amd64-setup.msi
-            asset_name: "sixgrid-${{ github.sha }}-win-amd64-setup.msi"
+            asset_name: "sixgrid-win-amd64-setup.msi"
           - os: windows-latest
             artifact_name: sixgrid-windows-amd64.zip
-            asset_name: "sixgrid-${{ github.sha }}-win-amd64.zip"
+            asset_name: "sixgrid-win-amd64.zip"
     
     steps:
       - name: Check out Git Repo
@@ -55,9 +58,15 @@ jobs:
         with:
           node-version: 16
           
-      - run: npm i -g npm@latest-6
+      - run: npm i -g npm@latest-9
+      - run: npm install --legacy-peer-deps
       - run: npm install --include=dev
       - run: node ./build-scripts/prebuild.js
+      - name: Install flatpak dependencies
+        if: ${{ matrix.artifact_name == 'sixgrid-amd64.flatpak' }}
+        run: |
+          sudo apt install flatpak flatpak-builder -y
+          flatpak install flathub org.freedesktop.Sdk/x86_64/23.08 org.freedesktop.Platform/x86_64/23.08 app/org.electronjs.Electron2.BaseApp/x86_64/23.08 -y
       - name: Build Electron Application
         run: npm run build
         env:

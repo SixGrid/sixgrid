@@ -7,8 +7,10 @@
     "main": "./dist/electron/main.js",
     "scripts": {
         "build": "node .electron-vue/build.js && electron-builder",
-        "build:wintux": "node .electron-vue/build.js && electron-builder -wl",
+        "build:wintux": "node .electron-vue/build.js && electron-builder --windows --linux flatpak",
         "build:tux": "node .electron-vue/build.js && electron-builder -l",
+        "build:flatpak-full": "node .electron-vue/build.js && env DEBUG=\"@malept/flatpak-bundler\" electron-builder build --linux flatpak",
+        "build:flatpak": "env DEBUG=\"@malept/flatpak-bundler\" electron-builder build --linux flatpak",
         "build:dir": "node .electron-vue/build.js && electron-builder --dir",
         "build:clean": "cross-env BUILD_TARGET=clean node .electron-vue/build.js",
         "build:web": "cross-env BUILD_TARGET=web node .electron-vue/build.js",
@@ -19,8 +21,8 @@
         "pack:renderer": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.renderer.config.js"
     },
     "build": {
-        "productName": "sixgrid",
-        "appId": "pet.kate.sixgrid",
+        "productName": "SixGrid",
+        "appId": "pet.kate.SixGrid",
         "directories": {
             "output": "build",
             "buildResources": "dist"
@@ -66,6 +68,7 @@
         },
         "linux": {
             "icon": "build/icons",
+            "category": "Network",
             "target": [
                 {
                     "target": "AppImage",
@@ -78,7 +81,28 @@
                     "arch": [
                         "x64"
                     ]
+                },
+                {
+                    "target": "flatpak",
+                    "arch": [
+                        "x64"
+                    ]
                 }
+            ]
+        },
+        "flatpak": {
+            "category": "Network",
+            "license": "LICENSE.txt",
+            "runtimeVersion": "23.08",
+            "baseVersion": "23.08",
+            "finishArgs": [
+                "--share=ipc",
+                "--socket=x11",
+                "--socket=wayland",
+                "--socket=pulseaudio",
+                "--filesystem=home", 
+                "--share=network",
+                "--device=dri"
             ]
         }
     },
