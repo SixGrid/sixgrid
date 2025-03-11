@@ -79,7 +79,7 @@
         }
     },
     "dependencies": {
-        "axios": "^0.27.2",
+        "axios": "^1.8.2",
         "dayjs": "^1.11.5",
         "greenworks": "file:greenworks",
         "jquery": "^3.6.0",
