@@ -58,7 +58,7 @@ jobs:
         with:
           node-version: 24
           
-      - run: npm i -g npm@latest-11
+      - run: npm i -g npm@next-11
       - run: npm install --legacy-peer-deps
       - run: npm install --include=dev
       - run: node ./build-scripts/prebuild.js
